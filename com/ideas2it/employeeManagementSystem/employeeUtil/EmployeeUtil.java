@@ -13,7 +13,6 @@ public class EmployeeUtil {
      * @return the string user value
      */
     public String receiveEmployeeDetail() {
-        //scanner = new Scanner(System.in);
         String receivedEmployeeDetail = scanner.next();
         return receivedEmployeeDetail;
     }
