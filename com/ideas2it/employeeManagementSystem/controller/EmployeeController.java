@@ -1,7 +1,8 @@
 package com.ideas2it.employeeManagementSystem.controller;
 
-import com.ideas2it.employeeManagementSystem.service.impl.EmployeeService;
 import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.service.EmployeeService;
+
 import java.util.List;
 
 /*
@@ -23,7 +24,7 @@ public class EmployeeController {
      * @return to acknowledge the view class
      */
     public boolean createEmployeeDetails(Employee employee) {
-        return employeeService.insertEmployeeDetails(employee);
+        return employeeService.createEmployeeDetails(employee);
     }
 
     /**
@@ -32,7 +33,7 @@ public class EmployeeController {
      * @return list of all employees.
      */
     public List displayEmployeeDetails() {
-         return employeeService.showEmployeeDetails();
+         return employeeService.displayEmployeeDetails();
     }
 
     /**

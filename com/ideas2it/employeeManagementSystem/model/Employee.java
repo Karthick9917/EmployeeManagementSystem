@@ -12,13 +12,15 @@ import static java.lang.String.format;
 public class Employee {
     private String id;
     private String name;
+    private long phoneNumber;
     private int salary;
     private String dateOfJoining;
     private Address address;
 
-    public Employee(String id, String name, int salary, String dateOfJoining, Address address) {
+    public Employee(String id, String name, long phoneNumber, int salary, String dateOfJoining, Address address) {
         this.id = id;
         this.name = name;
+        this.phoneNumber = phoneNumber;
         this.salary = salary;
         this.address = address;
         this.dateOfJoining = dateOfJoining;
@@ -40,6 +42,14 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public int getSalary() {
@@ -66,7 +76,7 @@ public class Employee {
     }
 
     public String toString() {
-        String displayEmployeeDetails = format("%-18s %-20s %-18d %-15s", id, name, salary, dateOfJoining);
+        String displayEmployeeDetails = format("%-18s %-20s %-13s %-18d %-15s", id, name, phoneNumber, salary, dateOfJoining);
         return displayEmployeeDetails + address;
     }
 }

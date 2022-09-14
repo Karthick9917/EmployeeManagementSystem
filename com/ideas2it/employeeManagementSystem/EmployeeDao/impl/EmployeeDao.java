@@ -1,20 +1,20 @@
-package com.ideas2it.employeeManagementSystem.service.impl;
+package com.ideas2it.employeeManagementSystem.EmployeeDao.impl;
 
+import com.ideas2it.employeeManagementSystem.EmployeeDao.Dao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
-import com.ideas2it.employeeManagementSystem.service.EmployeeManagement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting employee details from the controller and
+ * Getting employee details from the service and
  * once the operation is done.
- * it will return the acknowledgment to the controller
+ * it will return the acknowledgment
  *
  * @version	1.8.0_281
  * @author	Karthick
  */
-public class EmployeeService implements EmployeeManagement {
+public class EmployeeDao implements Dao {
     List<Employee> employeeList = new ArrayList<Employee>();
 
     /**

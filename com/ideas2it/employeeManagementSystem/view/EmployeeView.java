@@ -101,12 +101,14 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.NAME);
         String name = employeeUtil.receiveEmployeeDetail();
         scanner.nextLine();
+        System.out.println(EmployeeConstants.PHONE_NUMBER);
+        long phoneNumber = employeeUtil.obtainEmployeeDetails();
         System.out.println(EmployeeConstants.SALARY);
         int salary = employeeUtil.getEmployeeDetail();
         System.out.println(EmployeeConstants.DATE_OF_JOINING);
         String dateOfJoining = employeeUtil.receiveEmployeeDetail();
         Address address = addAddress();
-        Employee employee = new Employee(id, name, salary,
+        Employee employee = new Employee(id, name, phoneNumber, salary,
                 dateOfJoining, address);
 
         if(employeeController.createEmployeeDetails(employee)) {
@@ -168,12 +170,15 @@ public class EmployeeView {
         String id = employeeUtil.receiveEmployeeDetail();
         System.out.println(EmployeeConstants.NAME);
         String name = employeeUtil.receiveEmployeeDetail();
+        scanner.nextLine();
+        System.out.println(EmployeeConstants.PHONE_NUMBER);
+        long phoneNumber = employeeUtil.obtainEmployeeDetails();
         System.out.println(EmployeeConstants.SALARY);
         int salary = employeeUtil.getEmployeeDetail();
         System.out.println(EmployeeConstants.DATE_OF_JOINING);
         String dateOfJoining = employeeUtil.receiveEmployeeDetail();
         Address address = addAddress();
-        Employee employee = new Employee(id, name, salary, dateOfJoining, address);
+        Employee employee = new Employee(id, name, phoneNumber, salary, dateOfJoining, address);
 
         if (employeeController.updateEmployeeDetails(employee)) {
             System.out.println("Record updated successfully");
