@@ -1,16 +1,16 @@
-package com.ideas2it.employeeManagementSystem.service;
+package com.ideas2it.employeeManagementSystem.EmployeeDao;
 
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import java.util.List;
 
 /**
  * This interface to declare the abstract method
- * to employee service class.
+ * to employee EmployeeDao.
  *
  * @version 1.8.0_281
  * @author	Karthick
  */
-public interface EmployeeManagement {
+public interface Dao {
 
     /**
      * Add the employee details to array list
@@ -18,30 +18,22 @@ public interface EmployeeManagement {
      * @param employee - get an employee object for create operation
      * @return to acknowledge the controller class
      */
-    boolean insertEmployeeDetails(Employee employee);
+    boolean createEmployeeDetails(Employee employee);
 
     /**
      * get the all employees from the list
      *
      * @return list of all the employees
      */
-    List showEmployeeDetails();
-
-    /**
-     * it will return the employee details based on employee name
-     *
-     * @param employeeName - receive a String value from the controller
-     * @return employee details by employee name
-     */
-    Employee findEmployeeDetails(String employeeName);
+    List readEmployeeDetails();
 
     /**
      * it will delete the unique employee details based on the employee id.
      *
-     * @param employeeId - receive a String value from the controller
+     * @param employee - receive a String value from the service
      * @return the acknowledgement once the operation is done
      */
-    boolean deleteEmployeeDetails(String employeeId);
+    boolean deleteEmployeeDetails(Employee employee);
 
     /**
      * update the employee details to array list

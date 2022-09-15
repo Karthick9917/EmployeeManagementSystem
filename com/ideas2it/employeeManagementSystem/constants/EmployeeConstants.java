@@ -29,5 +29,6 @@ public class EmployeeConstants {
     public static final String DATE_OF_JOINING = "Enter employee DateOfJoining: ";
     public static final String ERROR_404 = " Record Not found...!";
     public static final String ID = "Enter employee id ";
+    public static final String PHONE_NUMBER = "Enter employee phone number ";
     public static final String GREETINGS = "\n*** WELCOME TO EMPLOYEE MANAGEMENT SYSTEM ***\n";
 }

@@ -3,14 +3,15 @@ package com.ideas2it.employeeManagementSystem.view;
 import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
 import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
 import com.ideas2it.employeeManagementSystem.employeeUtil.EmployeeUtil;
-import com.ideas2it.employeeManagementSystem.model.Address;
-import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.model.AddressDTO;
+import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 /*
- * EmployeeView class which represents the getting all inputs from user
+ * This class which represents the getting all inputs from user
  * and give the result once the operation is completed
  *
  * @version	1.8.0_281
@@ -18,10 +19,10 @@ import java.util.Scanner;
  */
 public class EmployeeView {
 
-    int defaultEmployeeId = 100;
-    Scanner scanner = new Scanner(System.in);
-    EmployeeController employeeController = new EmployeeController();
-    EmployeeUtil employeeUtil = new EmployeeUtil();
+    private int defaultEmployeeId = 100;
+    private Scanner scanner = new Scanner(System.in);
+    private EmployeeController employeeController = new EmployeeController();
+    private EmployeeUtil employeeUtil = new EmployeeUtil();
 
     /**
      * Employee management system used to
@@ -75,7 +76,7 @@ public class EmployeeView {
      * @return address object
      */
 
-    private Address addAddress() {
+    private AddressDTO addAddress() {
         System.out.print(EmployeeConstants.HOUSE_NUMBER);
         int buildingNumber = employeeUtil.getEmployeeDetail();
         System.out.println(EmployeeConstants.STREET_NAME);
@@ -86,9 +87,9 @@ public class EmployeeView {
         String city = employeeUtil.receiveEmployeeDetail();
         System.out.println(EmployeeConstants.PINCODE);
         int pincode = employeeUtil.getEmployeeDetail();
-        Address address = new Address(buildingNumber, street,
+        AddressDTO addressDTO = new AddressDTO(buildingNumber, street,
                 area, city, pincode);
-        return address;
+        return addressDTO;
     }
 
     /**
@@ -101,15 +102,17 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.NAME);
         String name = employeeUtil.receiveEmployeeDetail();
         scanner.nextLine();
+        System.out.println(EmployeeConstants.PHONE_NUMBER);
+        long phoneNumber = employeeUtil.obtainEmployeeDetails();
         System.out.println(EmployeeConstants.SALARY);
         int salary = employeeUtil.getEmployeeDetail();
         System.out.println(EmployeeConstants.DATE_OF_JOINING);
         String dateOfJoining = employeeUtil.receiveEmployeeDetail();
-        Address address = addAddress();
-        Employee employee = new Employee(id, name, salary,
-                dateOfJoining, address);
+        AddressDTO addressDTO = addAddress();
+        EmployeeDTO employeeDTO = new EmployeeDTO(id, name, phoneNumber, salary,
+                dateOfJoining, addressDTO);
 
-        if(employeeController.createEmployeeDetails(employee)) {
+        if(employeeController.createEmployeeDetails(employeeDTO)) {
             System.out.println("Record successfully created by " + id);
         } else {
             System.out.println("create is failed !!!");
@@ -120,11 +123,11 @@ public class EmployeeView {
      * Getting the List of all employee details and display
      */
     public void displayEmployeeDetails() {
-        List<Employee> employeeList = employeeController.displayEmployeeDetails();
+        List<EmployeeDTO> employeesList = employeeController.readEmployeeDetails();
 
-        if (employeeList.size() != 0) {
-            for (Employee employee : employeeList) {
-                System.out.println(employee);
+        if (employeesList.size() != 0) {
+            for (EmployeeDTO employeeDTO : employeesList) {
+                System.out.println(employeeDTO);
             }
         } else {
             System.out.println(EmployeeConstants.ERROR_404);
@@ -137,7 +140,7 @@ public class EmployeeView {
     public void searchEmployeeDetails() {
         System.out.println(EmployeeConstants.NAME);
         String name = employeeUtil.receiveEmployeeDetail();
-        Employee findEmployee = employeeController.findEmployeeDetails(name);
+        EmployeeDTO findEmployee = employeeController.findEmployeeDetails(name);
 
         if (findEmployee!=null) {
             System.out.println(findEmployee);
@@ -168,14 +171,17 @@ public class EmployeeView {
         String id = employeeUtil.receiveEmployeeDetail();
         System.out.println(EmployeeConstants.NAME);
         String name = employeeUtil.receiveEmployeeDetail();
+        scanner.nextLine();
+        System.out.println(EmployeeConstants.PHONE_NUMBER);
+        long phoneNumber = employeeUtil.obtainEmployeeDetails();
         System.out.println(EmployeeConstants.SALARY);
         int salary = employeeUtil.getEmployeeDetail();
         System.out.println(EmployeeConstants.DATE_OF_JOINING);
         String dateOfJoining = employeeUtil.receiveEmployeeDetail();
-        Address address = addAddress();
-        Employee employee = new Employee(id, name, salary, dateOfJoining, address);
+        AddressDTO addressDTO = addAddress();
+        EmployeeDTO employeeDTO = new EmployeeDTO(id, name, phoneNumber, salary, dateOfJoining, addressDTO);
 
-        if (employeeController.updateEmployeeDetails(employee)) {
+        if (employeeController.updateEmployeeDetails(employeeDTO)) {
             System.out.println("Record updated successfully");
         } else {
             System.out.println("Record not update ");
