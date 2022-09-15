@@ -2,7 +2,10 @@ package com.ideas2it.employeeManagementSystem.service;
 
 import com.ideas2it.employeeManagementSystem.EmployeeDao.impl.EmployeeDao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+import com.ideas2it.employeeManagementSystem.mapper.EmployeeMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -13,18 +16,19 @@ import java.util.List;
  * @version	1.8.0_281
  * @author	Karthick
  */
-
 public class EmployeeService {
 
-    EmployeeDao employeeDao = new EmployeeDao();
+    private EmployeeDao employeeDao = new EmployeeDao();
+
     /**
      * Collect the employee from the controller and pass to the Dao
      *
-     * @param employee - Getting the employee object
+     * @param employeeDTO - Getting the employee object
      * @return to acknowledge the view class
      */
-    public boolean createEmployeeDetails(Employee employee) {
-        return employeeDao.insertEmployeeDetails(employee);
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
+        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
+        return employeeDao.createEmployeeDetails(employee);
     }
 
     /**
@@ -32,37 +36,61 @@ public class EmployeeService {
      *
      * @return list of all employees.
      */
-    public List displayEmployeeDetails() {
-        return employeeDao.showEmployeeDetails();
+    public List<EmployeeDTO> readEmployeeDetails() {
+        List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
+        List<Employee> employeeList = employeeDao.readEmployeeDetails();
+        for (int i = 0; i < employeeList.size(); i++) {
+            Employee employee = employeeList.get(i);
+            employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employee));
+        }
+        return employeeDTOList;
     }
 
     /**
-     * Collect the employee name from the controller and pass to the Dao
+     * Collect the employee name and pass to the DAO
      *
-     * @param employeeName - transfer the String value to EmployeeDao
+     * @param employeeDTO_Name - transfer the String value to EmployeeDao
      * @return the object to controller
      */
-    public Employee findEmployeeDetails(String employeeName) {
-        return employeeDao.findEmployeeDetails(employeeName);
+    public EmployeeDTO findEmployeeDetails(String employeeDTO_Name) {
+        List<EmployeeDTO> employeesList = readEmployeeDetails();
+        EmployeeDTO foundEmployeeDTO = null;
+        for (int i = 0; i < employeesList.size(); i++) {
+            EmployeeDTO searchEmployeeDTO = employeesList.get(i);
+            if (searchEmployeeDTO.getName().substring(0, 3)
+                    .equals(employeeDTO_Name.substring(0, 3))) {
+                foundEmployeeDTO = searchEmployeeDTO;
+            }
+        }
+        return foundEmployeeDTO;
     }
 
     /**
-     * Collect the employee name from the controller and pass to the EmployeeDao
+     * Collect the employee id and pass to the DAO
      *
-     * @param employeeId - transfer the String value to EmployeeDao
-     * @return to acknowledge the controller class
+     * @param employeeDTO_Id - collect the employee id value
+     * @return Give the acknowledgment.
      */
-    public boolean deleteEmployeeDetails(String employeeId) {
-        return employeeDao.deleteEmployeeDetails(employeeId);
+    public boolean deleteEmployeeDetails(String employeeDTO_Id) {
+        List<Employee> employeeList = employeeDao.readEmployeeDetails();
+        Employee employee = null;
+        for (int i = 0; i < employeeList.size(); i++) {
+            Employee searchEmployee = employeeList.get(i);
+            if (searchEmployee.getId().equals(employeeDTO_Id)) {
+                employee = searchEmployee;
+            }
+        }
+        return employeeDao.deleteEmployeeDetails(employee);
     }
 
     /**
-     * Collect the employee details from the controller and pass to the Dao
+     * Collect the employee details and pass to the DAO
      *
-     * @param employee - transfer the object to EmployeeDao
-     * @return to acknowledge the controller
+     * @param employeeDTO - transfer the object to EmployeeDao
+     * @return Give the acknowledgement
      */
-    public boolean updateEmployeeDetails(Employee employee) {
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
+        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
         return employeeDao.updateEmployeeDetails(employee);
     }
 }

@@ -20,45 +20,22 @@ public class EmployeeDao implements Dao {
     /**
      * {@inheritDoc}
      */
-    public boolean insertEmployeeDetails(Employee employee) {
+    public boolean createEmployeeDetails(Employee employee) {
         return employeeList.add(employee);
     }
 
     /**
      *{@inheritDoc}
      */
-    public List showEmployeeDetails() {
+    public List readEmployeeDetails() {
         return employeeList;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Employee findEmployeeDetails(String employeeName) {
-        Employee selectEmployee = null;
-        for (int i = 0; i < employeeList.size(); i++) {
-            Employee searchEmployeeNameSearch = employeeList.get(i);
-            if (searchEmployeeNameSearch.getName().substring(0, 3)
-                    .equals(employeeName.substring(0, 3))) {
-                selectEmployee = searchEmployeeNameSearch;
-            }
-        }
-        return selectEmployee;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean deleteEmployeeDetails(String employeeId) {
-        boolean isRemove = false;
-        for (int i = 0; i < employeeList.size(); i++) {
-            Employee searchEmployeeId = employeeList.get(i);
-            if (searchEmployeeId.getId().equals(employeeId)) {
-                employeeList.remove(i);
-                isRemove = true;
-            }
-        }
-        return isRemove;
+    public boolean deleteEmployeeDetails(Employee employee) {
+        return employeeList.remove(employee);
     }
 
     /**

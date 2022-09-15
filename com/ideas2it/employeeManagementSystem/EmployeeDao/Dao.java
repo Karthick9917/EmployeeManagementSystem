@@ -18,30 +18,22 @@ public interface Dao {
      * @param employee - get an employee object for create operation
      * @return to acknowledge the controller class
      */
-    boolean insertEmployeeDetails(Employee employee);
+    boolean createEmployeeDetails(Employee employee);
 
     /**
      * get the all employees from the list
      *
      * @return list of all the employees
      */
-    List showEmployeeDetails();
-
-    /**
-     * it will return the employee details based on employee name
-     *
-     * @param employeeName - receive a String value from the service
-     * @return employee details by employee name
-     */
-    Employee findEmployeeDetails(String employeeName);
+    List readEmployeeDetails();
 
     /**
      * it will delete the unique employee details based on the employee id.
      *
-     * @param employeeId - receive a String value from the service
+     * @param employee - receive a String value from the service
      * @return the acknowledgement once the operation is done
      */
-    boolean deleteEmployeeDetails(String employeeId);
+    boolean deleteEmployeeDetails(Employee employee);
 
     /**
      * update the employee details to array list
