@@ -1,12 +1,13 @@
 package com.ideas2it.employeeManagementSystem.controller;
 
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 
 import java.util.List;
 
 /*
- * Getting the all employee details from the database
+ * Getting the all employeeDTO
  * once the operation is done
  * returning the acknowledgement.
  *
@@ -18,49 +19,49 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
 
     /**
-     * Collect the employee details from the view class and pass to the service
+     * passing the employeeDTO and return the acknowledgement.
      *
-     * @param employeeDTO - Getting the employee object
-     * @return to acknowledge the view class
+     * @param employeeDTO - Getting the employeeDTO object
+     * @return the acknowledgement
      */
     public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
         return employeeService.createEmployeeDetails(employeeDTO);
     }
 
     /**
-     * Display employee details
+     * Asking all employeeDTO.
      *
-     * @return list of all employees.
+     * @return list of all employeesDTO.
      */
     public List readEmployeeDetails() {
          return employeeService.readEmployeeDetails();
     }
 
     /**
-     * Collect the employee name from the view class and pass to the service
+     * passing the value and return the acknowledgement.
      *
-     * @param employeeDTOName - transfer the String value to service class
-     * @return the object to view class
+     * @param employeeDTOName - transfer the String value.
+     * @return the Employee DTO object
      */
     public EmployeeDTO findEmployeeDetails(String employeeDTOName) {
         return employeeService.findEmployeeDetails(employeeDTOName);
     }
 
     /**
-     * Collect the employee name from the view class and pass to the service
+     * passing the value and return the acknowledgement.
      *
-     * @param employeeId - transfer the String value to service class
-     * @return to acknowledge the view class
+     * @param employeeId - transfer the String value.
+     * @return the acknowledgement
      */
     public boolean deleteEmployeeDetails(String employeeId) {
         return employeeService.deleteEmployeeDetails(employeeId);
     }
 
     /**
-     * Collect the employee details from the view class and pass to the service
+     * passing the employeeDTO and return the acknowledgement.
      *
-     * @param employeeDTO - transfer the object to service class
-     * @return to acknowledge the view class
+     * @param employeeDTO - Getting the employeeDTO object
+     * @return the acknowledgement
      */
     public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
         return employeeService.updateEmployeeDetails(employeeDTO);

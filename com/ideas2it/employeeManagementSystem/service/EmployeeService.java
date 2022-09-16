@@ -1,30 +1,28 @@
 package com.ideas2it.employeeManagementSystem.service;
 
-import com.ideas2it.employeeManagementSystem.EmployeeDao.impl.EmployeeDao;
-import com.ideas2it.employeeManagementSystem.model.Employee;
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+import com.ideas2it.employeeManagementSystem.dao.impl.EmployeeDao;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.mapper.EmployeeMapper;
+import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting employee details from the controller and
+ * Getting employeeDTO
  * once the operation is done.
  * it will return the acknowledgment
  *
  * @version	1.8.0_281
  * @author	Karthick
  */
-public class EmployeeService {
+public class EmployeeService implements EmployeeServiceImpl {
 
     private EmployeeDao employeeDao = new EmployeeDao();
 
     /**
-     * Collect the employee from the controller and pass to the Dao
-     *
-     * @param employeeDTO - Getting the employee object
-     * @return to acknowledge the view class
+     * {@inheritDoc}
      */
     public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
         Employee employee = EmployeeMapper.toEmployee(employeeDTO);
@@ -32,9 +30,7 @@ public class EmployeeService {
     }
 
     /**
-     * Display employee details
-     *
-     * @return list of all employees.
+     * {@inheritDoc}
      */
     public List<EmployeeDTO> readEmployeeDetails() {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
@@ -47,10 +43,7 @@ public class EmployeeService {
     }
 
     /**
-     * Collect the employee name and pass to the DAO
-     *
-     * @param employeeDTO_Name - transfer the String value to EmployeeDao
-     * @return the object to controller
+     * {@inheritDoc}
      */
     public EmployeeDTO findEmployeeDetails(String employeeDTO_Name) {
         List<EmployeeDTO> employeesList = readEmployeeDetails();
@@ -66,10 +59,7 @@ public class EmployeeService {
     }
 
     /**
-     * Collect the employee id and pass to the DAO
-     *
-     * @param employeeDTO_Id - collect the employee id value
-     * @return Give the acknowledgment.
+     * {@inheritDoc}
      */
     public boolean deleteEmployeeDetails(String employeeDTO_Id) {
         List<Employee> employeeList = employeeDao.readEmployeeDetails();
@@ -84,10 +74,7 @@ public class EmployeeService {
     }
 
     /**
-     * Collect the employee details and pass to the DAO
-     *
-     * @param employeeDTO - transfer the object to EmployeeDao
-     * @return Give the acknowledgement
+     * {@inheritDoc}
      */
     public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
         Employee employee = EmployeeMapper.toEmployee(employeeDTO);

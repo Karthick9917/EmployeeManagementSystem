@@ -3,7 +3,7 @@ package com.ideas2it.employeeManagementSystem.model;
 import static java.lang.String.format;
 
 /**
- * Employee class with the attributes employee id, name, salary, address
+ * This class with the attributes employee id, name, salary, address
  * initialize these attributes with the help of constructor
  *
  *@version    1.8.0_281

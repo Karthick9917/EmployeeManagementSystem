@@ -1,13 +1,13 @@
-package com.ideas2it.employeeManagementSystem.EmployeeDao.impl;
+package com.ideas2it.employeeManagementSystem.dao.impl;
 
-import com.ideas2it.employeeManagementSystem.EmployeeDao.Dao;
+import com.ideas2it.employeeManagementSystem.dao.Dao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting employee details from the service and
+ * Getting employee
  * once the operation is done.
  * it will return the acknowledgment
  *

@@ -1,9 +1,15 @@
-package com.ideas2it.employeeManagementSystem.model;
+package com.ideas2it.employeeManagementSystem.dto;
 
 import static java.lang.String.format;
 
+/**
+ * This class with the attributes employee id, name, salary, address
+ * initialize these attributes with the help of constructor
+ *
+ *@version    1.8.0_281
+ *@author     Karthick
+ */
 public class EmployeeDTO {
-
     private String id;
     private String name;
     private long phoneNumber;

@@ -1,11 +1,11 @@
-package com.ideas2it.employeeManagementSystem.EmployeeDao;
+package com.ideas2it.employeeManagementSystem.dao;
 
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import java.util.List;
 
 /**
  * This interface to declare the abstract method
- * to employee EmployeeDao.
+ * to EmployeeDao.
  *
  * @version 1.8.0_281
  * @author	Karthick

@@ -2,9 +2,9 @@ package com.ideas2it.employeeManagementSystem.view;
 
 import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
 import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
+import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.employeeUtil.EmployeeUtil;
-import com.ideas2it.employeeManagementSystem.model.AddressDTO;
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
 
 import java.util.InputMismatchException;
 import java.util.List;

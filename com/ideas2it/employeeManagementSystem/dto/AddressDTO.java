@@ -1,7 +1,7 @@
-package com.ideas2it.employeeManagementSystem.model;
+package com.ideas2it.employeeManagementSystem.dto;
 
 /**
- * AddressDTO class with the attributes house building number, street name,
+ * This class with the attributes house building number, street name,
  * area name, city name, pincode initialize these attributes
  * with the help of constructor
  *
@@ -17,7 +17,7 @@ public class AddressDTO {
     private int pincode;
 
     public AddressDTO(int buildingNumber, String street, String area,
-                   String city, int pincode) {
+                      String city, int pincode) {
         this.buildingNumber = buildingNumber;
         this.street = street;
         this.area = area;
@@ -73,3 +73,4 @@ public class AddressDTO {
                 " " + city + ", " + pincode;
     }
 }
+

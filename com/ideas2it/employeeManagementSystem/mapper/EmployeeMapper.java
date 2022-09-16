@@ -1,9 +1,10 @@
 package com.ideas2it.employeeManagementSystem.mapper;
 
+import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.model.Address;
-import com.ideas2it.employeeManagementSystem.model.AddressDTO;
 import com.ideas2it.employeeManagementSystem.model.Employee;
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+
 
 /*
  * This class convert DTO object to model object and model to DTO
