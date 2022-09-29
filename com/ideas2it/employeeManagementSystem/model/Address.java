@@ -9,30 +9,32 @@ package com.ideas2it.employeeManagementSystem.model;
  *@author     Karthick
  */
 public class Address {
-    private int buildingNumber;
+    private int doorNumber;
     private String street;
-    private String area;
     private String city;
+    private String state;
     private int pincode;
+    private String type;
 
-    public Address(int buildingNumber, String street, String area,
-                   String city, int pincode) {
-        this.buildingNumber = buildingNumber;
+    public Address(int buildingNumber, String street,
+                      String city, String state, int pincode, String type) {
+        this.doorNumber = buildingNumber;
         this.street = street;
-        this.area = area;
         this.city = city;
+        this.state = state;
         this.pincode = pincode;
+        this.type = type;
     }
 
     public Address() {
     }
 
-    public int getBuildingNumber() {
-        return buildingNumber;
+    public int getDoorNumber() {
+        return doorNumber;
     }
 
-    public void setBuildingNumber(int buildingNumber) {
-        this.buildingNumber = buildingNumber;
+    public void setDoorNumber(int doorNumber) {
+        this.doorNumber = doorNumber;
     }
 
     public String getStreet() {
@@ -42,21 +44,21 @@ public class Address {
     public void setStreet(String street) {
         this.street = street;
     }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getCity() {
         return city;
     }
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public int getPincode() {
@@ -67,9 +69,17 @@ public class Address {
         this.pincode = pincode;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String toString() {
-        return buildingNumber + ", "+ street + ", " + area + "," +
-                " " + city + ", " + pincode;
+        return doorNumber + ", "+ street + ", " + "," +
+                " " + city + ", " + state + ", " + pincode + "," + type;
     }
 }
 

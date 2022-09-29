@@ -4,6 +4,7 @@ package com.ideas2it.employeeManagementSystem.controller;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /*
@@ -24,7 +25,7 @@ public class EmployeeController {
      * @param employeeDTO - Getting the employeeDTO object
      * @return the acknowledgement
      */
-    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException {
         return employeeService.createEmployeeDetails(employeeDTO);
     }
 
@@ -33,7 +34,7 @@ public class EmployeeController {
      *
      * @return list of all employeesDTO.
      */
-    public List readEmployeeDetails() {
+    public List readEmployeeDetails() throws SQLException {
          return employeeService.readEmployeeDetails();
     }
 
@@ -43,7 +44,7 @@ public class EmployeeController {
      * @param employeeDTOName - transfer the String value.
      * @return the Employee DTO object
      */
-    public EmployeeDTO findEmployeeDetails(String employeeDTOName) {
+    public List<EmployeeDTO> findEmployeeDetails(String employeeDTOName) throws SQLException {
         return employeeService.findEmployeeDetails(employeeDTOName);
     }
 
@@ -53,7 +54,7 @@ public class EmployeeController {
      * @param employeeId - transfer the String value.
      * @return the acknowledgement
      */
-    public boolean deleteEmployeeDetails(String employeeId) {
+    public boolean deleteEmployeeDetails(int employeeId) throws SQLException {
         return employeeService.deleteEmployeeDetails(employeeId);
     }
 
@@ -63,7 +64,7 @@ public class EmployeeController {
      * @param employeeDTO - Getting the employeeDTO object
      * @return the acknowledgement
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException {
         return employeeService.updateEmployeeDetails(employeeDTO);
     }
 }

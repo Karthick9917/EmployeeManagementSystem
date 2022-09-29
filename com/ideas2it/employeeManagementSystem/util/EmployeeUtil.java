@@ -1,4 +1,4 @@
-package com.ideas2it.employeeManagementSystem.employeeUtil;
+package com.ideas2it.employeeManagementSystem.util;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

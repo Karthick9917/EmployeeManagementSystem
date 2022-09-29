@@ -1,11 +1,12 @@
 package com.ideas2it.employeeManagementSystem.service;
 
-import com.ideas2it.employeeManagementSystem.dao.impl.EmployeeDao;
+import com.ideas2it.employeeManagementSystem.dao.EmployeeDao;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.mapper.EmployeeMapper;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,20 +25,18 @@ public class EmployeeService implements EmployeeServiceImpl {
     /**
      * {@inheritDoc}
      */
-    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
-        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        return employeeDao.createEmployeeDetails(employee);
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException {
+        return employeeDao.createEmployeeDetails(EmployeeMapper.toEmployee(employeeDTO));
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> readEmployeeDetails() {
+    public List<EmployeeDTO> readEmployeeDetails() throws SQLException {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
         List<Employee> employeeList = employeeDao.readEmployeeDetails();
         for (int i = 0; i < employeeList.size(); i++) {
-            Employee employee = employeeList.get(i);
-            employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employee));
+            employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employeeList.get(i)));
         }
         return employeeDTOList;
     }
@@ -45,39 +44,40 @@ public class EmployeeService implements EmployeeServiceImpl {
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO findEmployeeDetails(String employeeDTO_Name) {
-        List<EmployeeDTO> employeesList = readEmployeeDetails();
-        EmployeeDTO foundEmployeeDTO = null;
-        for (int i = 0; i < employeesList.size(); i++) {
-            EmployeeDTO searchEmployeeDTO = employeesList.get(i);
-            if (searchEmployeeDTO.getName().substring(0, 3)
-                    .equals(employeeDTO_Name.substring(0, 3))) {
-                foundEmployeeDTO = searchEmployeeDTO;
-            }
-        }
-        return foundEmployeeDTO;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean deleteEmployeeDetails(String employeeDTO_Id) {
-        List<Employee> employeeList = employeeDao.readEmployeeDetails();
-        Employee employee = null;
+    public List<EmployeeDTO> findEmployeeDetails(String employeeDTO_Name) throws SQLException {
+        List<Employee> employeeList = employeeDao.searchEmployee();
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        List<EmployeeDTO> matchedList = new ArrayList<>();
         for (int i = 0; i < employeeList.size(); i++) {
-            Employee searchEmployee = employeeList.get(i);
-            if (searchEmployee.getId().equals(employeeDTO_Id)) {
-                employee = searchEmployee;
+            employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employeeList.get(i)));
+        }
+        for (int i = 0; i < employeeDTOList.size(); i++) {
+            if (employeeDTOList.get(i).getFirstName().substring(0, 3)
+                    .equals(employeeDTO_Name.substring(0, 3))) {
+                matchedList.add(employeeDTOList.get(i));
             }
         }
-        return employeeDao.deleteEmployeeDetails(employee);
+        return matchedList;
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
-        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        return employeeDao.updateEmployeeDetails(employee);
+    public boolean deleteEmployeeDetails(int employeeDTO_Id) throws SQLException {
+        List<Employee> employeeList = employeeDao.readEmployeeDetails();
+        int employeeId = 0;
+        for (int i = 0; i < employeeList.size(); i++) {
+            if(employeeList.get(i).getId() == employeeDTO_Id) {
+                employeeId = employeeDTO_Id;
+            }
+        }
+        return employeeDao.deleteEmployeeDetails(employeeId);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException {
+        return employeeDao.updateEmployeeDetails(EmployeeMapper.toEmployee(employeeDTO));
     }
 }

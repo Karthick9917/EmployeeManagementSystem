@@ -2,8 +2,8 @@ package com.ideas2it.employeeManagementSystem.service.impl;
 
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 
+import java.sql.SQLException;
 import java.util.List;
-
 
 /**
  * This interface to declare the abstract method
@@ -20,14 +20,14 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO - get an employeeDTO object for create operation
      * @return The acknowledgment
      */
-    boolean createEmployeeDetails(EmployeeDTO employeeDTO);
+    boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException;
 
     /**
      * get the all employeeDTO from the list
      *
      * @return list of all the employeeDTO
      */
-    List readEmployeeDetails();
+    List readEmployeeDetails() throws SQLException;
 
     /**
      * it will return the employeeDTO based on employee name
@@ -35,7 +35,7 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO_Name - receive a String value
      * @return employeeDTO by employeeDTO name
      */
-    EmployeeDTO findEmployeeDetails(String employeeDTO_Name);
+    List<EmployeeDTO> findEmployeeDetails(String employeeDTO_Name) throws SQLException;
 
     /**
      * it will delete the unique employeeDTO based on the employeeDTO id.
@@ -43,7 +43,8 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO_Id - receive a String value.
      * @return the acknowledgement once the operation is done
      */
-    boolean deleteEmployeeDetails(String employeeDTO_Id);
+
+    boolean deleteEmployeeDetails(int employeeDTO_Id) throws SQLException;
 
     /**
      * update the employeeDTO to array list
@@ -51,5 +52,5 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO - get an employeeDTO object for update operation
      * @return the acknowledgement once the operation is done.
      */
-    boolean updateEmployeeDetails(EmployeeDTO employeeDTO);
+    boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException;
 }
