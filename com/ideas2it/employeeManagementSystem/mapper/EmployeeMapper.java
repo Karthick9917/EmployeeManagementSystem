@@ -1,9 +1,13 @@
-package com.ideas2it.employeeManagementSystem.modelMapper;
+package com.ideas2it.employeeManagementSystem.mapper;
 
+import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.model.Address;
-import com.ideas2it.employeeManagementSystem.model.AddressDTO;
 import com.ideas2it.employeeManagementSystem.model.Employee;
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /*
  * This class convert DTO object to model object and model to DTO
@@ -11,7 +15,7 @@ import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
  * @version	1.8.0_281
  * @author	Karthick
  */
-public class ModelMapper {
+public class EmployeeMapper {
 
     /**
      * Convert employeeDTO object to employeeModel Object
@@ -21,12 +25,22 @@ public class ModelMapper {
      */
     public static Employee toEmployee(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
+        List<Address> address = new ArrayList<Address>();
         employee.setId(employeeDTO.getId());
-        employee.setName(employeeDTO.getName());
-        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
+        employee.setFirstName(employeeDTO.getFirstName());
+        employee.setLastName(employeeDTO.getLastName());
+        employee.setDateOfBirth(employeeDTO.getDateOfBirth());
         employee.setSalary(employeeDTO.getSalary());
+        employee.setGender(employeeDTO.getGender());
+        employee.setEmail(employeeDTO.getEmail());
+        employee.setPhoneNumber(employeeDTO.getPhoneNumber());
         employee.setDateOfJoining(employeeDTO.getDateOfJoining());
-        employee.setAddress(toAddress(employeeDTO.getAddressDTO()));
+        if(null != employeeDTO.getAddressDTO()) {
+            for(AddressDTO addressDTO: employeeDTO.getAddressDTO()){
+                address.add(toAddress(addressDTO));
+            }
+            employee.setAddress(address);
+        }
         return employee;
     }
 
@@ -38,11 +52,12 @@ public class ModelMapper {
      */
     public static Address toAddress(AddressDTO addressDTO) {
         Address address = new Address();
-        address.setBuildingNumber(addressDTO.getBuildingNumber());
+        address.setDoorNumber(addressDTO.getDoorNumber());
         address.setStreet(addressDTO.getStreet());
-        address.setArea(addressDTO.getArea());
         address.setCity(addressDTO.getCity());
+        address.setState(addressDTO.getState());
         address.setPincode(addressDTO.getPincode());
+        address.setType(addressDTO.getType());
         return address;
     }
 
@@ -54,12 +69,22 @@ public class ModelMapper {
      */
     public static EmployeeDTO toEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
+        List<AddressDTO> addressDTO = new ArrayList<AddressDTO>();
         employeeDTO.setId(employee.getId());
-        employeeDTO.setName(employee.getName());
-        employeeDTO.setPhoneNumber(employee.getPhoneNumber());
+        employeeDTO.setFirstName(employee.getFirstName());
+        employeeDTO.setLastName(employee.getLastName());
+        employeeDTO.setDateOfBirth(employee.getDateOfBirth());
         employeeDTO.setSalary(employee.getSalary());
+        employeeDTO.setGender(employee.getGender());
+        employeeDTO.setEmail(employee.getEmail());
+        employeeDTO.setPhoneNumber(employee.getPhoneNumber());
         employeeDTO.setDateOfJoining(employee.getDateOfJoining());
-        employeeDTO.setAddressDTO(toAddressDTO(employee.getAddress()));
+        if(null != employee.getAddress()) {
+            for(Address address: employee.getAddress()){
+                addressDTO.add(toAddressDTO(address));
+            }
+            employeeDTO.setAddressDTO(addressDTO);
+        }
         return employeeDTO;
     }
 
@@ -71,11 +96,12 @@ public class ModelMapper {
      */
     public static AddressDTO toAddressDTO(Address address) {
         AddressDTO addressDTO = new AddressDTO();
-        addressDTO.setBuildingNumber(address.getBuildingNumber());
+        addressDTO.setDoorNumber(address.getDoorNumber());
         addressDTO.setStreet(address.getStreet());
-        addressDTO.setArea(address.getArea());
         addressDTO.setCity(address.getCity());
+        addressDTO.setState(address.getState());
         addressDTO.setPincode(address.getPincode());
+        addressDTO.setType(address.getType());
         return addressDTO;
     }
 }

@@ -1,96 +1,108 @@
 package com.ideas2it.employeeManagementSystem.service;
 
-import com.ideas2it.employeeManagementSystem.EmployeeDao.impl.EmployeeDao;
+import com.ideas2it.employeeManagementSystem.Exception.EmsException;
+import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
+import com.ideas2it.employeeManagementSystem.dao.EmployeeDao;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
+import com.ideas2it.employeeManagementSystem.mapper.EmployeeMapper;
 import com.ideas2it.employeeManagementSystem.model.Employee;
-import com.ideas2it.employeeManagementSystem.model.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.modelMapper.ModelMapper;
+import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
+import com.ideas2it.employeeManagementSystem.util.EmployeeUtil;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting employee details from the controller and
+ * Getting employeeDTO
  * once the operation is done.
  * it will return the acknowledgment
  *
  * @version	1.8.0_281
  * @author	Karthick
  */
-public class EmployeeService {
+public class EmployeeService implements EmployeeServiceImpl {
 
     private EmployeeDao employeeDao = new EmployeeDao();
 
     /**
-     * Collect the employee from the controller and pass to the Dao
-     *
-     * @param employeeDTO - Getting the employee object
-     * @return to acknowledge the view class
+     * {@inheritDoc}
      */
-    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) {
-        Employee employee = ModelMapper.toEmployee(employeeDTO);
-        return employeeDao.createEmployeeDetails(employee);
+    public boolean userInputValidation(String pattern, String userInput) {
+        return EmployeeUtil.isInputValid(pattern, userInput);
     }
 
     /**
-     * Display employee details
-     *
-     * @return list of all employees.
+     * {@inheritDoc}
      */
-    public List<EmployeeDTO> readEmployeeDetails() {
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO)
+            throws SQLException, EmsException {
+        return employeeDao.createEmployeeDetails(EmployeeMapper.
+                toEmployee(employeeDTO));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<EmployeeDTO> readEmployeeDetails() throws SQLException,
+            EmsException {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
         List<Employee> employeeList = employeeDao.readEmployeeDetails();
         for (int i = 0; i < employeeList.size(); i++) {
-            Employee employee = employeeList.get(i);
-            employeeDTOList.add(ModelMapper.toEmployeeDTO(employee));
+            employeeDTOList.add(EmployeeMapper.
+                    toEmployeeDTO(employeeList.get(i)));
         }
         return employeeDTOList;
     }
 
     /**
-     * Collect the employee name and pass to the DAO
-     *
-     * @param employeeDTO_Name - transfer the String value to EmployeeDao
-     * @return the object to controller
+     * {@inheritDoc}
      */
-    public EmployeeDTO findEmployeeDetails(String employeeDTO_Name) {
-        List<EmployeeDTO> employeesList = readEmployeeDetails();
-        EmployeeDTO foundEmployeeDTO = null;
-        for (int i = 0; i < employeesList.size(); i++) {
-            EmployeeDTO searchEmployeeDTO = employeesList.get(i);
-            if (searchEmployeeDTO.getName().substring(0, 3)
+    public List<EmployeeDTO> findEmployeeDetails(String employeeDTO_Name)
+            throws SQLException, EmsException {
+        List<Employee> employeeList = employeeDao.searchEmployee();
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        List<Employee> matchedList = new ArrayList<>();
+        for (Employee employee : employeeList) {
+            if (employee.getFirstName().substring(0, 3)
                     .equals(employeeDTO_Name.substring(0, 3))) {
-                foundEmployeeDTO = searchEmployeeDTO;
+                matchedList.add(employee);
             }
         }
-        return foundEmployeeDTO;
+        for (Employee employee : matchedList) {
+            employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employee));
+        }
+        if (employeeDTOList.isEmpty()){
+            throw new EmsException(EmployeeConstants.NOT_MATCHED_MESSAGE);
+        }
+        return employeeDTOList;
     }
 
     /**
-     * Collect the employee id and pass to the DAO
-     *
-     * @param employeeDTO_Id - collect the employee id value
-     * @return Give the acknowledgment.
+     * {@inheritDoc}
      */
-    public boolean deleteEmployeeDetails(String employeeDTO_Id) {
+    public boolean deleteEmployeeDetails(int employeeDTO_Id)
+            throws SQLException, EmsException {
         List<Employee> employeeList = employeeDao.readEmployeeDetails();
-        Employee employee = null;
+        int employeeId = 0;
         for (int i = 0; i < employeeList.size(); i++) {
-            Employee searchEmployee = employeeList.get(i);
-            if (searchEmployee.getId().equals(employeeDTO_Id)) {
-                employee = searchEmployee;
+            if(employeeList.get(i).getId() == employeeDTO_Id) {
+                employeeId = employeeList.get(i).getId();
             }
         }
-        return employeeDao.deleteEmployeeDetails(employee);
+        boolean isEmployeeDeleted = employeeDao.deleteEmployeeDetails(employeeId);
+        if (!isEmployeeDeleted) {
+            throw new EmsException(EmployeeConstants.ERROR_404);
+        }
+        return isEmployeeDeleted;
     }
 
     /**
-     * Collect the employee details and pass to the DAO
-     *
-     * @param employeeDTO - transfer the object to EmployeeDao
-     * @return Give the acknowledgement
+     * {@inheritDoc}
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) {
-        Employee employee = ModelMapper.toEmployee(employeeDTO);
-        return employeeDao.updateEmployeeDetails(employee);
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO)
+            throws SQLException, EmsException {
+        return employeeDao.updateEmployeeDetails(EmployeeMapper.
+                toEmployee(employeeDTO));
     }
 }

@@ -1,14 +1,14 @@
-package com.ideas2it.employeeManagementSystem.model;
+package com.ideas2it.employeeManagementSystem.dto;
 
 /**
- * Address class with the attributes house building number, street name,
- * area name, city name, pincode initialize these attributes
+ * This class with the attributes door number, street,
+ * city, state, pincode initialize these attributes
  * with the help of constructor
  *
  *@version    1.8.0_281
  *@author     Karthick
  */
-public class Address {
+public class AddressDTO {
     private int doorNumber;
     private String street;
     private String city;
@@ -16,8 +16,8 @@ public class Address {
     private int pincode;
     private String type;
 
-    public Address(int buildingNumber, String street,
-                      String city, String state, int pincode, String type) {
+    public AddressDTO(int buildingNumber, String street,
+                   String city, String state, int pincode, String type) {
         this.doorNumber = buildingNumber;
         this.street = street;
         this.city = city;
@@ -26,7 +26,7 @@ public class Address {
         this.type = type;
     }
 
-    public Address() {
+    public AddressDTO() {
     }
 
     public int getDoorNumber() {
@@ -51,7 +51,6 @@ public class Address {
     public void setCity(String city) {
         this.city = city;
     }
-
 
     public String getState() {
         return state;
@@ -78,8 +77,8 @@ public class Address {
     }
 
     public String toString() {
-        return doorNumber + ", "+ street + ", " + "," +
-                " " + city + ", " + state + ", " + pincode + "," + type;
+        return doorNumber + " "+ street + " "+ city + " "
+                + state + " " + pincode + " - " + type + " address" + "\n" +
+                "                        ";
     }
 }
-
