@@ -6,7 +6,7 @@ package com.ideas2it.employeeManagementSystem.Exception;
  *  *@version    1.8.0_281
  *  *@author     Karthick
  */
-public class EmsException extends Exception {
+public class EmsException extends RuntimeException {
 
     /**
      * This method shows message of exception thrown.

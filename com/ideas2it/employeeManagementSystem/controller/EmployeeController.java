@@ -3,9 +3,10 @@ package com.ideas2it.employeeManagementSystem.controller;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
+import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 /*
@@ -21,14 +22,58 @@ public class EmployeeController {
     private EmployeeService employeeService = new EmployeeService();
 
     /**
-     * Passing the pattern and user input and return the true or
+     * Passing the pattern and user input, and it returns the true or
      * false once the input is valid.
+     *
      * @param pattern - for check the input.
-     * @param userInput - for check the giving input is matches or not for check the input.
+     * @param userInput - for check the input is matches or not
      * @return true for false once the input is valid.
      */
     public boolean userInputValidation(String pattern, String userInput) {
        return employeeService.userInputValidation(pattern,userInput);
+    }
+
+    /**
+     * Passing the date, and it returns the true or false
+     * once the date is valid.
+     *
+     * @param date - for check the date is valid or not
+     * @return true for false once the input is valid.
+     */
+    public boolean getDate(String date) {
+        return employeeService.getDate(date);
+    }
+
+    /**
+     * Passing the date of birth and date of joining, and it returns the true or false
+     * based on the given date is valid or not
+     * @param dateOfJoining - passing the date of joining for validate
+     *                        the date of birth.
+     * @param dateOfBirth - passing the date of birth input to be validated.
+     * @return true for false once the input is valid.
+     */
+    public boolean getDateOfBirth(LocalDate dateOfJoining, LocalDate dateOfBirth) {
+        return employeeService.getDateOfBirth(dateOfJoining, dateOfBirth);
+    }
+
+    /**
+     * Passing the string and its return the true or false
+     * based on the given String is valid or not
+     * @param email - passing the given String for valid.
+     * @return true for false once the input is valid.
+     */
+    public boolean validateEmail(String email) {
+        return employeeService.validateEmail(email);
+    }
+
+    /**
+     * Passing the string and its return the true or false
+     * based on the given String is valid or not
+     * @param phoneNumber    - passing the given String for valid.
+     * @return true for false once the input is valid.
+     */
+    public boolean validatePhoneNumber(String phoneNumber) {
+        return employeeService.validatePhoneNumber(phoneNumber);
     }
 
     /**
@@ -37,7 +82,7 @@ public class EmployeeController {
      * @param employeeDTO - get an employeeDTO object for create operation
      * @return the acknowledgement
      */
-    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException, EmsException {
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException {
         return employeeService.createEmployeeDetails(employeeDTO);
     }
 
@@ -46,18 +91,18 @@ public class EmployeeController {
      *
      * @return list of all employeesDTO.
      */
-    public List readEmployeeDetails() throws SQLException, EmsException {
+    public List readEmployeeDetails() throws EmsException {
          return employeeService.readEmployeeDetails();
     }
 
     /**
      * passing the value and return the acknowledgement.
      *
-     * @param employeeDTOName - transfer the String value.
+     * @param employeeName - transfer the String value.
      * @return the Employee DTO object
      */
-    public List<EmployeeDTO> findEmployeeDetails(String employeeDTOName) throws SQLException, EmsException {
-        return employeeService.findEmployeeDetails(employeeDTOName);
+    public List<Employee> findEmployeeDetails(String employeeName) throws EmsException {
+        return employeeService.findEmployeeDetails(employeeName);
     }
 
     /**
@@ -66,7 +111,7 @@ public class EmployeeController {
      * @param employeeId - transfer the String value.
      * @return the acknowledgement
      */
-    public boolean deleteEmployeeDetails(int employeeId) throws SQLException, EmsException {
+    public boolean deleteEmployeeDetails(int employeeId) throws EmsException {
         return employeeService.deleteEmployeeDetails(employeeId);
     }
 
@@ -76,7 +121,7 @@ public class EmployeeController {
      * @param employeeDTO - Getting the employeeDTO object
      * @return the acknowledgement
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws SQLException, EmsException {
-        return employeeService.updateEmployeeDetails(employeeDTO);
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId) throws EmsException {
+        return employeeService.updateEmployeeDetails(employeeDTO,employeeId);
     }
 }

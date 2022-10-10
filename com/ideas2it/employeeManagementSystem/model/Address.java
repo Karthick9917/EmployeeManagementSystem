@@ -9,14 +9,14 @@ package com.ideas2it.employeeManagementSystem.model;
  *@author     Karthick
  */
 public class Address {
-    private int doorNumber;
+    private String doorNumber;
     private String street;
     private String city;
     private String state;
     private int pincode;
     private String type;
 
-    public Address(int buildingNumber, String street,
+    public Address(String buildingNumber, String street,
                       String city, String state, int pincode, String type) {
         this.doorNumber = buildingNumber;
         this.street = street;
@@ -29,11 +29,11 @@ public class Address {
     public Address() {
     }
 
-    public int getDoorNumber() {
+    public String getDoorNumber() {
         return doorNumber;
     }
 
-    public void setDoorNumber(int doorNumber) {
+    public void setDoorNumber(String doorNumber) {
         this.doorNumber = doorNumber;
     }
 
@@ -78,8 +78,9 @@ public class Address {
     }
 
     public String toString() {
-        return doorNumber + ", "+ street + ", " + "," +
-                " " + city + ", " + state + ", " + pincode + "," + type;
+        return doorNumber + " "+ street + " "+ city + " "
+                + state + " " + pincode + " - " + type + " address" + "\n" +
+                "                        ";
     }
 }
 

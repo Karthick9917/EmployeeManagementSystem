@@ -26,11 +26,10 @@ public class EmployeeDTO {
     private LocalDate dateOfJoining;
     private List<AddressDTO> addressDTO;
 
-    public EmployeeDTO(int id, String firstName, String lastName,
+    public EmployeeDTO(String firstName, String lastName,
                        LocalDate dateOfBirth, double salary, String gender,
                        String email, long phoneNumber, LocalDate dateOfJoining,
                        List<AddressDTO> addressDTO) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;

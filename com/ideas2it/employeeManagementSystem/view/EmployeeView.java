@@ -5,12 +5,9 @@ import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
 import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
 import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.util.EmployeeUtil;
+import com.ideas2it.employeeManagementSystem.model.Employee;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -25,10 +22,8 @@ import java.util.Scanner;
  */
 public class EmployeeView {
 
-    private int defaultEmployeeId = 100;
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
-    private EmployeeUtil employeeUtil = new EmployeeUtil();
 
     /**
      * Employee management system used to
@@ -74,8 +69,6 @@ public class EmployeeView {
             } catch (InputMismatchException inputMismatchException) {
                 inputMismatchException.printStackTrace();
                 System.out.println(EmployeeConstants.INPUT_MISMATCH_EXCEPTION);
-            } catch (SQLException sqlException) {
-                sqlException.printStackTrace();
             }
         } while (option != 6);
     }
@@ -87,8 +80,8 @@ public class EmployeeView {
      */
     private AddressDTO addAddress() {
         System.out.print(EmployeeConstants.HOUSE_NUMBER);
-        int buildingNumber = Integer.parseInt(getUserInput(EmployeeConstants.
-                DOOR_NUMBER_PATTERN,"door number..!!"));
+        String buildingNumber = getUserInput(EmployeeConstants.
+                DOOR_NUMBER_PATTERN,"door number..!!");
         System.out.println(EmployeeConstants.STREET);
         String street = getUserInput(EmployeeConstants.
                 STREET_PATTERN, "street name" +
@@ -134,7 +127,7 @@ public class EmployeeView {
      * Getting the input from the user and check the input is valid or not.
      * @param pattern - Regex matcher pattern
      * @param errorMessage - if the input is not valid this error
-     *                     message is display to the user.
+     *                       message is display to the user.
      * @return the user input whether is it valid.
      */
     public String getUserInput(String pattern, String errorMessage) {
@@ -144,12 +137,70 @@ public class EmployeeView {
             scanner = new Scanner(System.in);
             userInput = scanner.nextLine();
             if(!employeeController.userInputValidation(pattern, userInput)) {
-                System.out.println(EmployeeConstants.ASKING_VALID_INPUT + errorMessage);
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
             } else {
                 isValid = true;
             }
         } while (!isValid);
         return userInput;
+    }
+
+    /**
+     * Getting the input from the user and passing for the input is valid or not.
+     * @param pattern - for check the given input is matches or not.
+     * @param errorMessage - for Displaying the message
+     *                       once the given input is invalid.
+     * @return the string value once the given input is valid.
+     */
+    public String getEmail(String pattern, String errorMessage) {
+        boolean isValid = false;
+        String email;
+        do {
+            scanner = new Scanner(System.in);
+            email = scanner.nextLine();
+            if (employeeController.validateEmail(email)) {
+                System.out.println("Given Email " +
+                        "is already exist..!!");
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else if (!employeeController.userInputValidation
+                    (pattern, email)) {
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else {
+                isValid = true;
+            }
+        } while (!isValid);
+        return email;
+    }
+
+    /**
+     * Getting the input from the user and passing for the input is valid or not.
+     * @param pattern - for check the given input is matches or not.
+     * @param errorMessage - for Displaying the message
+     *                       once the given input is invalid.
+     * @return the string value once the given input is valid.
+     */
+    public String getPhoneNumber(String pattern, String errorMessage) {
+        boolean isValid = false;
+        String phoneNumber;
+        do{
+            scanner = new Scanner(System.in);
+            phoneNumber = scanner.nextLine();
+            if (employeeController.validatePhoneNumber(phoneNumber)) {
+                System.out.println("Given phone number " +
+                        "is already exist..!!");
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else if(!employeeController.userInputValidation(pattern, phoneNumber)) {
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else {
+                isValid = true;
+            }
+        } while (!isValid);
+        return phoneNumber;
     }
 
     /**
@@ -160,30 +211,51 @@ public class EmployeeView {
      */
     public LocalDate getDate() {
         boolean isValid = false;
-        String getDate;
-        LocalDate parsedDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern
-                (EmployeeConstants.DATE_FORMAT);
+        String date = null;
         do {
             try {
                 scanner = new Scanner(System.in);
-                getDate = scanner.next();
-                parsedDate = LocalDate.parse(getDate, formatter);
-                isValid=true;
-            } catch (DateTimeParseException dateTimeParseException) {
-                System.out.println(EmployeeConstants.ASKING_VALID_INPUT + "date(YYYY-MM-DD)");
+                date = scanner.next();
+                if(employeeController.getDate(date)){
+                    System.out.println(EmployeeConstants.
+                            ASKING_VALID_INPUT + "date(YYYY-MM-DD)");
+                } else {
+                    isValid = true;
+                }
+            } catch (EmsException emsException) {
+                System.out.println(emsException.getMessage());
             }
         } while (!isValid);
-        return parsedDate;
+        return LocalDate.parse(date);
+    }
+
+    /**
+     * Getting the joining date from user and check the employee is eligible
+     * or not eligible to work
+     * @param dateOfJoining - for the employee is eligible or not
+     * @return the parsed date after the date is valid.
+     */
+    public LocalDate getDateOfBirth(LocalDate dateOfJoining) {
+        boolean isValid = false;
+        LocalDate dateOfBirth;
+        do {
+            dateOfBirth = getDate();
+            if (employeeController.getDateOfBirth(dateOfJoining, dateOfBirth)) {
+                System.out.println("Not an eligible employee please " +
+                        "enter the correct date of birth...!!");
+            } else {
+                isValid = true;
+            }
+        } while (!isValid);
+        return dateOfBirth;
     }
 
     /**
      * Getting an employee details from user and transfer for creation
      * Employee id will automatically generate.
      */
-    public void createEmployeeDetails() throws SQLException {
+    public void createEmployeeDetails() {
         List<AddressDTO> listAddressDTO = new ArrayList<>();
-        int id = defaultEmployeeId++;
         System.out.println(EmployeeConstants.FIRST_NAME);
         String firstName = getUserInput(EmployeeConstants.NAME_PATTERN,
                 "first name (eg:karthick)");
@@ -193,8 +265,10 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.SALARY);
         Double salary = Double.parseDouble(getUserInput(EmployeeConstants.
                 SALARY_PATTERN, "salary (eg: 34000.45)"));
+        System.out.println(EmployeeConstants.DATE_OF_JOINING);
+        LocalDate dateOfJoining = getDate();
         System.out.println(EmployeeConstants.DOB);
-        LocalDate dateOfBirth =getDate();
+        LocalDate dateOfBirth = getDateOfBirth(dateOfJoining);
         System.out.println(EmployeeConstants.GENDER);
         String gender = "";
         int choose = 0;
@@ -223,13 +297,11 @@ public class EmployeeView {
             }
         } while (!(choose > 0 && choose < 4 ));
         System.out.println(EmployeeConstants.EMAIL);
-        String email = getUserInput(EmployeeConstants.EMAIL_PATTERN, "email" +
+        String email = getEmail(EmployeeConstants.EMAIL_PATTERN, "email" +
                 " eg: karthick17@gmail.com");
         System.out.println(EmployeeConstants.PHONE_NUMBER);
-        long phoneNumber = Long.parseLong(getUserInput(EmployeeConstants.
+        long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
-        System.out.println(EmployeeConstants.DATE_OF_JOINING);
-        LocalDate dateOfJoining = getDate();
         System.out.println(EmployeeConstants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
@@ -240,12 +312,16 @@ public class EmployeeView {
             AddressDTO tempAddressDTO = addAddress();
             listAddressDTO.add(tempAddressDTO);
         }
-        EmployeeDTO employeeDTO = new EmployeeDTO(id, firstName, lastName,
+        EmployeeDTO employeeDTO = new EmployeeDTO(firstName, lastName,
                 dateOfBirth, salary, gender, email, phoneNumber,
                 dateOfJoining, listAddressDTO);
         try {
-            employeeController.createEmployeeDetails(employeeDTO);
-            System.out.println(EmployeeConstants.SUCCESSFULL_MESSAGE + "created ");
+            if (employeeController.createEmployeeDetails(employeeDTO)) {
+                System.out.println(EmployeeConstants.
+                        SUCCESSFULL_MESSAGE + "created ");
+            } else {
+                System.out.println(EmployeeConstants.NOT_ADDED_MESSAGE);
+            }
         } catch (EmsException emsException) {
             System.out.println(emsException.getMessage());
         }
@@ -254,12 +330,16 @@ public class EmployeeView {
     /**
      * Getting the List of all employee details and display
      */
-    public void displayEmployeeDetails() throws SQLException {
+    public void displayEmployeeDetails() {
         try {
             List<EmployeeDTO> employeesList = employeeController.
                     readEmployeeDetails();
-            for (EmployeeDTO employeeDTO : employeesList) {
-                System.out.println(employeeDTO);
+            if (employeesList.isEmpty()) {
+                System.out.println(EmployeeConstants.RECORD_EMPTY_MESSAGE);
+            } else {
+                for (EmployeeDTO employeeDTO : employeesList) {
+                    System.out.println(employeeDTO);
+                }
             }
         } catch (EmsException emsException) {
             System.out.println(emsException.getMessage());
@@ -269,17 +349,15 @@ public class EmployeeView {
     /**
      * display the employee details based on the employee name
      */
-    public void searchEmployeeDetails() throws SQLException {
+    public void searchEmployeeDetails() {
         System.out.println(EmployeeConstants.FIRST_NAME);
-        String name = getUserInput(EmployeeConstants.NAME_PATTERN, "name eg: karthick");
+        String name = getUserInput(EmployeeConstants.
+                NAME_PATTERN, "name eg: karthick");
         try {
-            List<EmployeeDTO> searchEmployee = employeeController.
+            List<Employee> searchEmployee = employeeController.
                     findEmployeeDetails(name);
-            for (EmployeeDTO employeeDTO : searchEmployee) {
-                System.out.println(employeeDTO);
-                for (AddressDTO addressDTO : employeeDTO.getAddressDTO()) {
-                    System.out.println(addressDTO);
-                }
+            for (Employee employee : searchEmployee) {
+                System.out.println(employee);
             }
         } catch (EmsException emsException) {
             System.out.println(emsException.getMessage());
@@ -289,13 +367,17 @@ public class EmployeeView {
     /**
      * Delete the employee details based on the employee id.
      */
-    public void deleteEmployeeDetails() throws SQLException {
+    public void deleteEmployeeDetails() {
         System.out.println(EmployeeConstants.ID + "to delete");
         int id = Integer.parseInt(getUserInput(EmployeeConstants.
                 EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
         try {
-            employeeController.deleteEmployeeDetails(id);
-            System.out.println( EmployeeConstants.SUCCESSFULL_MESSAGE + "deleted");
+            if (!employeeController.deleteEmployeeDetails(id)) {
+                System.out.println(EmployeeConstants.ERROR_404);
+            } else {
+                System.out.println(EmployeeConstants.
+                        SUCCESSFULL_MESSAGE + "deleted");
+            }
         } catch (EmsException e) {
             System.out.println(e.getMessage());
         }
@@ -304,7 +386,8 @@ public class EmployeeView {
     /**
      * Update the employee Details based on the employee id.
      */
-    public void updateEmployeeDetails() throws SQLException {
+    public void updateEmployeeDetails() {
+        EmployeeDTO employeeDTO = null;
         List<AddressDTO> listAddressDTO = new ArrayList<>();
         System.out.println(EmployeeConstants.ID + "to update ");
         int id = Integer.parseInt(getUserInput(EmployeeConstants.
@@ -315,8 +398,10 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.LAST_NAME);
         String lastName = getUserInput(EmployeeConstants.
                 LAST_NAME_PATTERN, "last name (eg:b or baskar)");
+        System.out.println(EmployeeConstants.DATE_OF_JOINING);
+        LocalDate dateOfJoining = getDate();
         System.out.println(EmployeeConstants.DOB);
-        LocalDate dateOfBirth = getDate();
+        LocalDate dateOfBirth = getDateOfBirth(dateOfJoining);
         System.out.println(EmployeeConstants.SALARY);
         double salary = Double.parseDouble(getUserInput(EmployeeConstants.
                 SALARY_PATTERN, "salary (eg: 34000.45)"));
@@ -348,13 +433,11 @@ public class EmployeeView {
             }
         } while (!(choose > 0 && choose < 4 ));
         System.out.println(EmployeeConstants.EMAIL);
-        String email = getUserInput(EmployeeConstants.EMAIL_PATTERN, "email" +
+        String email = getEmail(EmployeeConstants.EMAIL_PATTERN, "email" +
                 " eg: karthick17@gmail.com");
         System.out.println(EmployeeConstants.PHONE_NUMBER);
-        long phoneNumber = Long.parseLong(getUserInput(EmployeeConstants.
+        long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
-        System.out.println(EmployeeConstants.DATE_OF_JOINING);
-        LocalDate dateOfJoining = getDate();
         System.out.println(EmployeeConstants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
@@ -365,12 +448,16 @@ public class EmployeeView {
             addressDTO = addAddress();
             listAddressDTO.add(addressDTO);
         }
-        EmployeeDTO employeeDTO = new EmployeeDTO(id, firstName, lastName,
+        employeeDTO = new EmployeeDTO(firstName, lastName,
                 dateOfBirth, salary, gender, email, phoneNumber,
                 dateOfJoining, listAddressDTO);
         try {
-            employeeController.updateEmployeeDetails(employeeDTO);
-            System.out.println( EmployeeConstants.SUCCESSFULL_MESSAGE + "updated");
+            if (!employeeController.updateEmployeeDetails(employeeDTO, id)) {
+                System.out.println(EmployeeConstants.
+                        SUCCESSFULL_MESSAGE + "updated");
+            } else {
+                System.out.println(EmployeeConstants.NOT_UPDATED_MESSAGE);
+            }
         } catch (EmsException emsException) {
             System.out.println(emsException.getMessage());
         }

@@ -3,7 +3,6 @@ package com.ideas2it.employeeManagementSystem.dao.impl;
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -20,40 +19,40 @@ public interface Dao {
      *
      * @param employee - get an employee object for create operation
      * @return to acknowledge the controller class
-     * @throws SQLException
+     * @throws EmsException
      */
-    boolean createEmployeeDetails(Employee employee)throws SQLException, EmsException;
+    boolean createEmployeeDetails(Employee employee)throws EmsException;
 
     /**
      * get the all employees from the database
      *
      * @return list of all the employees
-     * @throws SQLException
+     * @throws EmsException
      *
      */
-    List readEmployeeDetails() throws SQLException, EmsException;
+    List readEmployeeDetails() throws EmsException;
 
     /**
      * get all the employees from the database
      *
-     * @throws SQLException
+     * @throws EmsException
      */
-    List searchEmployee() throws SQLException, EmsException;
+    List searchEmployee(String firstName) throws EmsException;
     /**
      * it will delete the unique employee details based on the employee id.
      *
      * @param employee - receive a String value from the service
      * @return the acknowledgement once the operation is done
-     * @throws SQLException
+     * @throws EmsException
      */
-    boolean deleteEmployeeDetails(int employee) throws SQLException, EmsException;
+    boolean deleteEmployeeDetails(int employee) throws EmsException;
 
     /**
      * update the employee details to array list
      *
      * @param employee - get an employee object for update operation
      * @return the acknowledgement once the operation is done.
-     * @throws SQLException
+     * @throws EmsException
      */
-    boolean updateEmployeeDetails(Employee employee) throws SQLException, EmsException;
+    boolean updateEmployeeDetails(Employee employee, int employeeId) throws EmsException;
 }

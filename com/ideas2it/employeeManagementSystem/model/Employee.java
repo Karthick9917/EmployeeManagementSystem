@@ -25,11 +25,10 @@ public class Employee {
     private LocalDate dateOfJoining;
     private List<Address> address;
 
-    public Employee(int id, String firstName, String lastName,
+    public Employee(String firstName, String lastName,
                     LocalDate dateOfBirth, double salary, String gender,
                     String email, long phoneNumber, LocalDate dateOfJoining,
                     List<Address> address) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -124,7 +123,18 @@ public class Employee {
     }
 
     public String toString() {
-        String displayEmployeeDetails = format("%-18s %-20s %-10s %-13s %-9d %-13s %-19s %-13s %-10s", id, firstName, lastName, dateOfBirth, salary, gender, email, phoneNumber, dateOfJoining);
-        return displayEmployeeDetails + address;
+        String displayEmployeeDetails = "\nEmployee Id           :  " + id +
+                "\nFirst Name            :  " + firstName +
+                "\nLast Name             :  " + lastName +
+                "\nDate Of Birth         :  " + dateOfBirth +
+                "\nSalary                :  " + salary +
+                "\nGender                :  " + gender +
+                "\nEmail                 :  " + email +
+                "\nPhoneNumber           :  +91" + phoneNumber +
+                "\nDate Of Joining       :  " + dateOfJoining +
+                "\nAddress               :";
+
+        return displayEmployeeDetails + "  " + address.toString().replace(
+                "[","").replace("]","").replace(",", "");
     }
 }
