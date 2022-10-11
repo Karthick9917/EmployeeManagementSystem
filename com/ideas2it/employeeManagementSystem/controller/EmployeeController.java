@@ -1,11 +1,16 @@
 package com.ideas2it.employeeManagementSystem.controller;
 
-import com.ideas2it.employeeManagementSystem.service.impl.EmployeeService;
+
+import com.ideas2it.employeeManagementSystem.Exception.EmsException;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.service.EmployeeService;
+
+import java.time.LocalDate;
 import java.util.List;
 
 /*
- * Getting the all employee details from the database
+ * Getting the all employeeDTO
  * once the operation is done
  * returning the acknowledgement.
  *
@@ -14,54 +19,109 @@ import java.util.List;
  */
 public class EmployeeController {
 
-    EmployeeService employeeService = new EmployeeService();
+    private EmployeeService employeeService = new EmployeeService();
 
     /**
-     * Collect the employee details from the view class and pass to the service
+     * Passing the pattern and user input, and it returns the true or
+     * false once the input is valid.
      *
-     * @param employee - Getting the employee object
-     * @return to acknowledge the view class
+     * @param pattern - for check the input.
+     * @param userInput - for check the input is matches or not
+     * @return true for false once the input is valid.
      */
-    public boolean createEmployeeDetails(Employee employee) {
-        return employeeService.insertEmployeeDetails(employee);
+    public boolean userInputValidation(String pattern, String userInput) {
+       return employeeService.userInputValidation(pattern,userInput);
     }
 
     /**
-     * Display employee details
+     * Passing the date, and it returns the true or false
+     * once the date is valid.
      *
-     * @return list of all employees.
+     * @param date - for check the date is valid or not
+     * @return true for false once the input is valid.
      */
-    public List displayEmployeeDetails() {
-         return employeeService.showEmployeeDetails();
+    public boolean getDate(String date) {
+        return employeeService.getDate(date);
     }
 
     /**
-     * Collect the employee name from the view class and pass to the service
-     *
-     * @param employeeName - transfer the String value to service class
-     * @return the object to view class
+     * Passing the date of birth and date of joining, and it returns the true or false
+     * based on the given date is valid or not
+     * @param dateOfJoining - passing the date of joining for validate
+     *                        the date of birth.
+     * @param dateOfBirth - passing the date of birth input to be validated.
+     * @return true for false once the input is valid.
      */
-    public Employee findEmployeeDetails(String employeeName) {
+    public boolean getDateOfBirth(LocalDate dateOfJoining, LocalDate dateOfBirth) {
+        return employeeService.getDateOfBirth(dateOfJoining, dateOfBirth);
+    }
+
+    /**
+     * Passing the string and its return the true or false
+     * based on the given String is valid or not
+     * @param email - passing the given String for valid.
+     * @return true for false once the input is valid.
+     */
+    public boolean validateEmail(String email) {
+        return employeeService.validateEmail(email);
+    }
+
+    /**
+     * Passing the string and its return the true or false
+     * based on the given String is valid or not
+     * @param phoneNumber    - passing the given String for valid.
+     * @return true for false once the input is valid.
+     */
+    public boolean validatePhoneNumber(String phoneNumber) {
+        return employeeService.validatePhoneNumber(phoneNumber);
+    }
+
+    /**
+     * passing the employeeDTO and return the acknowledgement.
+     *
+     * @param employeeDTO - get an employeeDTO object for create operation
+     * @return the acknowledgement
+     */
+    public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException {
+        return employeeService.createEmployeeDetails(employeeDTO);
+    }
+
+    /**
+     * Asking all employeeDTO.
+     *
+     * @return list of all employeesDTO.
+     */
+    public List readEmployeeDetails() throws EmsException {
+         return employeeService.readEmployeeDetails();
+    }
+
+    /**
+     * passing the value and return the acknowledgement.
+     *
+     * @param employeeName - transfer the String value.
+     * @return the Employee DTO object
+     */
+    public List<Employee> findEmployeeDetails(String employeeName) throws EmsException {
         return employeeService.findEmployeeDetails(employeeName);
     }
 
     /**
-     * Collect the employee name from the view class and pass to the service
+     * passing the value and return the acknowledgement.
      *
-     * @param employeeId - transfer the String value to service class
-     * @return to acknowledge the view class
+     * @param employeeId - transfer the String value.
+     * @return the acknowledgement
      */
-    public boolean deleteEmployeeDetails(String employeeId) {
+    public boolean deleteEmployeeDetails(int employeeId) throws EmsException {
         return employeeService.deleteEmployeeDetails(employeeId);
     }
 
     /**
-     * Collect the employee details from the view class and pass to the service
+     * passing the employeeDTO and return the acknowledgement.
      *
-     * @param employee - transfer the object to service class
-     * @return to acknowledge the view class
+     * @param employeeDTO - Getting the employeeDTO object
+     * @return the acknowledgement
      */
-    public boolean updateEmployeeDetails(Employee employee) {
-        return employeeService.updateEmployeeDetails(employee);
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId) throws EmsException {
+        return employeeService.updateEmployeeDetails(employeeDTO,employeeId);
     }
 }

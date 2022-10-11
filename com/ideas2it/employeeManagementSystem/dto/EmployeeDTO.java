@@ -1,4 +1,5 @@
-package com.ideas2it.employeeManagementSystem.model;
+package com.ideas2it.employeeManagementSystem.dto;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,14 +7,14 @@ import java.util.List;
 import static java.lang.String.format;
 
 /**
- * This class with the attributes employee id, first name, last name,
- * date of birth, salary, gender, email,phone number, address
+ * This class with the attributes employeeDTO id, first name, last name,
+ * date of birth, salary, gender, email,phone number, addressDTO
  * initialize these attributes with the help of constructor
  *
  *@version    1.8.0_281
  *@author     Karthick
  */
-public class Employee {
+public class EmployeeDTO {
     private int id;
     private String firstName;
     private String lastName;
@@ -23,12 +24,12 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate dateOfJoining;
-    private List<Address> address;
+    private List<AddressDTO> addressDTO;
 
-    public Employee(String firstName, String lastName,
-                    LocalDate dateOfBirth, double salary, String gender,
-                    String email, long phoneNumber, LocalDate dateOfJoining,
-                    List<Address> address) {
+    public EmployeeDTO(String firstName, String lastName,
+                       LocalDate dateOfBirth, double salary, String gender,
+                       String email, long phoneNumber, LocalDate dateOfJoining,
+                       List<AddressDTO> addressDTO) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -37,9 +38,9 @@ public class Employee {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.dateOfJoining = dateOfJoining;
-        this.address = address;
+        this.addressDTO = addressDTO;
     }
-    public Employee (){
+    public EmployeeDTO (){
     }
 
     public int getId() {
@@ -114,12 +115,12 @@ public class Employee {
         this.dateOfJoining = dateOfJoining;
     }
 
-    public List<Address> getAddress() {
-        return address;
+    public List<AddressDTO> getAddressDTO() {
+        return addressDTO;
     }
 
-    public void setAddress(List<Address> address) {
-        this.address = address;
+    public void setAddressDTO(List<AddressDTO> addressDTO) {
+        this.addressDTO = addressDTO;
     }
 
     public String toString() {
@@ -134,7 +135,7 @@ public class Employee {
                 "\nDate Of Joining       :  " + dateOfJoining +
                 "\nAddress               :";
 
-        return displayEmployeeDetails + "  " + address.toString().replace(
+        return displayEmployeeDetails + "  " + addressDTO.toString().replace(
                 "[","").replace("]","").replace(",", "");
     }
 }
