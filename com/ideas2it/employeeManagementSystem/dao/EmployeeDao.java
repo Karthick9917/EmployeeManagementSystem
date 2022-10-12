@@ -6,6 +6,9 @@ import com.ideas2it.employeeManagementSystem.dao.impl.Dao;
 import com.ideas2it.employeeManagementSystem.model.Address;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.util.ConnectionUtil;
+import com.ideas2it.employeeManagementSystem.view.EmployeeView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -27,6 +30,7 @@ import java.util.List;
  */
 public class EmployeeDao implements Dao {
 
+    private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
     Connection connection = ConnectionUtil.getCustomConnection().getConnection();
 
     /**
@@ -63,8 +67,10 @@ public class EmployeeDao implements Dao {
             isAdded = addAddress(employee, employeeId);
             preparedStatement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_ADDED_MESSAGE);
         }
+        logger.info("Employee " + employeeId + "has been created successfully");
         return (employeeAdded != 0  && isAdded);
     }
 
@@ -94,6 +100,7 @@ public class EmployeeDao implements Dao {
             }
             insertStatement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_ADDED_MESSAGE);
         }
         return (addAddress != 0);
@@ -135,6 +142,7 @@ public class EmployeeDao implements Dao {
             }
             statement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.RECORD_EMPTY_MESSAGE);
         }
         return employeeList;
@@ -164,6 +172,7 @@ public class EmployeeDao implements Dao {
             }
             statement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.RECORD_EMPTY_MESSAGE);
         }
         return addressList;
@@ -184,8 +193,10 @@ public class EmployeeDao implements Dao {
             deleted = preparedStatement.executeUpdate();
             preparedStatement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_DELETED_MESSAGE);
         }
+        logger.info("Employee " + employeeId + "has been removed successfully");
         return (deleted != 0);
     }
 
@@ -224,6 +235,7 @@ public class EmployeeDao implements Dao {
             }
             statement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.RECORD_EMPTY_MESSAGE);
         }
         return searchEmployeeList;
@@ -256,8 +268,10 @@ public class EmployeeDao implements Dao {
             isUpdated = updateAddress(employee);
             preparedStatement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_UPDATED_MESSAGE);
         }
+        logger.info("Employee " + employeeId + "has been updated successfully");
         return (employeeUpdated < 1 && !isUpdated);
     }
 
@@ -287,6 +301,7 @@ public class EmployeeDao implements Dao {
             updated = insertStatement.executeBatch().length;
             insertStatement.close();
         } catch (SQLException sqlException) {
+            logger.error(sqlException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_UPDATED_MESSAGE);
         }
         return (updated != 0);

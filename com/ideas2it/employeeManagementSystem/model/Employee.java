@@ -3,8 +3,6 @@ package com.ideas2it.employeeManagementSystem.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.lang.String.format;
-
 /**
  * This class with the attributes employee id, first name, last name,
  * date of birth, salary, gender, email,phone number, address

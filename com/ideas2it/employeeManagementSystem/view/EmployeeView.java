@@ -6,6 +6,8 @@ import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
 import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.model.Employee;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import java.util.Scanner;
  */
 public class EmployeeView {
 
+    private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
+
     private Scanner scanner = new Scanner(System.in);
     private EmployeeController employeeController = new EmployeeController();
 
@@ -37,7 +41,6 @@ public class EmployeeView {
                 System.out.println(EmployeeConstants.EMPLOYEE_MANAGEMENT_MENU);
                 scanner = new Scanner(System.in);
                 option = scanner.nextInt();
-
                 switch (option) {
                     case 1:
                         this.createEmployeeDetails();
@@ -63,11 +66,12 @@ public class EmployeeView {
                         System.exit(6);
 
                     default:
+                        logger.warn("invalid data");
                         System.out.println(EmployeeConstants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
-                inputMismatchException.printStackTrace();
+                logger.error("input mismatch");
                 System.out.println(EmployeeConstants.INPUT_MISMATCH_EXCEPTION);
             }
         } while (option != 6);
@@ -111,10 +115,12 @@ public class EmployeeView {
                         type = "temporary";
                         break;
                     default:
+                        logger.warn("invalid data");
                         System.out.println(EmployeeConstants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
                 System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
                         +EmployeeConstants.ADDRESS_TYPE_OPTION);
             }
@@ -223,6 +229,7 @@ public class EmployeeView {
                     isValid = true;
                 }
             } catch (EmsException emsException) {
+                logger.error("date format mismatch");
                 System.out.println(emsException.getMessage());
             }
         } while (!isValid);
@@ -288,10 +295,12 @@ public class EmployeeView {
                         gender = "others";
                         break;
                     default:
+                        logger.warn("invalid data");
                         System.out.println(EmployeeConstants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
                 System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
                         +EmployeeConstants.GENDER_OPTION);
             }
@@ -323,6 +332,7 @@ public class EmployeeView {
                 System.out.println(EmployeeConstants.NOT_ADDED_MESSAGE);
             }
         } catch (EmsException emsException) {
+            logger.error("Database not connected");
             System.out.println(emsException.getMessage());
         }
     }
@@ -335,13 +345,16 @@ public class EmployeeView {
             List<EmployeeDTO> employeesList = employeeController.
                     readEmployeeDetails();
             if (employeesList.isEmpty()) {
+                logger.warn("No records in database");
                 System.out.println(EmployeeConstants.RECORD_EMPTY_MESSAGE);
             } else {
                 for (EmployeeDTO employeeDTO : employeesList) {
                     System.out.println(employeeDTO);
                 }
+                logger.info("Employee displayed");
             }
         } catch (EmsException emsException) {
+            logger.error("Database not connected");
             System.out.println(emsException.getMessage());
         }
     }
@@ -356,10 +369,16 @@ public class EmployeeView {
         try {
             List<Employee> searchEmployee = employeeController.
                     findEmployeeDetails(name);
-            for (Employee employee : searchEmployee) {
-                System.out.println(employee);
+            if (!searchEmployee.isEmpty()) {
+                for (Employee employee : searchEmployee) {
+                    System.out.println(employee);
+                }
+            } else {
+                logger.warn("no records");
+                System.out.println(EmployeeConstants.RECORD_EMPTY_MESSAGE);
             }
         } catch (EmsException emsException) {
+            logger.error("empty records...!!");
             System.out.println(emsException.getMessage());
         }
     }
@@ -373,12 +392,14 @@ public class EmployeeView {
                 EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
         try {
             if (!employeeController.deleteEmployeeDetails(id)) {
+                logger.warn("record not found..!! ");
                 System.out.println(EmployeeConstants.ERROR_404);
             } else {
                 System.out.println(EmployeeConstants.
                         SUCCESSFULL_MESSAGE + "deleted");
             }
         } catch (EmsException e) {
+            logger.error("empty record..!!");
             System.out.println(e.getMessage());
         }
     }
@@ -424,10 +445,12 @@ public class EmployeeView {
                         gender = "others";
                         break;
                     default:
+                        logger.warn("invalid data");
                         System.out.println(EmployeeConstants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
                 System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
                         +EmployeeConstants.GENDER_OPTION);
             }
@@ -459,6 +482,7 @@ public class EmployeeView {
                 System.out.println(EmployeeConstants.NOT_UPDATED_MESSAGE);
             }
         } catch (EmsException emsException) {
+            logger.error("database not connected..!!");
             System.out.println(emsException.getMessage());
         }
     }
