@@ -9,21 +9,32 @@ package com.ideas2it.employeeManagementSystem.model;
  *@author     Karthick
  */
 public class Address {
+
+    private int id;
     private String doorNumber;
     private String street;
     private String city;
     private String state;
-    private int pincode;
+    private int pinCode;
     private String type;
 
-    public Address(String buildingNumber, String street,
-                      String city, String state, int pincode, String type) {
-        this.doorNumber = buildingNumber;
+    public Address(int id, String doorNumber, String street,
+                      String city, String state, int pinCode, String type) {
+        this.id = id;
+        this.doorNumber = doorNumber;
         this.street = street;
         this.city = city;
         this.state = state;
-        this.pincode = pincode;
+        this.pinCode = pinCode;
         this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Address() {
@@ -61,12 +72,12 @@ public class Address {
         this.state = state;
     }
 
-    public int getPincode() {
-        return pincode;
+    public int getPinCode() {
+        return pinCode;
     }
 
-    public void setPincode(int pincode) {
-        this.pincode = pincode;
+    public void setPinCode(int pinCode) {
+        this.pinCode = pinCode;
     }
 
     public String getType() {
@@ -79,7 +90,7 @@ public class Address {
 
     public String toString() {
         return doorNumber + " "+ street + " "+ city + " "
-                + state + " " + pincode + " - " + type + " address" + "\n" +
+                + state + " " + pinCode + " - " + type + " address" + "\n" +
                 "                        ";
     }
 }

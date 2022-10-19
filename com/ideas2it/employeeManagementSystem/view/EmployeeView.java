@@ -311,6 +311,33 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.PHONE_NUMBER);
         long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
+
+        System.out.println(EmployeeConstants.ROLE);
+        String role = "";
+        int select = 0;
+        do{
+            try {
+                System.out.println(EmployeeConstants.ROLE_OPTION);
+                scanner = new Scanner(System.in);
+                select = scanner.nextInt();
+                switch (select) {
+                    case 1:
+                        role = "trainer";
+                        break;
+                    case 2:
+                        role = "trainee";
+                        break;
+                    default:
+                        logger.warn("invalid data");
+                        System.out.println(EmployeeConstants.
+                                SELECT_OPTION_ERROR);
+                }
+            } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
+                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
+                        +EmployeeConstants.ROLE_OPTION);
+            }
+        } while (!(select > 0 && select < 3 ));
         System.out.println(EmployeeConstants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
@@ -323,7 +350,7 @@ public class EmployeeView {
         }
         EmployeeDTO employeeDTO = new EmployeeDTO(firstName, lastName,
                 dateOfBirth, salary, gender, email, phoneNumber,
-                dateOfJoining, listAddressDTO);
+                dateOfJoining, role, listAddressDTO);
         try {
             if (employeeController.createEmployeeDetails(employeeDTO)) {
                 System.out.println(EmployeeConstants.
@@ -391,16 +418,13 @@ public class EmployeeView {
         int id = Integer.parseInt(getUserInput(EmployeeConstants.
                 EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
         try {
-            if (!employeeController.deleteEmployeeDetails(id)) {
-                logger.warn("record not found..!! ");
-                System.out.println(EmployeeConstants.ERROR_404);
-            } else {
-                System.out.println(EmployeeConstants.
-                        SUCCESSFULL_MESSAGE + "deleted");
-            }
+            employeeController.deleteEmployeeDetails(id);
+            logger.info("Employee " + id + "has been removed successfully");
+            System.out.println(EmployeeConstants.
+                    SUCCESSFULL_MESSAGE + "deleted");
         } catch (EmsException e) {
             logger.error("empty record..!!");
-            System.out.println(e.getMessage());
+            System.out.println(EmployeeConstants.ERROR_404);
         }
     }
 
@@ -408,7 +432,7 @@ public class EmployeeView {
      * Update the employee Details based on the employee id.
      */
     public void updateEmployeeDetails() {
-        EmployeeDTO employeeDTO = null;
+        EmployeeDTO employeeDTO;
         List<AddressDTO> listAddressDTO = new ArrayList<>();
         System.out.println(EmployeeConstants.ID + "to update ");
         int id = Integer.parseInt(getUserInput(EmployeeConstants.
@@ -461,6 +485,32 @@ public class EmployeeView {
         System.out.println(EmployeeConstants.PHONE_NUMBER);
         long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
+        System.out.println(EmployeeConstants.ROLE);
+        String role = "";
+        int select = 0;
+        do{
+            try {
+                System.out.println(EmployeeConstants.ROLE_OPTION);
+                scanner = new Scanner(System.in);
+                select = scanner.nextInt();
+                switch (select) {
+                    case 1:
+                        role = "trainer";
+                        break;
+                    case 2:
+                        role = "trainee";
+                        break;
+                    default:
+                        logger.warn("invalid data");
+                        System.out.println(EmployeeConstants.
+                                SELECT_OPTION_ERROR);
+                }
+            } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
+                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
+                        +EmployeeConstants.ROLE_OPTION);
+            }
+        } while (!(select > 0 && select < 3 ));
         System.out.println(EmployeeConstants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
@@ -473,9 +523,11 @@ public class EmployeeView {
         }
         employeeDTO = new EmployeeDTO(firstName, lastName,
                 dateOfBirth, salary, gender, email, phoneNumber,
-                dateOfJoining, listAddressDTO);
+                dateOfJoining, role, listAddressDTO);
+        employeeDTO.setId(id);
         try {
-            if (!employeeController.updateEmployeeDetails(employeeDTO, id)) {
+            if (!employeeController.updateEmployeeDetails(employeeDTO)) {
+                logger.info("Employee " + id + "has been updated successfully");
                 System.out.println(EmployeeConstants.
                         SUCCESSFULL_MESSAGE + "updated");
             } else {

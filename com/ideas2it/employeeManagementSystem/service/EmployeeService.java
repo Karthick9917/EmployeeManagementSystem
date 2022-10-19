@@ -65,9 +65,7 @@ public class EmployeeService implements EmployeeServiceImpl {
      * @throws EmsException
      */
     public boolean validateEmail(String email) throws EmsException {
-        return readEmployeeDetails().stream()
-                .anyMatch(employeeDTO -> employeeDTO
-                        .getEmail().equals(email));
+        return readEmployeeDetails().stream().anyMatch(employeeDTO -> employeeDTO.getEmail().equals(email));
     }
 
     /**
@@ -115,17 +113,17 @@ public class EmployeeService implements EmployeeServiceImpl {
     /**
      * {@inheritDoc}
      */
-    public boolean deleteEmployeeDetails(int employeeId)
+    public void deleteEmployeeDetails(int employeeId)
             throws EmsException {
-        return employeeDao.deleteEmployeeDetails(employeeId);
+        employeeDao.deleteEmployeeDetails(employeeId);
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId)
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO)
             throws EmsException {
         Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        return employeeDao.updateEmployeeDetails(employee, employeeId);
+        return employeeDao.updateEmployeeDetails(employee);
     }
 }

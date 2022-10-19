@@ -34,6 +34,10 @@ public class EmployeeConstants {
     public static final String GENDER_OPTION = " 1.male \n 2.female" +
             " \n 3.others ";
     public static final String GENDER = "Enter employee's gender: ";
+
+    public static final String ROLE = "Enter employee's role: ";
+
+    public static final String ROLE_OPTION = " 1.Trainer \n 2.Trainee";
     public static final String SALARY = "Enter employee salary: ";
     public static final String DATE_OF_JOINING = "Enter employee " +
             "DateOfJoining (YYYY/MM/DD): ";

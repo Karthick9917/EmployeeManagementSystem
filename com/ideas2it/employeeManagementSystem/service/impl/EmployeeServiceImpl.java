@@ -45,7 +45,7 @@ public interface EmployeeServiceImpl {
      * @return the acknowledgement once the operation is done
      */
 
-    boolean deleteEmployeeDetails(int employeeDTO_Id) throws EmsException;
+    void deleteEmployeeDetails(int employeeDTO_Id) throws EmsException;
 
     /**
      * update the employeeDTO to array list
@@ -53,5 +53,5 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO - get an employeeDTO object for update operation
      * @return the acknowledgement once the operation is done.
      */
-    boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId) throws EmsException;
+    boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
 }

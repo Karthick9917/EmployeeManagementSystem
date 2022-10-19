@@ -111,8 +111,8 @@ public class EmployeeController {
      * @param employeeId - transfer the String value.
      * @return the acknowledgement
      */
-    public boolean deleteEmployeeDetails(int employeeId) throws EmsException {
-        return employeeService.deleteEmployeeDetails(employeeId);
+    public void deleteEmployeeDetails(int employeeId) throws EmsException {
+        employeeService.deleteEmployeeDetails(employeeId);
     }
 
     /**
@@ -121,7 +121,7 @@ public class EmployeeController {
      * @param employeeDTO - Getting the employeeDTO object
      * @return the acknowledgement
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId) throws EmsException {
-        return employeeService.updateEmployeeDetails(employeeDTO,employeeId);
+    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO ) throws EmsException {
+        return employeeService.updateEmployeeDetails(employeeDTO);
     }
 }

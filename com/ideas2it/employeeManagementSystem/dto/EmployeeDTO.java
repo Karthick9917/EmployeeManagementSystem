@@ -24,11 +24,13 @@ public class EmployeeDTO {
     private String email;
     private long phoneNumber;
     private LocalDate dateOfJoining;
+
+    private String role;
     private List<AddressDTO> addressDTO;
 
     public EmployeeDTO(String firstName, String lastName,
                        LocalDate dateOfBirth, double salary, String gender,
-                       String email, long phoneNumber, LocalDate dateOfJoining,
+                       String email, long phoneNumber, LocalDate dateOfJoining, String role,
                        List<AddressDTO> addressDTO) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,9 +40,10 @@ public class EmployeeDTO {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.dateOfJoining = dateOfJoining;
+        this.role = role;
         this.addressDTO = addressDTO;
     }
-    public EmployeeDTO (){
+    public EmployeeDTO() {
     }
 
     public int getId() {
@@ -113,6 +116,14 @@ public class EmployeeDTO {
 
     public void setDateOfJoining(LocalDate dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<AddressDTO> getAddressDTO() {
