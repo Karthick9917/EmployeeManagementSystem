@@ -1,2 +1,6 @@
 *.class
+<<<<<<< HEAD
 *.logs
+=======
+logs/
+>>>>>>> c53db26 (Review changes are worked)

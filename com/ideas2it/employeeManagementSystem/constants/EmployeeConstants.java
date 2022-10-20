@@ -49,6 +49,8 @@ public class EmployeeConstants {
     public static final String ADDRESS_TYPE_OPTION = " 1.Permanent " +
             "\n 2.Temporary ";
     public static final String ERROR_404 = " Record Not found...!";
+
+    public static final String NOT_EXISTS_MESSAGE = "Given id is not exists..!!!";
     public static final String ID = "Enter employee id ";
     public static final String PHONE_NUMBER = "Enter employee phone number ";
     public static final String SUCCESSFULL_MESSAGE = "Record successfully ";

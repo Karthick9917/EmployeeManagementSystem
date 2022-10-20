@@ -85,7 +85,6 @@ public class EmployeeDao implements Dao {
      */
     public void deleteEmployeeDetails(int employeeId) throws EmsException {
         Session session = null;
-        Employee employee;
         try {
             session = sessionfactory.openSession();
             session.beginTransaction();
@@ -95,6 +94,8 @@ public class EmployeeDao implements Dao {
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_DELETED_MESSAGE);
+        } finally {
+            session.close();
         }
 
     }
@@ -112,7 +113,7 @@ public class EmployeeDao implements Dao {
             session = sessionfactory.openSession();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Employee.class);
-            searchEmployeeList.add((Employee) criteria.add(Restrictions.like("firstName", (firstName + "%"))).uniqueResult());
+            searchEmployeeList = (List<Employee>) criteria.add(Restrictions.like("firstName", (firstName + "%"))).list();
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
@@ -137,6 +138,9 @@ public class EmployeeDao implements Dao {
             session.beginTransaction();
             updateEmployee = (Employee) session.merge(employee);
             session.getTransaction().commit();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            logger.error(illegalArgumentException.getMessage());
+            throw new EmsException(EmployeeConstants.NOT_EXISTS_MESSAGE);
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_UPDATED_MESSAGE);
