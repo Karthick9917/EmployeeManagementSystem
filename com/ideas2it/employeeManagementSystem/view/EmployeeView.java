@@ -83,22 +83,28 @@ public class EmployeeView {
      * @return address object
      */
     private AddressDTO addAddress() {
+        AddressDTO addressDTO = new AddressDTO();
         System.out.print(EmployeeConstants.HOUSE_NUMBER);
         String buildingNumber = getUserInput(EmployeeConstants.
                 DOOR_NUMBER_PATTERN,"door number..!!");
+        addressDTO.setDoorNumber(buildingNumber);
         System.out.println(EmployeeConstants.STREET);
         String street = getUserInput(EmployeeConstants.
                 STREET_PATTERN, "street name" +
                 " eg: karaneeswarar koil 1st street");
+        addressDTO.setStreet(street);
         System.out.println(EmployeeConstants.CITY);
         String city = getUserInput(EmployeeConstants.
                 ADDRESS_PATTERN, "city eg: chennai");
+        addressDTO.setCity(city);
         System.out.println(EmployeeConstants.STATE);
         String state = getUserInput(EmployeeConstants.
                 ADDRESS_PATTERN,"state eg: tamil nadu");
+        addressDTO.setState(state);
         System.out.println(EmployeeConstants.PINCODE);
         int pincode = Integer.parseInt(getUserInput(EmployeeConstants.
                 PINCODE_PATTERN, "pincode eg:600004"));
+        addressDTO.setPincode(pincode);
         System.out.println(EmployeeConstants.ADDRESS_TYPE);
         String type = "";
         int choose = 0;
@@ -125,8 +131,8 @@ public class EmployeeView {
                         +EmployeeConstants.ADDRESS_TYPE_OPTION);
             }
         } while (!(choose > 0 && choose < 3 ));
-        return new AddressDTO(buildingNumber, street, city,
-                state, pincode, type);
+        addressDTO.setType(type);
+        return addressDTO;
     }
 
     /**
@@ -210,6 +216,32 @@ public class EmployeeView {
     }
 
     /**
+     * Getting the input from the user and passing for the input is valid or not.
+     * @param pattern - for check the given input is matches or not.
+     * @param errorMessage - for Displaying the message
+     *                       once the given input is invalid.
+     * @return the string value once the given input is valid.
+     */
+    public String getId(String pattern, String errorMessage) {
+        boolean isValid = false;
+        String id;
+        do{
+            scanner = new Scanner(System.in);
+            id = scanner.nextLine();
+            if (!employeeController.userInputValidation(pattern, id)) {
+                System.out.println(EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else if(!employeeController.validateId(id)){
+                System.out.println(EmployeeConstants.ERROR_404 + "\n" + EmployeeConstants.
+                        ASKING_VALID_INPUT + errorMessage);
+            } else {
+                isValid = true;
+            }
+        } while (!isValid);
+        return id;
+    }
+
+    /**
      * Getting the date from user and check the date is valid or not based
      * on the given format
      *
@@ -263,19 +295,25 @@ public class EmployeeView {
      */
     public void createEmployeeDetails() {
         List<AddressDTO> listAddressDTO = new ArrayList<>();
+        EmployeeDTO employeeDTO = new EmployeeDTO();
         System.out.println(EmployeeConstants.FIRST_NAME);
         String firstName = getUserInput(EmployeeConstants.NAME_PATTERN,
                 "first name (eg:karthick)");
+        employeeDTO.setFirstName(firstName);
         System.out.println(EmployeeConstants.LAST_NAME);
         String lastName = getUserInput(EmployeeConstants.
                 LAST_NAME_PATTERN, "last name (eg:b or baskar)");
+        employeeDTO.setLastName(lastName);
         System.out.println(EmployeeConstants.SALARY);
         Double salary = Double.parseDouble(getUserInput(EmployeeConstants.
                 SALARY_PATTERN, "salary (eg: 34000.45)"));
+        employeeDTO.setSalary(salary);
         System.out.println(EmployeeConstants.DATE_OF_JOINING);
         LocalDate dateOfJoining = getDate();
+        employeeDTO.setDateOfJoining(dateOfJoining);
         System.out.println(EmployeeConstants.DOB);
         LocalDate dateOfBirth = getDateOfBirth(dateOfJoining);
+        employeeDTO.setDateOfBirth(dateOfBirth);
         System.out.println(EmployeeConstants.GENDER);
         String gender = "";
         int choose = 0;
@@ -305,13 +343,15 @@ public class EmployeeView {
                         +EmployeeConstants.GENDER_OPTION);
             }
         } while (!(choose > 0 && choose < 4 ));
+        employeeDTO.setGender(gender);
         System.out.println(EmployeeConstants.EMAIL);
         String email = getEmail(EmployeeConstants.EMAIL_PATTERN, "email" +
                 " eg: karthick17@gmail.com");
         System.out.println(EmployeeConstants.PHONE_NUMBER);
+        employeeDTO.setEmail(email);
         long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
-
+        employeeDTO.setPhoneNumber(phoneNumber);
         System.out.println(EmployeeConstants.ROLE);
         String role = "";
         int select = 0;
@@ -338,23 +378,21 @@ public class EmployeeView {
                         +EmployeeConstants.ROLE_OPTION);
             }
         } while (!(select > 0 && select < 3 ));
+        employeeDTO.setRole(role);
         System.out.println(EmployeeConstants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
-        System.out.println(EmployeeConstants.ANOTHER_ADDRESS);
+        System.out.println(EmployeeConstants.ADD_ANOTHER_ADDRESS);
         String anotherAddress = getUserInput(EmployeeConstants.
                 ANOTHER_ADDRESS_PATTERN, "input eg:y or n ");
         if (anotherAddress.equalsIgnoreCase("Y")) {
             AddressDTO tempAddressDTO = addAddress();
             listAddressDTO.add(tempAddressDTO);
         }
-        EmployeeDTO employeeDTO = new EmployeeDTO(firstName, lastName,
-                dateOfBirth, salary, gender, email, phoneNumber,
-                dateOfJoining, role, listAddressDTO);
         try {
             if (employeeController.createEmployeeDetails(employeeDTO)) {
                 System.out.println(EmployeeConstants.
-                        SUCCESSFULL_MESSAGE + "created ");
+                        SUCCESSFUL_MESSAGE + "created ");
             } else {
                 System.out.println(EmployeeConstants.NOT_ADDED_MESSAGE);
             }
@@ -415,13 +453,13 @@ public class EmployeeView {
      */
     public void deleteEmployeeDetails() {
         System.out.println(EmployeeConstants.ID + "to delete");
-        int id = Integer.parseInt(getUserInput(EmployeeConstants.
+        int id =  Integer.parseInt(getId(EmployeeConstants.
                 EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
         try {
             employeeController.deleteEmployeeDetails(id);
             logger.info("Employee " + id + "has been removed successfully");
             System.out.println(EmployeeConstants.
-                    SUCCESSFULL_MESSAGE + "deleted");
+                    SUCCESSFUL_MESSAGE + "deleted");
         } catch (EmsException e) {
             logger.error("empty record..!!");
             System.out.println(EmployeeConstants.ERROR_404);
@@ -432,24 +470,142 @@ public class EmployeeView {
      * Update the employee Details based on the employee id.
      */
     public void updateEmployeeDetails() {
-        EmployeeDTO employeeDTO;
-        List<AddressDTO> listAddressDTO = new ArrayList<>();
         System.out.println(EmployeeConstants.ID + "to update ");
-        int id = Integer.parseInt(getUserInput(EmployeeConstants.
+        int id = Integer.parseInt(getId(EmployeeConstants.
                 EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
-        System.out.println(EmployeeConstants.FIRST_NAME);
-        String firstName = getUserInput(EmployeeConstants.NAME_PATTERN,
-                "first name (eg:karthick)");
-        System.out.println(EmployeeConstants.LAST_NAME);
-        String lastName = getUserInput(EmployeeConstants.
-                LAST_NAME_PATTERN, "last name (eg:b or baskar)");
-        System.out.println(EmployeeConstants.DATE_OF_JOINING);
-        LocalDate dateOfJoining = getDate();
-        System.out.println(EmployeeConstants.DOB);
-        LocalDate dateOfBirth = getDateOfBirth(dateOfJoining);
-        System.out.println(EmployeeConstants.SALARY);
-        double salary = Double.parseDouble(getUserInput(EmployeeConstants.
-                SALARY_PATTERN, "salary (eg: 34000.45)"));
+        EmployeeDTO employeeDTO = employeeController.getEmployeeById(id);
+        int option = 0;
+        employeeDTO.setId(id);
+        do {
+            try {
+                System.out.println(EmployeeConstants.UPDATE_EMPLOYEE_MENU);
+                scanner = new Scanner(System.in);
+                option = scanner.nextInt();
+                switch (option) {
+                    case 1:
+                        System.out.println(EmployeeConstants.FIRST_NAME);
+                        employeeDTO.setFirstName(getUserInput(EmployeeConstants
+                                .NAME_PATTERN,"first name (eg:karthick)"));
+                        break;
+                    case 2:
+                        System.out.println(EmployeeConstants.LAST_NAME);
+                        employeeDTO.setLastName(getUserInput(EmployeeConstants
+                                .LAST_NAME_PATTERN, "last name (eg:b or baskar)"));
+                        break;
+                    case 3:
+                        System.out.println(EmployeeConstants.DATE_OF_JOINING);
+                        employeeDTO.setDateOfJoining(getDate());
+                        break;
+                    case 4:
+                        System.out.println(EmployeeConstants.DOB);
+                        LocalDate dateOfBirth = getDateOfBirth(employeeDTO.getDateOfJoining());
+                        employeeDTO.setDateOfBirth(dateOfBirth);
+                        break;
+                    case 5:
+                        System.out.println(EmployeeConstants.SALARY);
+                        employeeDTO.setSalary(Double
+                                .parseDouble(getUserInput(EmployeeConstants
+                                .SALARY_PATTERN, "salary (eg: 34000.45)")));
+                        break;
+                    case 6:
+                        employeeDTO.setGender(getGender());
+                        break;
+                    case 7:
+                        System.out.println(EmployeeConstants.EMAIL);
+                        employeeDTO.setEmail(getEmail(EmployeeConstants
+                                .EMAIL_PATTERN, "email eg: karthick17@gmail.com"));
+                        break;
+                    case 8:
+                        System.out.println(EmployeeConstants.PHONE_NUMBER);
+                        employeeDTO.setPhoneNumber(Long
+                                .parseLong(getPhoneNumber(EmployeeConstants
+                                        .PHONE_NUMBER_PATTERN,"phone number" +
+                                        " eg:7898765678")));
+                        break;
+                    case 9:
+                        employeeDTO.setRole(getRole());
+                        break;
+                    case 10:
+                        employeeDTO.setAddressDTO(updateAddress(employeeDTO));
+                        break;
+                    case 11:
+                        break;
+                    default:
+                        logger.warn("invalid data");
+                        System.out.println(EmployeeConstants.
+                                SELECT_OPTION_ERROR);
+                }
+            } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
+                System.out.println(EmployeeConstants.INPUT_MISMATCH_EXCEPTION);
+            }
+        } while (option != 11);
+        try {
+            employeeController.updateEmployeeDetails(employeeDTO);
+                logger.info("Employee " + id + "has been updated successfully");
+                System.out.println(EmployeeConstants.
+                        SUCCESSFUL_MESSAGE + "updated");
+        } catch (EmsException emsException) {
+            logger.error("database not connected..!!");
+            System.out.println(emsException.getMessage());
+        }
+    }
+
+    public List<AddressDTO> updateAddress(EmployeeDTO employeeDTO) {
+        boolean isUpdateAnotherAddress = false;
+        List<AddressDTO> listAddressDTO;
+        do {
+            System.out.println(EmployeeConstants.UPDATE_ADDRESS_TYPE);
+            String type = "";
+            int choose = 0;
+            do {
+                try {
+                    System.out.println(EmployeeConstants.ADDRESS_TYPE_OPTION);
+                    scanner = new Scanner(System.in);
+                    choose = scanner.nextInt();
+                    switch (choose) {
+                        case 1:
+                            type = "permanent";
+                            break;
+                        case 2:
+                            type = "temporary";
+                            break;
+                        default:
+                            logger.warn("invalid data");
+                            System.out.println(EmployeeConstants.
+                                    SELECT_OPTION_ERROR);
+                    }
+                } catch (InputMismatchException inputMismatchException) {
+                    logger.error("input mismatch");
+                    System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
+                            + EmployeeConstants.ADDRESS_TYPE_OPTION);
+                }
+            } while (!(choose > 0 && choose < 3));
+            listAddressDTO = employeeDTO.getAddressDTO();
+            for (AddressDTO addressDto : listAddressDTO) {
+                if (addressDto.getType().equals(type)) {
+                    getAddress(addressDto);
+                    break;
+                } else {
+                    System.out.println(type + " address is not there for update...!!");
+                }
+            }
+            System.out.println(EmployeeConstants.UPDATE_ANOTHER_ADDRESS);
+            String anotherAddress = getUserInput(EmployeeConstants.
+                    ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
+            if (anotherAddress.equalsIgnoreCase("Y")) {
+                isUpdateAnotherAddress = true;
+            }
+        } while (isUpdateAnotherAddress == true);
+        return listAddressDTO;
+    }
+
+    /**
+     * Get the gender of the employee from the user.
+     *
+     * @return the string value of the role.
+     */
+    public String getGender() {
         System.out.println(EmployeeConstants.GENDER);
         String gender = "";
         int choose = 0;
@@ -479,12 +635,15 @@ public class EmployeeView {
                         +EmployeeConstants.GENDER_OPTION);
             }
         } while (!(choose > 0 && choose < 4 ));
-        System.out.println(EmployeeConstants.EMAIL);
-        String email = getEmail(EmployeeConstants.EMAIL_PATTERN, "email" +
-                " eg: karthick17@gmail.com");
-        System.out.println(EmployeeConstants.PHONE_NUMBER);
-        long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
-                PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
+        return gender;
+    }
+
+    /**
+     * Get the role of the employee from the user.
+     *
+     * @return the string value of the role.
+     */
+    public String getRole() {
         System.out.println(EmployeeConstants.ROLE);
         String role = "";
         int select = 0;
@@ -511,31 +670,58 @@ public class EmployeeView {
                         +EmployeeConstants.ROLE_OPTION);
             }
         } while (!(select > 0 && select < 3 ));
-        System.out.println(EmployeeConstants.ADDRESS);
-        AddressDTO addressDTO = addAddress();
-        listAddressDTO.add(addressDTO);
-        System.out.println(EmployeeConstants.ANOTHER_ADDRESS);
-        String anotherAddress = getUserInput(EmployeeConstants.
-                ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
-        if (anotherAddress.equalsIgnoreCase("Y")) {
-            addressDTO = addAddress();
-            listAddressDTO.add(addressDTO);
-        }
-        employeeDTO = new EmployeeDTO(firstName, lastName,
-                dateOfBirth, salary, gender, email, phoneNumber,
-                dateOfJoining, role, listAddressDTO);
-        employeeDTO.setId(id);
-        try {
-            if (!employeeController.updateEmployeeDetails(employeeDTO)) {
-                logger.info("Employee " + id + "has been updated successfully");
-                System.out.println(EmployeeConstants.
-                        SUCCESSFULL_MESSAGE + "updated");
-            } else {
-                System.out.println(EmployeeConstants.NOT_UPDATED_MESSAGE);
+        return role;
+    }
+
+    private AddressDTO getAddress(AddressDTO addressDTO) {
+        System.out.print(EmployeeConstants.HOUSE_NUMBER);
+        String buildingNumber = getUserInput(EmployeeConstants.
+                DOOR_NUMBER_PATTERN,"door number..!!");
+        addressDTO.setDoorNumber(buildingNumber);
+        System.out.println(EmployeeConstants.STREET);
+        String street = getUserInput(EmployeeConstants.
+                STREET_PATTERN, "street name" +
+                " eg: karaneeswarar koil 1st street");
+        addressDTO.setStreet(street);
+        System.out.println(EmployeeConstants.CITY);
+        String city = getUserInput(EmployeeConstants.
+                ADDRESS_PATTERN, "city eg: chennai");
+        addressDTO.setCity(city);
+        System.out.println(EmployeeConstants.STATE);
+        String state = getUserInput(EmployeeConstants.
+                ADDRESS_PATTERN,"state eg: tamil nadu");
+        addressDTO.setState(state);
+        System.out.println(EmployeeConstants.PINCODE);
+        int pincode = Integer.parseInt(getUserInput(EmployeeConstants.
+                PINCODE_PATTERN, "pincode eg:600004"));
+        addressDTO.setPincode(pincode);
+        System.out.println(EmployeeConstants.ADDRESS_TYPE);
+        String type = "";
+        int choose = 0;
+        do{
+            try {
+                System.out.println(EmployeeConstants.ADDRESS_TYPE_OPTION);
+                scanner = new Scanner(System.in);
+                choose = scanner.nextInt();
+                switch (choose) {
+                    case 1:
+                        type = "permanent";
+                        break;
+                    case 2:
+                        type = "temporary";
+                        break;
+                    default:
+                        logger.warn("invalid data");
+                        System.out.println(EmployeeConstants.
+                                SELECT_OPTION_ERROR);
+                }
+            } catch (InputMismatchException inputMismatchException) {
+                logger.error("input mismatch");
+                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
+                        +EmployeeConstants.ADDRESS_TYPE_OPTION);
             }
-        } catch (EmsException emsException) {
-            logger.error("database not connected..!!");
-            System.out.println(emsException.getMessage());
-        }
+        } while (!(choose > 0 && choose < 3 ));
+        addressDTO.setType(type);
+        return addressDTO;
     }
 }

@@ -8,12 +8,12 @@
         <id name = "id" column = "address_id">
             <generator class = "native"/>
         </id>
-        <property name="doorNumber" column="door_number" type = "string"/>
-        <property name="street" column="street" type = "string"/>
-        <property name="city" column="city" type = "string"/>
-        <property name="state" column="state" type = "string"/>
-        <property name="pinCode" column="pin_code" type = "int"/>
-        <property name="type" column="type" type = "string"/>
+        <property name="doorNumber" column="door_number"/>
+        <property name="street" column="street"/>
+        <property name="city" column="city"/>
+        <property name="state" column="state"/>
+        <property name="pinCode" column="pin_code"/>
+        <property name="type" column="type"/>
     </class>
 
 </hibernate-mapping>

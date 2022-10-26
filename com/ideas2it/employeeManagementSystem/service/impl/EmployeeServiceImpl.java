@@ -53,5 +53,5 @@ public interface EmployeeServiceImpl {
      * @param employeeDTO - get an employeeDTO object for update operation
      * @return the acknowledgement once the operation is done.
      */
-    boolean updateEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
+    void updateEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
 }

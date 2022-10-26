@@ -9,6 +9,7 @@ package com.ideas2it.employeeManagementSystem.dto;
  *@author     Karthick
  */
 public class AddressDTO {
+    private int id;
     private String doorNumber;
     private String street;
     private String city;
@@ -16,7 +17,7 @@ public class AddressDTO {
     private int pincode;
     private String type;
 
-    public AddressDTO(String buildingNumber, String street,
+    public AddressDTO(int id, String buildingNumber, String street,
                    String city, String state, int pincode, String type) {
         this.doorNumber = buildingNumber;
         this.street = street;
@@ -27,6 +28,14 @@ public class AddressDTO {
     }
 
     public AddressDTO() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDoorNumber() {

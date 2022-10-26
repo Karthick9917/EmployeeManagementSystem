@@ -17,6 +17,20 @@ public class EmployeeConstants {
             "\n5.update " +
             "\n6.exit " +
             "\nSelect your option : ";
+    public static final String UPDATE_EMPLOYEE_MENU= "Which one you want to update ?" +
+            "\n------------------------------" +
+            "\n01.First name " +
+            "\n02.Last name " +
+            "\n03.Date of joining " +
+            "\n04.Date of birth " +
+            "\n05.Salary " +
+            "\n06.Gender " +
+            "\n07.Email " +
+            "\n08.Phone number " +
+            "\n09.Role " +
+            "\n10.Address " +
+            "\n11.Save & Exit" +
+            "\nSelect your option : ";
     public static final String SELECT_OPTION_ERROR = " please Enter" +
             " valid option !!! ";
     public static final String INPUT_MISMATCH_EXCEPTION = "Invalid data. " +
@@ -43,17 +57,20 @@ public class EmployeeConstants {
             "DateOfJoining (YYYY/MM/DD): ";
     public static final String ASKING_VALID_INPUT = "Please enter the valid ";
     public static final String ADDRESS = "Enter employee address: ";
-    public static final String ANOTHER_ADDRESS ="Do you want to add " +
+    public static final String ADD_ANOTHER_ADDRESS ="Do you want to add " +
             "another address (Y/N) ? ";
-    public static final String ADDRESS_TYPE = "Enter the employee type";
+    public static final String UPDATE_ANOTHER_ADDRESS ="Do you want to " +
+            "update another address (Y/N) ? ";
+    public static final String ADDRESS_TYPE = "Select the address type";
     public static final String ADDRESS_TYPE_OPTION = " 1.Permanent " +
             "\n 2.Temporary ";
-    public static final String ERROR_404 = " Record Not found...!";
+    public static final String UPDATE_ADDRESS_TYPE = "Which address you" +
+            " want to update?";
+    public static final String ERROR_404 = "Record Not found...!";
 
-    public static final String NOT_EXISTS_MESSAGE = "Given id is not exists..!!!";
     public static final String ID = "Enter employee id ";
     public static final String PHONE_NUMBER = "Enter employee phone number ";
-    public static final String SUCCESSFULL_MESSAGE = "Record successfully ";
+    public static final String SUCCESSFUL_MESSAGE = "Record successfully ";
     public static final String NOT_ADDED_MESSAGE = "Record not added..!!";
     public static final String NOT_DELETED_MESSAGE = "Record not deleted..!!";
     public static final String NOT_UPDATED_MESSAGE = "Record not updated..!!";

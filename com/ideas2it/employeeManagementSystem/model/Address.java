@@ -63,7 +63,6 @@ public class Address {
         this.city = city;
     }
 
-
     public String getState() {
         return state;
     }
@@ -89,7 +88,7 @@ public class Address {
     }
 
     public String toString() {
-        return doorNumber + " "+ street + " "+ city + " "
+        return  id + " " +doorNumber + " "+ street + " "+ city + " "
                 + state + " " + pinCode + " - " + type + " address" + "\n" +
                 "                        ";
     }

@@ -54,5 +54,5 @@ public interface Dao {
      * @return the acknowledgement once the operation is done.
      * @throws EmsException
      */
-    boolean updateEmployeeDetails(Employee employee) throws EmsException;
+    void updateEmployeeDetails(Employee employee) throws EmsException;
 }

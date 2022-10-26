@@ -4,11 +4,14 @@ import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
 import com.ideas2it.employeeManagementSystem.dao.impl.Dao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.util.ConnectionUtil;
 import com.ideas2it.employeeManagementSystem.view.EmployeeView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 
@@ -27,8 +30,7 @@ public class EmployeeDao implements Dao {
 
     private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
 
-    SessionFactory sessionfactory = new Configuration().configure().buildSessionFactory();
-
+    private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
     /**
      * Getting the employee's address details and insert into database
      * @param employee - get an employee object for create operation
@@ -39,13 +41,12 @@ public class EmployeeDao implements Dao {
         int employeeId;
         Session session = null;
         try {
-            session = sessionfactory.openSession();
+            session = connectionUtil.getConnection();
             session.beginTransaction();
             employeeId = (int) session.save(employee);
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            session.getTransaction.rollback();
             throw new EmsException(EmployeeConstants.NOT_ADDED_MESSAGE);
         } finally {
             session.close();
@@ -60,10 +61,10 @@ public class EmployeeDao implements Dao {
      * @throws EmsException
      */
     public List<Employee> readEmployeeDetails() throws EmsException {
-        List<Employee> employeeList = new ArrayList<Employee>();
         Session session = null;
+        List<Employee> employeeList = new ArrayList<Employee>();
         try {
-            session = sessionfactory.openSession();
+            session = connectionUtil.getConnection();
             session.beginTransaction();
             Query query = session.createQuery("from Employee");
             employeeList = query.list();
@@ -86,7 +87,7 @@ public class EmployeeDao implements Dao {
     public void deleteEmployeeDetails(int employeeId) throws EmsException {
         Session session = null;
         try {
-            session = sessionfactory.openSession();
+            session = connectionUtil.getConnection();
             session.beginTransaction();
             Employee employee = session.get(Employee.class, employeeId);
             session.remove(employee);
@@ -97,12 +98,10 @@ public class EmployeeDao implements Dao {
         } finally {
             session.close();
         }
-
     }
 
     /**
-     * getting the all employees details from the database
-     *
+     * getting the all employees details from the database.
      * @return the employees list
      * @throws EmsException
      */
@@ -110,7 +109,7 @@ public class EmployeeDao implements Dao {
         List<Employee> searchEmployeeList = new ArrayList<Employee>();
         Session session = null;
         try {
-            session = sessionfactory.openSession();
+            session = connectionUtil.getConnection();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Employee.class);
             searchEmployeeList = (List<Employee>) criteria.add(Restrictions.like("firstName", (firstName + "%"))).list();
@@ -127,27 +126,21 @@ public class EmployeeDao implements Dao {
     /**
      * Get an employee object for update operation
      * @param employee - get an employee object for update operation
-     * @return the acknowledgement
      * @throws  EmsException
      */
-    public boolean updateEmployeeDetails(Employee employee) throws EmsException {
+    public void updateEmployeeDetails(Employee employee) throws EmsException {
         Session session = null;
-        Employee updateEmployee;
         try {
-            session = sessionfactory.openSession();
+            session = connectionUtil.getConnection();
             session.beginTransaction();
-            updateEmployee = (Employee) session.merge(employee);
+            session.update(employee);
             session.getTransaction().commit();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            logger.error(illegalArgumentException.getMessage());
-            throw new EmsException(EmployeeConstants.NOT_EXISTS_MESSAGE);
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
             throw new EmsException(EmployeeConstants.NOT_UPDATED_MESSAGE);
         } finally {
             session.close();
         }
-        return updateEmployee != null;
     }
 }
 
