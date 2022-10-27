@@ -3,10 +3,10 @@ package com.ideas2it.employeeManagementSystem.util;
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * This makes the connection between the database and our application.
@@ -19,10 +19,7 @@ public class ConnectionUtil {
 
     private static Logger logger = LogManager.getLogger(ConnectionUtil.class.getName());
     private static ConnectionUtil connectionUtil;
-    private static Connection connection;
-    private static final String url = "jdbc:mysql://localhost:3306/employee_management_system";
-    private static final String user = "root";
-    private static final String pass = "K@rthick5665";
+    private static SessionFactory sessionfactory;
 
     private ConnectionUtil() {
     }
@@ -31,7 +28,7 @@ public class ConnectionUtil {
      * Create an object for custom connection.
      * @return - the custom Connection object.
      */
-    public static ConnectionUtil getCustomConnection() {
+    public static ConnectionUtil getConnectionUtil() {
         if (connectionUtil == null) {
             connectionUtil = new ConnectionUtil();
         }
@@ -42,16 +39,16 @@ public class ConnectionUtil {
      * This makes the connection between the database and java application.
      * @return - the connection
      */
-    public Connection getConnection() {
-        if (connection == null) {
+    public Session getConnection() throws EmsException {
+        if (sessionfactory == null) {
             try {
-                connection = DriverManager.getConnection(url, user, pass);
-                logger.info("Database connected sucessfully");
-            } catch (SQLException sqlException) {
+                sessionfactory = new Configuration().configure().buildSessionFactory();
+                logger.info("Database connected successfully");
+            } catch (HibernateException hibernateException) {
                 logger.fatal("Database not connected");
                 throw new EmsException("Connection failed..!!");
             }
         }
-        return connection;
+        return sessionfactory.openSession();
     }
 }

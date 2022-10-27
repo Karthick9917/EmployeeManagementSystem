@@ -35,6 +35,7 @@ public class EmployeeMapper {
         employee.setEmail(employeeDTO.getEmail());
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
         employee.setDateOfJoining(employeeDTO.getDateOfJoining());
+        employee.setRole(employeeDTO.getRole());
         if(null != employeeDTO.getAddressDTO()) {
             for(AddressDTO addressDTO: employeeDTO.getAddressDTO()){
                 address.add(toAddress(addressDTO));
@@ -52,11 +53,12 @@ public class EmployeeMapper {
      */
     public static Address toAddress(AddressDTO addressDTO) {
         Address address = new Address();
+        address.setId(addressDTO.getId());
         address.setDoorNumber(addressDTO.getDoorNumber());
         address.setStreet(addressDTO.getStreet());
         address.setCity(addressDTO.getCity());
         address.setState(addressDTO.getState());
-        address.setPincode(addressDTO.getPincode());
+        address.setPinCode(addressDTO.getPincode());
         address.setType(addressDTO.getType());
         return address;
     }
@@ -79,6 +81,7 @@ public class EmployeeMapper {
         employeeDTO.setEmail(employee.getEmail());
         employeeDTO.setPhoneNumber(employee.getPhoneNumber());
         employeeDTO.setDateOfJoining(employee.getDateOfJoining());
+        employeeDTO.setRole(employee.getRole());
         if(null != employee.getAddress()) {
             for(Address address: employee.getAddress()){
                 addressDTO.add(toAddressDTO(address));
@@ -96,11 +99,12 @@ public class EmployeeMapper {
      */
     public static AddressDTO toAddressDTO(Address address) {
         AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setId(address.getId());
         addressDTO.setDoorNumber(address.getDoorNumber());
         addressDTO.setStreet(address.getStreet());
         addressDTO.setCity(address.getCity());
         addressDTO.setState(address.getState());
-        addressDTO.setPincode(address.getPincode());
+        addressDTO.setPincode(address.getPinCode());
         addressDTO.setType(address.getType());
         return addressDTO;
     }

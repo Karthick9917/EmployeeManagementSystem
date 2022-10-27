@@ -21,11 +21,13 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate dateOfJoining;
+
+    private String role;
     private List<Address> address;
 
     public Employee(String firstName, String lastName,
                     LocalDate dateOfBirth, double salary, String gender,
-                    String email, long phoneNumber, LocalDate dateOfJoining,
+                    String email, long phoneNumber, LocalDate dateOfJoining, String role,
                     List<Address> address) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,9 +37,10 @@ public class Employee {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.dateOfJoining = dateOfJoining;
+        this.role = role;
         this.address = address;
     }
-    public Employee (){
+    public Employee() {
     }
 
     public int getId() {
@@ -110,6 +113,14 @@ public class Employee {
 
     public void setDateOfJoining(LocalDate dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public List<Address> getAddress() {

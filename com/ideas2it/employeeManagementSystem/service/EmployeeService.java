@@ -11,6 +11,7 @@ import com.ideas2it.employeeManagementSystem.util.ValidationUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * Getting employeeDTO
@@ -62,24 +63,50 @@ public class EmployeeService implements EmployeeServiceImpl {
      * Return true or false based on the given string is valid or not.
      * @param email - passing the string for validate.
      * @return true or false based on the given email.
-     * @throws EmsException
      */
-    public boolean validateEmail(String email) throws EmsException {
-        return readEmployeeDetails().stream()
-                .anyMatch(employeeDTO -> employeeDTO
-                        .getEmail().equals(email));
+    public boolean validateEmail(String email) {
+        List<String> duplicateList = readEmployeeDetails().stream()
+                .map(employeeDto -> employeeDto.getEmail()).collect(Collectors.toList());
+        return duplicateList.contains(email);
     }
 
     /**
      * Return true or false based on the given string is valid or not.
      * @param phoneNumber - passing the string for validate.
      * @return true or false based on the given phone number.
-     * @throws EmsException
      */
-    public boolean validatePhoneNumber(String phoneNumber) throws EmsException{
+    public boolean validatePhoneNumber(String phoneNumber) {
+        List<Long> duplicateList = readEmployeeDetails().stream()
+                .map(employeeDto -> employeeDto.getPhoneNumber()).collect(Collectors.toList());
+        return duplicateList.contains(Long.parseLong(phoneNumber));
+    }
+
+    /**
+     * Return true or false based on the given string is valid or not.
+     * @param id - passing the string for validate.
+     * @return true or false based on the given id.
+     */
+    public boolean validateId(String id) {
         return readEmployeeDetails().stream()
                 .anyMatch(employeeDTO -> String.valueOf(employeeDTO
-                        .getPhoneNumber()).equals(phoneNumber));
+                        .getId()).equals(id));
+    }
+
+    /**
+     * Find out the particular object based on the given id.
+     * @param employeeId - passing the string.
+     * @return the object based on the given id.
+     */
+    public EmployeeDTO getEmployeeById(int employeeId) {
+        List<EmployeeDTO> employees = readEmployeeDetails();
+        EmployeeDTO employeeDTO = null;
+        for (EmployeeDTO employee : employees) {
+            if (employee.getId() == employeeId) {
+                employeeDTO = employee;
+                break;
+            }
+        }
+        return employeeDTO;
     }
 
     /**
@@ -115,17 +142,17 @@ public class EmployeeService implements EmployeeServiceImpl {
     /**
      * {@inheritDoc}
      */
-    public boolean deleteEmployeeDetails(int employeeId)
+    public void deleteEmployeeDetails(int employeeId)
             throws EmsException {
-        return employeeDao.deleteEmployeeDetails(employeeId);
+        employeeDao.deleteEmployeeDetails(employeeId);
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId)
+    public void updateEmployeeDetails(EmployeeDTO employeeDTO)
             throws EmsException {
         Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        return employeeDao.updateEmployeeDetails(employee, employeeId);
+        employeeDao.updateEmployeeDetails(employee);
     }
 }

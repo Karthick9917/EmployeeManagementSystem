@@ -45,7 +45,7 @@ public interface Dao {
      * @return the acknowledgement once the operation is done
      * @throws EmsException
      */
-    boolean deleteEmployeeDetails(int employee) throws EmsException;
+    void deleteEmployeeDetails(int employee) throws EmsException;
 
     /**
      * update the employee details to array list
@@ -54,5 +54,5 @@ public interface Dao {
      * @return the acknowledgement once the operation is done.
      * @throws EmsException
      */
-    boolean updateEmployeeDetails(Employee employee, int employeeId) throws EmsException;
+    void updateEmployeeDetails(Employee employee) throws EmsException;
 }

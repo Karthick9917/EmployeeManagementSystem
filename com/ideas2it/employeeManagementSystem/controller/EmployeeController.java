@@ -77,6 +77,26 @@ public class EmployeeController {
     }
 
     /**
+     * Passing the string and its return the true or false
+     * based on the given String is valid or not
+     * @param id    - passing the given String for valid.
+     * @return true for false once the input is valid.
+     */
+    public boolean validateId(String id) {
+        return employeeService.validateId(id);
+    }
+
+    /**
+     * Passing the integer and its return the object
+     * based on the given id.
+     * @param employeeId - passing the given integer.
+     * @return return the object based on the id.
+     */
+    public EmployeeDTO getEmployeeById (int employeeId) {
+        return employeeService.getEmployeeById(employeeId);
+    }
+
+    /**
      * passing the employeeDTO and return the acknowledgement.
      *
      * @param employeeDTO - get an employeeDTO object for create operation
@@ -111,17 +131,16 @@ public class EmployeeController {
      * @param employeeId - transfer the String value.
      * @return the acknowledgement
      */
-    public boolean deleteEmployeeDetails(int employeeId) throws EmsException {
-        return employeeService.deleteEmployeeDetails(employeeId);
+    public void deleteEmployeeDetails(int employeeId) throws EmsException {
+        employeeService.deleteEmployeeDetails(employeeId);
     }
 
     /**
      * passing the employeeDTO and return the acknowledgement.
      *
      * @param employeeDTO - Getting the employeeDTO object
-     * @return the acknowledgement
      */
-    public boolean updateEmployeeDetails(EmployeeDTO employeeDTO, int employeeId) throws EmsException {
-        return employeeService.updateEmployeeDetails(employeeDTO,employeeId);
+    public void updateEmployeeDetails(EmployeeDTO employeeDTO ) throws EmsException {
+        employeeService.updateEmployeeDetails(employeeDTO);
     }
 }
