@@ -4,8 +4,6 @@ package com.ideas2it.employeeManagementSystem.dto;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.lang.String.format;
-
 /**
  * This class with the attributes employeeDTO id, first name, last name,
  * date of birth, salary, gender, email,phone number, addressDTO
@@ -24,9 +22,10 @@ public class EmployeeDTO {
     private String email;
     private long phoneNumber;
     private LocalDate dateOfJoining;
-
     private String role;
     private List<AddressDTO> addressDTO;
+
+    private List<ProjectDTO> projectDTO;
 
     public EmployeeDTO(String firstName, String lastName,
                        LocalDate dateOfBirth, double salary, String gender,
@@ -134,6 +133,14 @@ public class EmployeeDTO {
         this.addressDTO = addressDTO;
     }
 
+    public List<ProjectDTO> getProjectDTO() {
+        return projectDTO;
+    }
+
+    public void setProjectDTO(List<ProjectDTO> projectDTO) {
+        this.projectDTO = projectDTO;
+    }
+
     public String toString() {
         String displayEmployeeDetails = "\nEmployee Id           :  " + id +
                 "\nFirst Name            :  " + firstName +
@@ -144,9 +151,11 @@ public class EmployeeDTO {
                 "\nEmail                 :  " + email +
                 "\nPhoneNumber           :  +91" + phoneNumber +
                 "\nDate Of Joining       :  " + dateOfJoining +
-                "\nAddress               :";
+                "\nAddress               :" +
+                "\nProject               :";
 
         return displayEmployeeDetails + "  " + addressDTO.toString().replace(
-                "[","").replace("]","").replace(",", "");
+                "[","").replace("]","").replace(",", "") + projectDTO + "\n" +
+                "                        ";
     }
 }

@@ -1,10 +1,10 @@
 package com.ideas2it.employeeManagementSystem.controller;
 
-
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
+import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class EmployeeController {
 
-    private EmployeeService employeeService = new EmployeeService();
+    private EmployeeService employeeService = new EmployeeServiceImpl();
 
     /**
      * Passing the pattern and user input, and it returns the true or
@@ -41,7 +41,7 @@ public class EmployeeController {
      * @return true for false once the input is valid.
      */
     public boolean getDate(String date) {
-        return employeeService.getDate(date);
+        return employeeService.validateDate(date);
     }
 
     /**
@@ -99,8 +99,9 @@ public class EmployeeController {
     /**
      * passing the employeeDTO and return the acknowledgement.
      *
-     * @param employeeDTO - get an employeeDTO object for create operation
-     * @return the acknowledgement
+     * @param employeeDTO - get an employeeDTO object for create operation.
+     * @return the acknowledgement.
+     * @throws EmsException
      */
     public boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException {
         return employeeService.createEmployeeDetails(employeeDTO);
@@ -110,6 +111,7 @@ public class EmployeeController {
      * Asking all employeeDTO.
      *
      * @return list of all employeesDTO.
+     * @throws EmsException
      */
     public List readEmployeeDetails() throws EmsException {
          return employeeService.readEmployeeDetails();
@@ -119,17 +121,18 @@ public class EmployeeController {
      * passing the value and return the acknowledgement.
      *
      * @param employeeName - transfer the String value.
-     * @return the Employee DTO object
+     * @return the list of employeeDTO object.
+     * @throws EmsException
      */
     public List<Employee> findEmployeeDetails(String employeeName) throws EmsException {
         return employeeService.findEmployeeDetails(employeeName);
     }
 
     /**
-     * passing the value and return the acknowledgement.
+     * passing the id value for delete operation.
      *
-     * @param employeeId - transfer the String value.
-     * @return the acknowledgement
+     * @param employeeId - transfer the integer value.
+     * @throws EmsException
      */
     public void deleteEmployeeDetails(int employeeId) throws EmsException {
         employeeService.deleteEmployeeDetails(employeeId);
@@ -138,7 +141,8 @@ public class EmployeeController {
     /**
      * passing the employeeDTO and return the acknowledgement.
      *
-     * @param employeeDTO - Getting the employeeDTO object
+     * @param employeeDTO - Getting the employeeDTO object.
+     * @throws EmsException
      */
     public void updateEmployeeDetails(EmployeeDTO employeeDTO ) throws EmsException {
         employeeService.updateEmployeeDetails(employeeDTO);

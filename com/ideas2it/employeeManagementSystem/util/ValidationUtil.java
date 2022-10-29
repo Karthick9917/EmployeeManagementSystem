@@ -1,7 +1,7 @@
 package com.ideas2it.employeeManagementSystem.util;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
-import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
+import com.ideas2it.employeeManagementSystem.constants.Constants;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -33,11 +33,11 @@ public class ValidationUtil {
     public static LocalDate dateValid(String date) throws EmsException {
         LocalDate parsedDate;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern
-                (EmployeeConstants.DATE_FORMAT);
+                (Constants.DATE_FORMAT);
         try {
             parsedDate = LocalDate.parse(date, formatter);
         } catch (DateTimeParseException dateTimeParseException) {
-            throw new EmsException(EmployeeConstants.ASKING_VALID_INPUT + "date(YYYY-MM-DD)");
+            throw new EmsException(Constants.ASKING_VALID_INPUT + "date(YYYY-MM-DD)");
         }
         return parsedDate;
     }

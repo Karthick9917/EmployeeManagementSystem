@@ -1,11 +1,10 @@
-package com.ideas2it.employeeManagementSystem.dao;
+package com.ideas2it.employeeManagementSystem.dao.impl;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
-import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
-import com.ideas2it.employeeManagementSystem.dao.impl.Dao;
+import com.ideas2it.employeeManagementSystem.constants.Constants;
+import com.ideas2it.employeeManagementSystem.dao.Dao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.util.ConnectionUtil;
-import com.ideas2it.employeeManagementSystem.view.EmployeeView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,11 +27,12 @@ import java.util.List;
  */
 public class EmployeeDao implements Dao {
 
-    private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
+    private static Logger logger = LogManager.getLogger(EmployeeDao.class.getName());
 
     private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
+
     /**
-     * Getting the employee's address details and insert into database
+     * Getting the employee's details and insert into database
      * @param employee - get an employee object for create operation
      * @return the acknowledgment
      * @throws EmsException
@@ -47,9 +47,11 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(EmployeeConstants.NOT_ADDED_MESSAGE);
+            throw new EmsException(Constants.NOT_ADDED_MESSAGE);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
         logger.info("Employee " + employeeId + "has been created successfully");
         return employeeId > 0;
@@ -71,9 +73,11 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(EmployeeConstants.RECORD_EMPTY_MESSAGE);
+            throw new EmsException(Constants.RECORD_EMPTY_MESSAGE);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
         return employeeList;
     }
@@ -94,9 +98,11 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(EmployeeConstants.NOT_DELETED_MESSAGE);
+            throw new EmsException(Constants.NOT_DELETED_MESSAGE);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
     }
 
@@ -116,9 +122,11 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(EmployeeConstants.RECORD_EMPTY_MESSAGE);
+            throw new EmsException(Constants.RECORD_EMPTY_MESSAGE);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
         return searchEmployeeList;
     }
@@ -137,9 +145,11 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(EmployeeConstants.NOT_UPDATED_MESSAGE);
+            throw new EmsException(Constants.NOT_UPDATED_MESSAGE);
         } finally {
-            session.close();
+            if(session != null) {
+                session.close();
+            }
         }
     }
 }
