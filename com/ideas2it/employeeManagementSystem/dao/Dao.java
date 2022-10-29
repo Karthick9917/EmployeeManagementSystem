@@ -1,4 +1,4 @@
-package com.ideas2it.employeeManagementSystem.dao.impl;
+package com.ideas2it.employeeManagementSystem.dao;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.model.Employee;

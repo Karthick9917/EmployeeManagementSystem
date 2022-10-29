@@ -21,9 +21,9 @@ public class Employee {
     private String email;
     private long phoneNumber;
     private LocalDate dateOfJoining;
-
     private String role;
     private List<Address> address;
+    private List<Project> project;
 
     public Employee(String firstName, String lastName,
                     LocalDate dateOfBirth, double salary, String gender,
@@ -131,6 +131,14 @@ public class Employee {
         this.address = address;
     }
 
+    public List<Project> getProject() {
+        return project;
+    }
+
+    public void setProject(List<Project> project) {
+        this.project = project;
+    }
+
     public String toString() {
         String displayEmployeeDetails = "\nEmployee Id           :  " + id +
                 "\nFirst Name            :  " + firstName +
@@ -141,9 +149,10 @@ public class Employee {
                 "\nEmail                 :  " + email +
                 "\nPhoneNumber           :  +91" + phoneNumber +
                 "\nDate Of Joining       :  " + dateOfJoining +
-                "\nAddress               :";
+                "\nAddress               :" +
+                "\nProject               :";
 
         return displayEmployeeDetails + "  " + address.toString().replace(
-                "[","").replace("]","").replace(",", "");
+                "[","").replace("]","").replace(",", "") + project;
     }
 }

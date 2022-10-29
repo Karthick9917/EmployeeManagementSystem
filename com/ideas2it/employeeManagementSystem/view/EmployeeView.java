@@ -1,7 +1,7 @@
 package com.ideas2it.employeeManagementSystem.view;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
-import com.ideas2it.employeeManagementSystem.constants.EmployeeConstants;
+import com.ideas2it.employeeManagementSystem.constants.Constants;
 import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
 import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
@@ -27,18 +27,19 @@ public class EmployeeView {
     private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
 
     private Scanner scanner = new Scanner(System.in);
+
     private EmployeeController employeeController = new EmployeeController();
 
     /**
      * Employee management system used to
      * select an option to perform operations.
      */
-    public void viewEmployeeManagementSystem () {
+    public void manageEmployee() {
         int option = 0;
 
         do {
             try {
-                System.out.println(EmployeeConstants.EMPLOYEE_MANAGEMENT_MENU);
+                System.out.println(Constants.EMPLOYEE_MANAGEMENT_MENU);
                 scanner = new Scanner(System.in);
                 option = scanner.nextInt();
                 switch (option) {
@@ -67,12 +68,12 @@ public class EmployeeView {
 
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.INPUT_MISMATCH_EXCEPTION);
+                System.out.println(Constants.INPUT_MISMATCH_EXCEPTION);
             }
         } while (option != 6);
     }
@@ -84,33 +85,33 @@ public class EmployeeView {
      */
     private AddressDTO addAddress() {
         AddressDTO addressDTO = new AddressDTO();
-        System.out.print(EmployeeConstants.HOUSE_NUMBER);
-        String buildingNumber = getUserInput(EmployeeConstants.
+        System.out.print(Constants.HOUSE_NUMBER);
+        String buildingNumber = getUserInput(Constants.
                 DOOR_NUMBER_PATTERN,"door number..!!");
         addressDTO.setDoorNumber(buildingNumber);
-        System.out.println(EmployeeConstants.STREET);
-        String street = getUserInput(EmployeeConstants.
+        System.out.println(Constants.STREET);
+        String street = getUserInput(Constants.
                 STREET_PATTERN, "street name" +
                 " eg: karaneeswarar koil 1st street");
         addressDTO.setStreet(street);
-        System.out.println(EmployeeConstants.CITY);
-        String city = getUserInput(EmployeeConstants.
+        System.out.println(Constants.CITY);
+        String city = getUserInput(Constants.
                 ADDRESS_PATTERN, "city eg: chennai");
         addressDTO.setCity(city);
-        System.out.println(EmployeeConstants.STATE);
-        String state = getUserInput(EmployeeConstants.
+        System.out.println(Constants.STATE);
+        String state = getUserInput(Constants.
                 ADDRESS_PATTERN,"state eg: tamil nadu");
         addressDTO.setState(state);
-        System.out.println(EmployeeConstants.PINCODE);
-        int pincode = Integer.parseInt(getUserInput(EmployeeConstants.
+        System.out.println(Constants.PINCODE);
+        int pincode = Integer.parseInt(getUserInput(Constants.
                 PINCODE_PATTERN, "pincode eg:600004"));
         addressDTO.setPincode(pincode);
-        System.out.println(EmployeeConstants.ADDRESS_TYPE);
+        System.out.println(Constants.ADDRESS_TYPE);
         String type = "";
         int choose = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.ADDRESS_TYPE_OPTION);
+                System.out.println(Constants.ADDRESS_TYPE_OPTION);
                 scanner = new Scanner(System.in);
                 choose = scanner.nextInt();
                 switch (choose) {
@@ -122,13 +123,12 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.ADDRESS_TYPE_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(choose > 0 && choose < 3 ));
         addressDTO.setType(type);
@@ -149,7 +149,7 @@ public class EmployeeView {
             scanner = new Scanner(System.in);
             userInput = scanner.nextLine();
             if(!employeeController.userInputValidation(pattern, userInput)) {
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else {
                 isValid = true;
@@ -174,11 +174,11 @@ public class EmployeeView {
             if (employeeController.validateEmail(email)) {
                 System.out.println("Given Email " +
                         "is already exist..!!");
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else if (!employeeController.userInputValidation
                     (pattern, email)) {
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else {
                 isValid = true;
@@ -203,10 +203,10 @@ public class EmployeeView {
             if (employeeController.validatePhoneNumber(phoneNumber)) {
                 System.out.println("Given phone number " +
                         "is already exist..!!");
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else if(!employeeController.userInputValidation(pattern, phoneNumber)) {
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else {
                 isValid = true;
@@ -229,10 +229,10 @@ public class EmployeeView {
             scanner = new Scanner(System.in);
             id = scanner.nextLine();
             if (!employeeController.userInputValidation(pattern, id)) {
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else if(!employeeController.validateId(id)){
-                System.out.println(EmployeeConstants.ERROR_404 + "\n" + EmployeeConstants.
+                System.out.println(Constants.ERROR_404 + "\n" + Constants.
                         ASKING_VALID_INPUT + errorMessage);
             } else {
                 isValid = true;
@@ -255,7 +255,7 @@ public class EmployeeView {
                 scanner = new Scanner(System.in);
                 date = scanner.next();
                 if(employeeController.getDate(date)){
-                    System.out.println(EmployeeConstants.
+                    System.out.println(Constants.
                             ASKING_VALID_INPUT + "date(YYYY-MM-DD)");
                 } else {
                     isValid = true;
@@ -296,30 +296,30 @@ public class EmployeeView {
     public void createEmployeeDetails() {
         List<AddressDTO> listAddressDTO = new ArrayList<>();
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        System.out.println(EmployeeConstants.FIRST_NAME);
-        String firstName = getUserInput(EmployeeConstants.NAME_PATTERN,
+        System.out.println(Constants.FIRST_NAME);
+        String firstName = getUserInput(Constants.NAME_PATTERN,
                 "first name (eg:karthick)");
         employeeDTO.setFirstName(firstName);
-        System.out.println(EmployeeConstants.LAST_NAME);
-        String lastName = getUserInput(EmployeeConstants.
+        System.out.println(Constants.LAST_NAME);
+        String lastName = getUserInput(Constants.
                 LAST_NAME_PATTERN, "last name (eg:b or baskar)");
         employeeDTO.setLastName(lastName);
-        System.out.println(EmployeeConstants.SALARY);
-        Double salary = Double.parseDouble(getUserInput(EmployeeConstants.
+        System.out.println(Constants.SALARY);
+        Double salary = Double.parseDouble(getUserInput(Constants.
                 SALARY_PATTERN, "salary (eg: 34000.45)"));
         employeeDTO.setSalary(salary);
-        System.out.println(EmployeeConstants.DATE_OF_JOINING);
+        System.out.println(Constants.DATE_OF_JOINING);
         LocalDate dateOfJoining = getDate();
         employeeDTO.setDateOfJoining(dateOfJoining);
-        System.out.println(EmployeeConstants.DOB);
+        System.out.println(Constants.DOB);
         LocalDate dateOfBirth = getDateOfBirth(dateOfJoining);
         employeeDTO.setDateOfBirth(dateOfBirth);
-        System.out.println(EmployeeConstants.GENDER);
+        System.out.println(Constants.GENDER);
         String gender = "";
         int choose = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.GENDER_OPTION);
+                System.out.println(Constants.GENDER_OPTION);
                 scanner = new Scanner(System.in);
                 choose = scanner.nextInt();
                 switch (choose) {
@@ -334,30 +334,29 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.GENDER_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(choose > 0 && choose < 4 ));
         employeeDTO.setGender(gender);
-        System.out.println(EmployeeConstants.EMAIL);
-        String email = getEmail(EmployeeConstants.EMAIL_PATTERN, "email" +
+        System.out.println(Constants.EMAIL);
+        String email = getEmail(Constants.EMAIL_PATTERN, "email" +
                 " eg: karthick17@gmail.com");
-        System.out.println(EmployeeConstants.PHONE_NUMBER);
+        System.out.println(Constants.PHONE_NUMBER);
         employeeDTO.setEmail(email);
-        long phoneNumber = Long.parseLong(getPhoneNumber(EmployeeConstants.
+        long phoneNumber = Long.parseLong(getPhoneNumber(Constants.
                 PHONE_NUMBER_PATTERN,"phone number eg:7898765678"));
         employeeDTO.setPhoneNumber(phoneNumber);
-        System.out.println(EmployeeConstants.ROLE);
+        System.out.println(Constants.ROLE);
         String role = "";
         int select = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.ROLE_OPTION);
+                System.out.println(Constants.ROLE_OPTION);
                 scanner = new Scanner(System.in);
                 select = scanner.nextInt();
                 switch (select) {
@@ -369,32 +368,32 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.ROLE_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(select > 0 && select < 3 ));
         employeeDTO.setRole(role);
-        System.out.println(EmployeeConstants.ADDRESS);
+        System.out.println(Constants.ADDRESS);
         AddressDTO addressDTO = addAddress();
         listAddressDTO.add(addressDTO);
-        System.out.println(EmployeeConstants.ADD_ANOTHER_ADDRESS);
-        String anotherAddress = getUserInput(EmployeeConstants.
+        System.out.println(Constants.ADD_ANOTHER_ADDRESS);
+        String anotherAddress = getUserInput(Constants.
                 ANOTHER_ADDRESS_PATTERN, "input eg:y or n ");
         if (anotherAddress.equalsIgnoreCase("Y")) {
             AddressDTO tempAddressDTO = addAddress();
             listAddressDTO.add(tempAddressDTO);
         }
+        employeeDTO.setAddressDTO(listAddressDTO);
         try {
             if (employeeController.createEmployeeDetails(employeeDTO)) {
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         SUCCESSFUL_MESSAGE + "created ");
             } else {
-                System.out.println(EmployeeConstants.NOT_ADDED_MESSAGE);
+                System.out.println(Constants.NOT_ADDED_MESSAGE);
             }
         } catch (EmsException emsException) {
             logger.error("Database not connected");
@@ -411,7 +410,7 @@ public class EmployeeView {
                     readEmployeeDetails();
             if (employeesList.isEmpty()) {
                 logger.warn("No records in database");
-                System.out.println(EmployeeConstants.RECORD_EMPTY_MESSAGE);
+                System.out.println(Constants.RECORD_EMPTY_MESSAGE);
             } else {
                 for (EmployeeDTO employeeDTO : employeesList) {
                     System.out.println(employeeDTO);
@@ -428,8 +427,8 @@ public class EmployeeView {
      * display the employee details based on the employee name
      */
     public void searchEmployeeDetails() {
-        System.out.println(EmployeeConstants.FIRST_NAME);
-        String name = getUserInput(EmployeeConstants.
+        System.out.println(Constants.FIRST_NAME);
+        String name = getUserInput(Constants.
                 NAME_PATTERN, "name eg: karthick");
         try {
             List<Employee> searchEmployee = employeeController.
@@ -440,7 +439,7 @@ public class EmployeeView {
                 }
             } else {
                 logger.warn("no records");
-                System.out.println(EmployeeConstants.RECORD_EMPTY_MESSAGE);
+                System.out.println(Constants.RECORD_EMPTY_MESSAGE);
             }
         } catch (EmsException emsException) {
             logger.error("empty records...!!");
@@ -452,17 +451,17 @@ public class EmployeeView {
      * Delete the employee details based on the employee id.
      */
     public void deleteEmployeeDetails() {
-        System.out.println(EmployeeConstants.ID + "to delete");
-        int id =  Integer.parseInt(getId(EmployeeConstants.
-                EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
+        System.out.println(Constants.EMPLOYEE_ID + "to delete");
+        int id =  Integer.parseInt(getId(Constants.
+                ID_PATTERN, "id eg: 1 or 12"));
         try {
             employeeController.deleteEmployeeDetails(id);
             logger.info("Employee " + id + "has been removed successfully");
-            System.out.println(EmployeeConstants.
+            System.out.println(Constants.
                     SUCCESSFUL_MESSAGE + "deleted");
         } catch (EmsException e) {
             logger.error("empty record..!!");
-            System.out.println(EmployeeConstants.ERROR_404);
+            System.out.println(Constants.ERROR_404);
         }
     }
 
@@ -470,55 +469,55 @@ public class EmployeeView {
      * Update the employee Details based on the employee id.
      */
     public void updateEmployeeDetails() {
-        System.out.println(EmployeeConstants.ID + "to update ");
-        int id = Integer.parseInt(getId(EmployeeConstants.
-                EMPLOYEE_ID_PATTERN, "id eg: 1 or 12"));
+        System.out.println(Constants.EMPLOYEE_ID + "to update ");
+        int id = Integer.parseInt(getId(Constants.
+                ID_PATTERN, "id eg: 1 or 12"));
         EmployeeDTO employeeDTO = employeeController.getEmployeeById(id);
-        int option = 0;
         employeeDTO.setId(id);
+        int option = 0;
         do {
             try {
-                System.out.println(EmployeeConstants.UPDATE_EMPLOYEE_MENU);
+                System.out.println(Constants.UPDATE_EMPLOYEE_MENU);
                 scanner = new Scanner(System.in);
                 option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        System.out.println(EmployeeConstants.FIRST_NAME);
-                        employeeDTO.setFirstName(getUserInput(EmployeeConstants
+                        System.out.println(Constants.FIRST_NAME);
+                        employeeDTO.setFirstName(getUserInput(Constants
                                 .NAME_PATTERN,"first name (eg:karthick)"));
                         break;
                     case 2:
-                        System.out.println(EmployeeConstants.LAST_NAME);
-                        employeeDTO.setLastName(getUserInput(EmployeeConstants
+                        System.out.println(Constants.LAST_NAME);
+                        employeeDTO.setLastName(getUserInput(Constants
                                 .LAST_NAME_PATTERN, "last name (eg:b or baskar)"));
                         break;
                     case 3:
-                        System.out.println(EmployeeConstants.DATE_OF_JOINING);
+                        System.out.println(Constants.DATE_OF_JOINING);
                         employeeDTO.setDateOfJoining(getDate());
                         break;
                     case 4:
-                        System.out.println(EmployeeConstants.DOB);
+                        System.out.println(Constants.DOB);
                         LocalDate dateOfBirth = getDateOfBirth(employeeDTO.getDateOfJoining());
                         employeeDTO.setDateOfBirth(dateOfBirth);
                         break;
                     case 5:
-                        System.out.println(EmployeeConstants.SALARY);
+                        System.out.println(Constants.SALARY);
                         employeeDTO.setSalary(Double
-                                .parseDouble(getUserInput(EmployeeConstants
+                                .parseDouble(getUserInput(Constants
                                 .SALARY_PATTERN, "salary (eg: 34000.45)")));
                         break;
                     case 6:
                         employeeDTO.setGender(getGender());
                         break;
                     case 7:
-                        System.out.println(EmployeeConstants.EMAIL);
-                        employeeDTO.setEmail(getEmail(EmployeeConstants
+                        System.out.println(Constants.EMAIL);
+                        employeeDTO.setEmail(getEmail(Constants
                                 .EMAIL_PATTERN, "email eg: karthick17@gmail.com"));
                         break;
                     case 8:
-                        System.out.println(EmployeeConstants.PHONE_NUMBER);
+                        System.out.println(Constants.PHONE_NUMBER);
                         employeeDTO.setPhoneNumber(Long
-                                .parseLong(getPhoneNumber(EmployeeConstants
+                                .parseLong(getPhoneNumber(Constants
                                         .PHONE_NUMBER_PATTERN,"phone number" +
                                         " eg:7898765678")));
                         break;
@@ -532,18 +531,18 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.INPUT_MISMATCH_EXCEPTION);
+                System.out.println(Constants.INPUT_MISMATCH_EXCEPTION);
             }
         } while (option != 11);
         try {
             employeeController.updateEmployeeDetails(employeeDTO);
                 logger.info("Employee " + id + "has been updated successfully");
-                System.out.println(EmployeeConstants.
+                System.out.println(Constants.
                         SUCCESSFUL_MESSAGE + "updated");
         } catch (EmsException emsException) {
             logger.error("database not connected..!!");
@@ -551,16 +550,22 @@ public class EmployeeView {
         }
     }
 
+    /**
+     * Getting the updated address object and
+     * set to the concerned employee address type.
+     * @param employeeDTO - passing the object for update the address.
+     * @return the list of address object
+     */
     public List<AddressDTO> updateAddress(EmployeeDTO employeeDTO) {
         boolean isUpdateAnotherAddress = false;
         List<AddressDTO> listAddressDTO;
         do {
-            System.out.println(EmployeeConstants.UPDATE_ADDRESS_TYPE);
+            System.out.println(Constants.UPDATE_ADDRESS_TYPE);
             String type = "";
             int choose = 0;
             do {
                 try {
-                    System.out.println(EmployeeConstants.ADDRESS_TYPE_OPTION);
+                    System.out.println(Constants.ADDRESS_TYPE_OPTION);
                     scanner = new Scanner(System.in);
                     choose = scanner.nextInt();
                     switch (choose) {
@@ -572,13 +577,12 @@ public class EmployeeView {
                             break;
                         default:
                             logger.warn("invalid data");
-                            System.out.println(EmployeeConstants.
+                            System.out.println(Constants.
                                     SELECT_OPTION_ERROR);
                     }
                 } catch (InputMismatchException inputMismatchException) {
                     logger.error("input mismatch");
-                    System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                            + EmployeeConstants.ADDRESS_TYPE_OPTION);
+                    System.out.println(Constants.SELECT_OPTION_ERROR);
                 }
             } while (!(choose > 0 && choose < 3));
             listAddressDTO = employeeDTO.getAddressDTO();
@@ -590,8 +594,8 @@ public class EmployeeView {
                     System.out.println(type + " address is not there for update...!!");
                 }
             }
-            System.out.println(EmployeeConstants.UPDATE_ANOTHER_ADDRESS);
-            String anotherAddress = getUserInput(EmployeeConstants.
+            System.out.println(Constants.UPDATE_ANOTHER_ADDRESS);
+            String anotherAddress = getUserInput(Constants.
                     ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
             if (anotherAddress.equalsIgnoreCase("Y")) {
                 isUpdateAnotherAddress = true;
@@ -602,16 +606,15 @@ public class EmployeeView {
 
     /**
      * Get the gender of the employee from the user.
-     *
      * @return the string value of the role.
      */
     public String getGender() {
-        System.out.println(EmployeeConstants.GENDER);
+        System.out.println(Constants.GENDER);
         String gender = "";
         int choose = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.GENDER_OPTION);
+                System.out.println(Constants.GENDER_OPTION);
                 scanner = new Scanner(System.in);
                 choose = scanner.nextInt();
                 switch (choose) {
@@ -626,13 +629,12 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.GENDER_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(choose > 0 && choose < 4 ));
         return gender;
@@ -644,12 +646,12 @@ public class EmployeeView {
      * @return the string value of the role.
      */
     public String getRole() {
-        System.out.println(EmployeeConstants.ROLE);
+        System.out.println(Constants.ROLE);
         String role = "";
         int select = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.ROLE_OPTION);
+                System.out.println(Constants.ROLE_OPTION);
                 scanner = new Scanner(System.in);
                 select = scanner.nextInt();
                 switch (select) {
@@ -661,46 +663,50 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.ROLE_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(select > 0 && select < 3 ));
         return role;
     }
 
+    /**
+     * Get the address of the employee from the user for update
+     * @param addressDTO - passing the object for update.
+     * @return the updated object
+     */
     private AddressDTO getAddress(AddressDTO addressDTO) {
-        System.out.print(EmployeeConstants.HOUSE_NUMBER);
-        String buildingNumber = getUserInput(EmployeeConstants.
+        System.out.print(Constants.HOUSE_NUMBER);
+        String buildingNumber = getUserInput(Constants.
                 DOOR_NUMBER_PATTERN,"door number..!!");
         addressDTO.setDoorNumber(buildingNumber);
-        System.out.println(EmployeeConstants.STREET);
-        String street = getUserInput(EmployeeConstants.
+        System.out.println(Constants.STREET);
+        String street = getUserInput(Constants.
                 STREET_PATTERN, "street name" +
                 " eg: karaneeswarar koil 1st street");
         addressDTO.setStreet(street);
-        System.out.println(EmployeeConstants.CITY);
-        String city = getUserInput(EmployeeConstants.
+        System.out.println(Constants.CITY);
+        String city = getUserInput(Constants.
                 ADDRESS_PATTERN, "city eg: chennai");
         addressDTO.setCity(city);
-        System.out.println(EmployeeConstants.STATE);
-        String state = getUserInput(EmployeeConstants.
+        System.out.println(Constants.STATE);
+        String state = getUserInput(Constants.
                 ADDRESS_PATTERN,"state eg: tamil nadu");
         addressDTO.setState(state);
-        System.out.println(EmployeeConstants.PINCODE);
-        int pincode = Integer.parseInt(getUserInput(EmployeeConstants.
+        System.out.println(Constants.PINCODE);
+        int pincode = Integer.parseInt(getUserInput(Constants.
                 PINCODE_PATTERN, "pincode eg:600004"));
         addressDTO.setPincode(pincode);
-        System.out.println(EmployeeConstants.ADDRESS_TYPE);
+        System.out.println(Constants.ADDRESS_TYPE);
         String type = "";
         int choose = 0;
         do{
             try {
-                System.out.println(EmployeeConstants.ADDRESS_TYPE_OPTION);
+                System.out.println(Constants.ADDRESS_TYPE_OPTION);
                 scanner = new Scanner(System.in);
                 choose = scanner.nextInt();
                 switch (choose) {
@@ -712,13 +718,12 @@ public class EmployeeView {
                         break;
                     default:
                         logger.warn("invalid data");
-                        System.out.println(EmployeeConstants.
+                        System.out.println(Constants.
                                 SELECT_OPTION_ERROR);
                 }
             } catch (InputMismatchException inputMismatchException) {
                 logger.error("input mismatch");
-                System.out.println(EmployeeConstants.SELECT_OPTION_ERROR
-                        +EmployeeConstants.ADDRESS_TYPE_OPTION);
+                System.out.println(Constants.SELECT_OPTION_ERROR);
             }
         } while (!(choose > 0 && choose < 3 ));
         addressDTO.setType(type);

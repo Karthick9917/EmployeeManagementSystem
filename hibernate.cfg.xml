@@ -13,5 +13,6 @@
         <property name="show_sql">true</property>
         <mapping resource = "com/ideas2it/employeeManagementSystem/model/Employee.hbm.xml"/>
         <mapping resource = "com/ideas2it/employeeManagementSystem/model/Address.hbm.xml"/>
+        <mapping resource = "com/ideas2it/employeeManagementSystem/model/Project.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

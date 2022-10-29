@@ -6,7 +6,7 @@ package com.ideas2it.employeeManagementSystem.constants;
  * @author	Karthick
  *
  */
-public class EmployeeConstants {
+public class Constants {
 
     public static final String EMPLOYEE_MANAGEMENT_MENU = "<<< Main Menu >>>" +
             "\n-----------------" +
@@ -31,7 +31,7 @@ public class EmployeeConstants {
             "\n10.Address " +
             "\n11.Save & Exit" +
             "\nSelect your option : ";
-    public static final String SELECT_OPTION_ERROR = " please Enter" +
+    public static final String SELECT_OPTION_ERROR = "please Enter" +
             " valid option !!! ";
     public static final String INPUT_MISMATCH_EXCEPTION = "Invalid data. " +
             "Please enter valid data.!";
@@ -68,7 +68,7 @@ public class EmployeeConstants {
             " want to update?";
     public static final String ERROR_404 = "Record Not found...!";
 
-    public static final String ID = "Enter employee id ";
+    public static final String EMPLOYEE_ID = "Enter employee id ";
     public static final String PHONE_NUMBER = "Enter employee phone number ";
     public static final String SUCCESSFUL_MESSAGE = "Record successfully ";
     public static final String NOT_ADDED_MESSAGE = "Record not added..!!";
@@ -86,7 +86,7 @@ public class EmployeeConstants {
     public static final String PHONE_NUMBER_PATTERN = "[6-9][0-9]{9}";
     public static final String EMAIL_PATTERN = "^[a-zA-Z0-9.!]+@[a-zA-Z0-9-]" +
             "+(?:.[a-zA-Z0-9-]+)*$";
-    public static final String EMPLOYEE_ID_PATTERN = "[1-9]{1,}";
+    public static final String ID_PATTERN = "[1-9]{1,}";
     public static final String PINCODE_PATTERN = "^([0-9]{6})$";
     public static final String ANOTHER_ADDRESS_PATTERN = "[a-zA-Z]{1}";
     public static final String DOOR_NUMBER_PATTERN = "([A-Za-z]*[-/]?" +
@@ -95,6 +95,48 @@ public class EmployeeConstants {
             "[a-zA-Z]{0,15}){0,}$";
     public static final String STREET_PATTERN = "^[a-zA-Z0-9]{2,15}([ ]" +
             "?[a-zA-Z0-9]{0,15}){0,}$";
-    public static final String GREETINGS = "\n*** WELCOME TO EMPLOYEE" +
+    public static final String EMPLOYEE_GREETINGS = "\n*** WELCOME TO EMPLOYEE" +
             " MANAGEMENT SYSTEM ***\n";
+    public static final String PROJECT_GREETINGS = "\n*** WELCOME TO PROJECT" +
+            " MANAGEMENT SYSTEM ***\n";
+
+    public static final String GREETINGS = "\n*** WELCOME TO" +
+            " MANAGEMENT SYSTEM ***\n";
+
+    public static final String OPTION = " 1.Employee " +
+            "\n 2.Project \n Select your option :";
+    public static final String PROJECT_MENU = "<<< Main Menu >>>" +
+            "\n-----------------" +
+            "\n1.Add project " +
+            "\n2.Display all project " +
+            "\n3.update project " +
+            "\n4.Delete project by id " +
+            "\n5.Assign Employees For Project" +
+            "\n5.exit " +
+            "\nSelect your option : ";
+
+    public static final String PROJECT_ID = "Enter project id ";
+    public static final String PROJECT_NAME_PATTERN = "^[a-zA-Z]{3,}([ ]?" +
+            "[a-zA-Z]{0,50}){0,}$";
+
+    public static final String PROJECT_DOMAIN_PATTERN = "^[a-zA-Z]{3,}([ ]?" +
+            "[a-zA-Z]{0,30}){0,}$";
+
+    public static final String UPDATE_PROJECT_MENU = "Which one you want to update ?" +
+            "\n------------------------------" +
+            "\n01.Project name" +
+            "\n02.Project domain " +
+            "\n03.project due date " +
+            "\n04.project start date " +
+            "\n05.project end date " +
+            "\n06.Save & Exit" +
+            "\nSelect your option : ";
+
+    public static final String PROJECT_NAME = "Enter the project name: ";
+    public static final String PROJECT_DOMAIN = "Enter the project domain: ";
+    public static final String PROJECT_DUE_DATE = "Enter the project due date(YYYY/MM/DD): ";
+    public static final String PROJECT_START_DATE = "Enter the project start date(YYYY/MM/DD): ";
+    public static final String PROJECT_END_DATE = "Enter the project end date (YYYY/MM/DD):";
+
+
 }
