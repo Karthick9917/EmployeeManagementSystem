@@ -25,10 +25,10 @@ public class EmployeeManagementSystem {
     public static void main(String[] args) {
 
         Logger logger = LogManager.getLogger(EmployeeView.class.getName());
-        System.out.println(Constants.GREETINGS);
         int choose = 0;
         do{
             try {
+                System.out.println(Constants.GREETINGS);
                 System.out.println(Constants.OPTION);
                 Scanner scanner = new Scanner(System.in);
                 choose = scanner.nextInt();
@@ -43,6 +43,8 @@ public class EmployeeManagementSystem {
                         System.out.println(Constants.PROJECT_GREETINGS);
                         projectView.manageProject();
                         break;
+                    case 3:
+                        System.exit(3);
                     default:
                         logger.warn("invalid data");
                         System.out.println(Constants.
@@ -52,6 +54,6 @@ public class EmployeeManagementSystem {
                 logger.error("input mismatch");
                 System.out.println(Constants.INPUT_MISMATCH_EXCEPTION);
             }
-        } while (!(choose > 0 && choose < 3 ));
+        } while (choose != 3);
     }
 }

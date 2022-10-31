@@ -5,7 +5,7 @@ import com.ideas2it.employeeManagementSystem.constants.Constants;
 import com.ideas2it.employeeManagementSystem.controller.EmployeeController;
 import com.ideas2it.employeeManagementSystem.dto.AddressDTO;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,7 +64,11 @@ public class EmployeeView {
                         break;
 
                     case 6:
-                        System.exit(6);
+                        this.assignProjectsForEmployee();
+                        break;
+
+                    case 7:
+                        break;
 
                     default:
                         logger.warn("invalid data");
@@ -75,7 +79,7 @@ public class EmployeeView {
                 logger.error("input mismatch");
                 System.out.println(Constants.INPUT_MISMATCH_EXCEPTION);
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 
     /**
@@ -393,7 +397,7 @@ public class EmployeeView {
                 System.out.println(Constants.
                         SUCCESSFUL_MESSAGE + "created ");
             } else {
-                System.out.println(Constants.NOT_ADDED_MESSAGE);
+                System.out.println(Constants.FAILED_TO_ADD);
             }
         } catch (EmsException emsException) {
             logger.error("Database not connected");
@@ -407,10 +411,10 @@ public class EmployeeView {
     public void displayEmployeeDetails() {
         try {
             List<EmployeeDTO> employeesList = employeeController.
-                    readEmployeeDetails();
+                    getAllEmployee();
             if (employeesList.isEmpty()) {
                 logger.warn("No records in database");
-                System.out.println(Constants.RECORD_EMPTY_MESSAGE);
+                System.out.println(Constants.ERROR_404);
             } else {
                 for (EmployeeDTO employeeDTO : employeesList) {
                     System.out.println(employeeDTO);
@@ -431,15 +435,15 @@ public class EmployeeView {
         String name = getUserInput(Constants.
                 NAME_PATTERN, "name eg: karthick");
         try {
-            List<Employee> searchEmployee = employeeController.
-                    findEmployeeDetails(name);
+            List<EmployeeDTO> searchEmployee = employeeController.
+                    getEmployeesByName(name);
             if (!searchEmployee.isEmpty()) {
-                for (Employee employee : searchEmployee) {
-                    System.out.println(employee);
+                for (EmployeeDTO employeeDTO : searchEmployee) {
+                    System.out.println(employeeDTO);
                 }
             } else {
                 logger.warn("no records");
-                System.out.println(Constants.RECORD_EMPTY_MESSAGE);
+                System.out.println(Constants.ERROR_404);
             }
         } catch (EmsException emsException) {
             logger.error("empty records...!!");
@@ -557,9 +561,10 @@ public class EmployeeView {
      * @return the list of address object
      */
     public List<AddressDTO> updateAddress(EmployeeDTO employeeDTO) {
-        boolean isUpdateAnotherAddress = false;
-        List<AddressDTO> listAddressDTO;
+        List<AddressDTO> addressDTOList = new ArrayList<AddressDTO>();
+        boolean isUpdateAnotherAddress;
         do {
+            isUpdateAnotherAddress = false;
             System.out.println(Constants.UPDATE_ADDRESS_TYPE);
             String type = "";
             int choose = 0;
@@ -585,23 +590,82 @@ public class EmployeeView {
                     System.out.println(Constants.SELECT_OPTION_ERROR);
                 }
             } while (!(choose > 0 && choose < 3));
-            listAddressDTO = employeeDTO.getAddressDTO();
-            for (AddressDTO addressDto : listAddressDTO) {
+            Boolean checkAddress = false;
+            for (AddressDTO addressDto : employeeDTO.getAddressDTO()) {
                 if (addressDto.getType().equals(type)) {
-                    getAddress(addressDto);
-                    break;
-                } else {
-                    System.out.println(type + " address is not there for update...!!");
+                    addressDTOList.add(getAddress(addressDto));
+                    checkAddress = true;
                 }
             }
-            System.out.println(Constants.UPDATE_ANOTHER_ADDRESS);
-            String anotherAddress = getUserInput(Constants.
+            if (!checkAddress) {
+                System.out.println(type + " address is not there for update...!!");
+                System.out.println("Do you want to add " + type + " address (Y/N) ?");
+                String confirmation = getUserInput(Constants.
+                        ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
+                if (confirmation.equalsIgnoreCase("Y")) {
+                    addressDTOList.add(addAddress());
+                }
+            }
+            System.out.println("Do you want to continue to Update the address (Y/N) ?");
+            String confirmation = getUserInput(Constants.
                     ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
-            if (anotherAddress.equalsIgnoreCase("Y")) {
+            if (confirmation.equalsIgnoreCase("Y")) {
                 isUpdateAnotherAddress = true;
             }
-        } while (isUpdateAnotherAddress == true);
-        return listAddressDTO;
+        } while (isUpdateAnotherAddress);
+        return addressDTOList;
+    }
+
+    /**
+     * pass the project object for assigning project to employee.
+     */
+    private void assignProjectsForEmployee() {
+        List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
+        System.out.println(Constants.EMPLOYEE_ID + "to assign projects");
+        int id =  Integer.parseInt(getId(Constants.
+                ID_PATTERN, "id eg: 1 or 12"));
+        EmployeeDTO employeeDTO = employeeController.getEmployeeById(id);
+        if (employeeDTO.getProjectDTO() != null) {
+            projectDTOList.addAll(employeeDTO.getProjectDTO());
+        }
+        System.out.println("How Many projects to Assign for this employee");
+        int projectCount = Integer.parseInt(getUserInput(Constants
+                .ID_PATTERN,"count of project"));
+        for (int count = 0; count < projectCount; count++) {
+            projectDTOList.add(getProject());
+        }
+        employeeDTO.setProjectDTO(projectDTOList);
+        try {
+            employeeController.assignProjectsForEmployee(employeeDTO);
+            logger.info("Project " + id + "has been updated successfully");
+            System.out.println(Constants
+                    .SUCCESSFUL_MESSAGE + "updated");
+        } catch (EmsException emsException) {
+            logger.error("database not connected..!!");
+            System.out.println(emsException.getMessage());
+        }
+    }
+
+    /**
+     * To get a project dto object based on project id.
+     * @return projectDTO object
+     */
+    public ProjectDTO getProject() {
+        ProjectDTO projectDTO = null;
+        System.out.println(Constants.PROJECT_ID + " to Assign");
+        int projectId = Integer.parseInt(getUserInput(Constants
+                .ID_PATTERN,"project id"));
+        try {
+            projectDTO = employeeController.getProjectById(projectId);
+            if (projectDTO == null) {
+                System.out.println(Constants.ERROR_404);
+                getProject();
+            }
+        } catch (EmsException e) {
+            logger.error("empty record..!!");
+            System.out.println(Constants.ERROR_404);
+        }
+        return projectDTO;
     }
 
     /**

@@ -2,15 +2,17 @@ package com.ideas2it.employeeManagementSystem.controller;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
+import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
+import com.ideas2it.employeeManagementSystem.service.impl.ProjectServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /*
- * Getting the all employeeDTO
+ * It is passing the data between the two classes.
  * once the operation is done
  * returning the acknowledgement.
  *
@@ -97,6 +99,17 @@ public class EmployeeController {
     }
 
     /**
+     * Passing the integer and its return the object
+     * based on the given id.
+     * @param projectId - passing the given integer.
+     * @return return the object based on the id.
+     */
+    public ProjectDTO getProjectById(int projectId) {
+        ProjectService projectService = new ProjectServiceImpl();
+        return projectService.getProjectById(projectId);
+    }
+
+    /**
      * passing the employeeDTO and return the acknowledgement.
      *
      * @param employeeDTO - get an employeeDTO object for create operation.
@@ -113,8 +126,8 @@ public class EmployeeController {
      * @return list of all employeesDTO.
      * @throws EmsException
      */
-    public List readEmployeeDetails() throws EmsException {
-         return employeeService.readEmployeeDetails();
+    public List<EmployeeDTO> getAllEmployee() throws EmsException {
+         return employeeService.getAllEmployee();
     }
 
     /**
@@ -124,8 +137,8 @@ public class EmployeeController {
      * @return the list of employeeDTO object.
      * @throws EmsException
      */
-    public List<Employee> findEmployeeDetails(String employeeName) throws EmsException {
-        return employeeService.findEmployeeDetails(employeeName);
+    public List<EmployeeDTO> getEmployeesByName(String employeeName) throws EmsException {
+        return employeeService.getEmployeesByName(employeeName);
     }
 
     /**
@@ -146,5 +159,14 @@ public class EmployeeController {
      */
     public void updateEmployeeDetails(EmployeeDTO employeeDTO ) throws EmsException {
         employeeService.updateEmployeeDetails(employeeDTO);
+    }
+
+    /**
+     * pass the employee object for assigning projects for employee.
+     * @param employeeDTO - passing a employeeDTO object.
+     * @throws EmsException
+     */
+    public void assignProjectsForEmployee(EmployeeDTO employeeDTO) throws EmsException {
+        employeeService.assignProjectsForEmployee(employeeDTO);
     }
 }

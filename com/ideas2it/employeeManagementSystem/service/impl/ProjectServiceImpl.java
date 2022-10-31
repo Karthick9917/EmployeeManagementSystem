@@ -1,12 +1,13 @@
 package com.ideas2it.employeeManagementSystem.service.impl;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
-import com.ideas2it.employeeManagementSystem.dao.impl.ProjectDAO;
+import com.ideas2it.employeeManagementSystem.dao.ProjectDao;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
+import com.ideas2it.employeeManagementSystem.mapper.EmployeeMapper;
 import com.ideas2it.employeeManagementSystem.mapper.ProjectMapper;
+import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.model.Project;
-import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import com.ideas2it.employeeManagementSystem.util.ValidationUtil;
 
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting projectDTO.
+ * It is passing the data between two class
+ * and check the giving data is valid or not.
  * once the operation is done.
  * it will return the acknowledgment
  *
@@ -24,8 +26,7 @@ import java.util.List;
  */
 public class ProjectServiceImpl  implements ProjectService {
 
-    private ProjectDAO projectDAO  = new ProjectDAO();
-    private EmployeeService employeeService = new EmployeeServiceImpl();
+    private ProjectDao projectDAO  = new ProjectDao();
 
     /**
      * {@inheritDoc}
@@ -45,20 +46,25 @@ public class ProjectServiceImpl  implements ProjectService {
      * {@inheritDoc}
      */
     public boolean validateId(String id) {
-        return getAllProject().stream()
-                .anyMatch(projectDTO -> String.valueOf(projectDTO
-                        .getId()).equals(id));
+        return getProjectById(Integer.parseInt(id)) != null;
     }
 
     /**
      * {@inheritDoc}
      */
     public ProjectDTO getProjectById(int id) {
-        List<ProjectDTO> projectDTOS = getAllProject();
+        List<Project> projects = projectDAO.getAllProject();
         ProjectDTO projectDTO = null;
-        for (ProjectDTO project : projectDTOS) {
+        for (Project project : projects) {
             if (project.getId() == id) {
-                projectDTO = project;
+                projectDTO = ProjectMapper.toProjectDTO(project);
+                if(null != project.getEmployee()) {
+                    List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
+                    for(Employee employee: project.getEmployee()){
+                        employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employee));
+                    }
+                    projectDTO.setEmployeeDTO(employeeDTOList);
+                }
                 break;
             }
         }
@@ -68,14 +74,9 @@ public class ProjectServiceImpl  implements ProjectService {
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO getEmployeeById(int employeeId) {
-        return employeeService.getEmployeeById(employeeId);
-    }
-    /**
-     * {@inheritDoc}
-     */
     public boolean addProject(ProjectDTO projectDTO) throws EmsException {
-        return projectDAO.addProject(ProjectMapper.toProject(projectDTO));
+        int id = projectDAO.addProject(ProjectMapper.toProject(projectDTO));
+        return id > 0;
     }
 
     /**
@@ -84,9 +85,17 @@ public class ProjectServiceImpl  implements ProjectService {
     public List<ProjectDTO> getAllProject() throws EmsException {
         List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
         List<Project> projectList = projectDAO.getAllProject();
+        ProjectDTO projectDTO;
         for (Project project : projectList) {
-            projectDTOList.add(ProjectMapper
-                    .toProjectDTO(project));
+            projectDTO = ProjectMapper.toProjectDTO(project);
+            if(null != project.getEmployee()) {
+                List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
+                for(Employee employee: project.getEmployee()){
+                    employeeDTOList.add(EmployeeMapper.toEmployeeDTO(employee));
+                }
+                projectDTO.setEmployeeDTO(employeeDTOList);
+            }
+            projectDTOList.add(projectDTO);
         }
         return projectDTOList;
     }
@@ -95,8 +104,15 @@ public class ProjectServiceImpl  implements ProjectService {
      * {@inheritDoc}
      */
     public void updateProject(ProjectDTO projectDTO) throws EmsException{
-        projectDAO.updateProject(ProjectMapper.toProject(projectDTO));
-
+        Project project = ProjectMapper.toProject(projectDTO);
+        if(null != projectDTO.getEmployeeDTO()) {
+            List<Employee> employee = new ArrayList<Employee>();
+            for(EmployeeDTO employeeDTO: projectDTO.getEmployeeDTO()){
+                employee.add(EmployeeMapper.toEmployee(employeeDTO));
+            }
+            project.setEmployee(employee);
+        }
+        projectDAO.updateProject(project);
     }
 
     /**
@@ -109,7 +125,36 @@ public class ProjectServiceImpl  implements ProjectService {
     /**
      * {@inheritDoc}
      */
+    public List<ProjectDTO> getProjectsByName(String projectName) throws EmsException {
+        List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
+        List<Project> projectList = projectDAO.getProjectsByName(projectName);
+        ProjectDTO projectDTO;
+        for (Project project : projectList) {
+            projectDTO = ProjectMapper.toProjectDTO(project);
+            if(null != project.getEmployee()) {
+                List<EmployeeDTO> employeeDTO = new ArrayList<EmployeeDTO>();
+                for(Employee employee: project.getEmployee()){
+                    employeeDTO.add(EmployeeMapper.toEmployeeDTO(employee));
+                }
+                projectDTO.setEmployeeDTO(employeeDTO);
+            }
+            projectDTOList.add(projectDTO);
+        }
+        return projectDTOList;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void assignEmployeesForProject(ProjectDTO projectDTO) throws EmsException {
-         projectDAO.updateProject(ProjectMapper.toProject(projectDTO));
+        Project project = ProjectMapper.toProject(projectDTO);
+        if(null != projectDTO.getEmployeeDTO()) {
+            List<Employee> employee = new ArrayList<Employee>();
+            for(EmployeeDTO employeeDTO: projectDTO.getEmployeeDTO()){
+                employee.add(EmployeeMapper.toEmployee(employeeDTO));
+            }
+            project.setEmployee(employee);
+        }
+        projectDAO.updateProject(project);
     }
 }

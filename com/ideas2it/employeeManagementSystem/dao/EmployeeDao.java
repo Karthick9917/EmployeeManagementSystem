@@ -1,8 +1,7 @@
-package com.ideas2it.employeeManagementSystem.dao.impl;
+package com.ideas2it.employeeManagementSystem.dao;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.constants.Constants;
-import com.ideas2it.employeeManagementSystem.dao.Dao;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.util.ConnectionUtil;
 import org.apache.logging.log4j.LogManager;
@@ -18,26 +17,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * Getting employee
+ * It is used for crud operations on the database
  * once the operation is done.
  * it will return the acknowledgment
  *
  * @version	1.8.0_281
  * @author	Karthick
  */
-public class EmployeeDao implements Dao {
+public class EmployeeDao {
 
     private static Logger logger = LogManager.getLogger(EmployeeDao.class.getName());
 
     private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
 
     /**
-     * Getting the employee's details and insert into database
-     * @param employee - get an employee object for create operation
-     * @return the acknowledgment
+     * Getting the employee's details and insert into database.
+     * @param employee - get an employee object for create operation.
+     * @return the id.
      * @throws EmsException
      */
-    public boolean createEmployeeDetails (Employee employee) throws EmsException {
+    public int createEmployeeDetails (Employee employee) throws EmsException {
         int employeeId;
         Session session = null;
         try {
@@ -47,14 +46,14 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_ADDED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_ADD);
         } finally {
             if(session != null) {
                 session.close();
             }
         }
         logger.info("Employee " + employeeId + "has been created successfully");
-        return employeeId > 0;
+        return employeeId;
     }
 
     /**
@@ -62,18 +61,16 @@ public class EmployeeDao implements Dao {
      * @return the list of all employee
      * @throws EmsException
      */
-    public List<Employee> readEmployeeDetails() throws EmsException {
+    public List<Employee> getAllEmployees() throws EmsException {
         Session session = null;
         List<Employee> employeeList = new ArrayList<Employee>();
         try {
             session = connectionUtil.getConnection();
-            session.beginTransaction();
             Query query = session.createQuery("from Employee");
             employeeList = query.list();
-            session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.RECORD_EMPTY_MESSAGE);
+            throw new EmsException(Constants.ERROR_404);
         } finally {
             if(session != null) {
                 session.close();
@@ -98,7 +95,7 @@ public class EmployeeDao implements Dao {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_DELETED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_DELETE);
         } finally {
             if(session != null) {
                 session.close();
@@ -111,7 +108,7 @@ public class EmployeeDao implements Dao {
      * @return the employees list
      * @throws EmsException
      */
-    public List<Employee> searchEmployee(String firstName) throws EmsException {
+    public List<Employee> getEmployeesByName(String firstName) throws EmsException {
         List<Employee> searchEmployeeList = new ArrayList<Employee>();
         Session session = null;
         try {
@@ -119,10 +116,9 @@ public class EmployeeDao implements Dao {
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Employee.class);
             searchEmployeeList = (List<Employee>) criteria.add(Restrictions.like("firstName", (firstName + "%"))).list();
-            session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.RECORD_EMPTY_MESSAGE);
+            throw new EmsException(Constants.ERROR_404);
         } finally {
             if(session != null) {
                 session.close();
@@ -141,11 +137,12 @@ public class EmployeeDao implements Dao {
         try {
             session = connectionUtil.getConnection();
             session.beginTransaction();
+            //System.out.println(employee);
             session.update(employee);
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_UPDATED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_UPDATE);
         } finally {
             if(session != null) {
                 session.close();

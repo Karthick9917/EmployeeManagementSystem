@@ -17,8 +17,8 @@
         <property name="projectStart" column="project_start"/>
         <property name="projectEnd" column="project_end"/>
 
-        <bag name = "employee" cascade = "save-update" table = "employee_project" lazy = "false">
-            <key column = "project_id"></key>
+        <bag table = "employee_project" name = "employee">
+            <key column="project_id"/>
             <many-to-many column = "employee_id" class = "com.ideas2it.employeeManagementSystem.model.Employee"/>
         </bag>
 
