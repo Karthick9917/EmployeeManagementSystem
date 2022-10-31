@@ -2,8 +2,7 @@ package com.ideas2it.employeeManagementSystem.service;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.model.Employee;
-
+import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -87,7 +86,7 @@ public interface EmployeeService {
      * @throws EmsException
      *
      */
-    List<EmployeeDTO> readEmployeeDetails() throws EmsException;
+    List<EmployeeDTO> getAllEmployee() throws EmsException;
 
     /**
      * it will return the employeeDTO based on employee name from the employeeDAO.
@@ -96,7 +95,7 @@ public interface EmployeeService {
      * @return the list of employeeDTO.
      * @throws EmsException
      */
-    List<Employee> findEmployeeDetails(String employeeName) throws EmsException;
+    List<EmployeeDTO> getEmployeesByName(String employeeName) throws EmsException;
 
     /**
      * pass the employee id for delete operation.
@@ -115,4 +114,11 @@ public interface EmployeeService {
      * @throws EmsException
      */
     void updateEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
+
+    /**
+     * pass the employee object for assigning projects for employee.
+     * @param employeeDTO - passing a employeeDTO object.
+     * @throws EmsException
+     */
+    void assignProjectsForEmployee(EmployeeDTO employeeDTO) throws EmsException;
 }

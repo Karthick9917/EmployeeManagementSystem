@@ -149,10 +149,16 @@ public class Employee {
                 "\nEmail                 :  " + email +
                 "\nPhoneNumber           :  +91" + phoneNumber +
                 "\nDate Of Joining       :  " + dateOfJoining +
-                "\nAddress               :" +
+                "\nAddress               :  " + address.toString().replace(
+                "[", "").replace("]", "").replace(",", "") +
                 "\nProject               :";
-
-        return displayEmployeeDetails + "  " + address.toString().replace(
-                "[","").replace("]","").replace(",", "") + project;
+        StringBuilder stringBuilder = new StringBuilder();
+        if (project != null) {
+            project.forEach(e -> stringBuilder.append(e.getId() + " - ")
+                    .append(e.getProjectName() + "\n                         "));
+        } else {
+            stringBuilder.append("Project not assign");
+        }
+        return displayEmployeeDetails + "  " + stringBuilder;
     }
 }

@@ -3,11 +3,21 @@ package com.ideas2it.employeeManagementSystem.controller;
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
+import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 import com.ideas2it.employeeManagementSystem.service.ProjectService;
+import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
 import com.ideas2it.employeeManagementSystem.service.impl.ProjectServiceImpl;
 
 import java.util.List;
 
+/*
+ * It is passing the data between the two classes.
+ * once the operation is done
+ * returning the acknowledgement.
+ *
+ * @version	1.8.0_281
+ * @author	Karthick
+ */
 public class ProjectController {
 
     private ProjectService projectService = new ProjectServiceImpl();
@@ -63,7 +73,8 @@ public class ProjectController {
      * @return return the object based on the id.
      */
     public EmployeeDTO getEmployeeById(int employeeId) {
-        return projectService.getEmployeeById(employeeId);
+        EmployeeService employeeService = new EmployeeServiceImpl();
+        return employeeService.getEmployeeById(employeeId);
     }
 
     /**
@@ -95,6 +106,17 @@ public class ProjectController {
     }
 
     /**
+     * passing the value and return the acknowledgement.
+     *
+     * @param projectName - transfer the String value.
+     * @return the list of projectDto object.
+     * @throws EmsException
+     */
+    public List<ProjectDTO> getProjectsByName(String projectName) throws EmsException {
+        return projectService.getProjectsByName(projectName);
+    }
+
+    /**
      * passing the value for delete operation.
      *
      * @param id - transfer the integer value.
@@ -105,7 +127,7 @@ public class ProjectController {
     }
 
     /**
-     * pass the project object for assigning project to employee.
+     * pass the project object for assigning employees for project.
      * @param projectDTO - passing a projectDTO object.
      * @throws EmsException
      */

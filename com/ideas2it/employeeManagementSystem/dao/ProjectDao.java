@@ -1,22 +1,31 @@
-package com.ideas2it.employeeManagementSystem.dao.impl;
+package com.ideas2it.employeeManagementSystem.dao;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.constants.Constants;
-import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.model.Project;
 import com.ideas2it.employeeManagementSystem.util.ConnectionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDAO {
+/*
+ * It is used for crud operations on the database
+ * once the operation is done.
+ * it will return the acknowledgment
+ *
+ * @version	1.8.0_281
+ * @author	Karthick
+ */
+public class ProjectDao {
 
-    private static Logger logger = LogManager.getLogger(ProjectDAO.class.getName());
+    private static Logger logger = LogManager.getLogger(ProjectDao.class.getName());
 
     private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
 
@@ -26,7 +35,7 @@ public class ProjectDAO {
      * @return the acknowledgment
      * @throws EmsException
      */
-    public boolean addProject(Project project) throws EmsException {
+    public int addProject(Project project) throws EmsException {
         int projectId;
         Session session = null;
         try {
@@ -36,14 +45,14 @@ public class ProjectDAO {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_ADDED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_ADD);
         } finally {
             if(session != null) {
                 session.close();
             }
         }
         logger.info("Project " + projectId + "has been created successfully");
-        return projectId > 0;
+        return projectId;
     }
 
     /**
@@ -56,13 +65,11 @@ public class ProjectDAO {
         List<Project> projectList = new ArrayList<Project>();
         try {
             session = connectionUtil.getConnection();
-            session.beginTransaction();
             Query query = session.createQuery("from Project");
             projectList = query.list();
-            session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.RECORD_EMPTY_MESSAGE);
+            throw new EmsException(Constants.ERROR_404);
         } finally {
             if(session != null) {
                 session.close();
@@ -85,7 +92,7 @@ public class ProjectDAO {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_UPDATED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_UPDATE);
         } finally {
             if(session != null) {
                 session.close();
@@ -109,11 +116,35 @@ public class ProjectDAO {
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.NOT_DELETED_MESSAGE);
+            throw new EmsException(Constants.FAILED_TO_DELETE);
         } finally {
             if(session != null) {
                 session.close();
             }
         }
+    }
+
+    /**
+     * getting the all project details from the database.
+     * @return the project list
+     * @throws EmsException
+     */
+    public List<Project> getProjectsByName(String projectName) throws EmsException {
+        List<Project> searchedProjectList = new ArrayList<Project>();
+        Session session = null;
+        try {
+            session = connectionUtil.getConnection();
+            session.beginTransaction();
+            Criteria criteria = session.createCriteria(Project.class);
+            searchedProjectList = (List<Project>) criteria.add(Restrictions.like("projectName", (projectName + "%"))).list();
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new EmsException(Constants.ERROR_404);
+        } finally {
+            if(session != null) {
+                session.close();
+            }
+        }
+        return searchedProjectList;
     }
 }

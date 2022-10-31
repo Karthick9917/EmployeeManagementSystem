@@ -14,11 +14,18 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class with the attributes project id, project name, domain,
+ * project due, project start, project end, employee
+ * initialize these attributes with the help of constructor
+ *
+ *@version    1.8.0_281
+ *@author     Karthick
+ */
 public class ProjectView {
 
     private static Logger logger = LogManager.getLogger(EmployeeView.class.getName());
     private Scanner scanner = new Scanner(System.in);
-
     private ProjectController projectController = new ProjectController();
 
     /**
@@ -51,11 +58,15 @@ public class ProjectView {
                         break;
 
                     case 5:
-                        this.assignEmployeesForProject();
+                        this.displayProjectsByName();
                         break;
 
                     case 6:
-                        System.exit(6);
+                        this.assignEmployeesForProject();
+                        break;
+
+                    case 7:
+                        break;
 
                     default:
                         logger.warn("invalid data");
@@ -66,7 +77,7 @@ public class ProjectView {
                 logger.error("input mismatch");
                 System.out.println(Constants.INPUT_MISMATCH_EXCEPTION);
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 
     /**
@@ -78,8 +89,12 @@ public class ProjectView {
         int id =  Integer.parseInt(getId(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
         ProjectDTO projectDTO = projectController.getProjectById(id);
+        if (projectDTO.getEmployeeDTO() != null) {
+            employeeDTOList.addAll(projectDTO.getEmployeeDTO());
+        }
         System.out.println("How Many Employees to Assign for this Project");
-        int employeeCount = Integer.parseInt(getUserInput(Constants.ID_PATTERN,"count of employee"));
+        int employeeCount = Integer.parseInt(getUserInput(Constants
+                .ID_PATTERN,"count of employee"));
         for (int count = 0; count < employeeCount; count++) {
             employeeDTOList.add(getEmployee());
         }
@@ -95,10 +110,15 @@ public class ProjectView {
         }
     }
 
+    /**
+     * To get an employee dto object based on employeeid.
+     * @return employeeDto object
+     */
     public EmployeeDTO getEmployee() {
         EmployeeDTO employeeDto = null;
         System.out.println(Constants.EMPLOYEE_ID + " to Assign");
-        int employeeId = Integer.parseInt(getUserInput(Constants.ID_PATTERN,"employee id"));
+        int employeeId = Integer.parseInt(getUserInput(Constants
+                .ID_PATTERN,"employee id"));
         try {
             employeeDto = projectController.getEmployeeById(employeeId);
             if (employeeDto == null) {
@@ -110,24 +130,6 @@ public class ProjectView {
             System.out.println(Constants.ERROR_404);
         }
         return employeeDto;
-    }
-
-    /**
-     * Delete the employee details based on the employee id.
-     */
-    private void deleteProject() {
-        System.out.println(Constants.PROJECT_ID + "to delete");
-        int id =  Integer.parseInt(getId(Constants.
-                ID_PATTERN, "id eg: 1 or 12"));
-        try {
-            projectController.deleteProject(id);
-            logger.info("Project " + id + "has been removed successfully");
-            System.out.println(Constants.
-                    SUCCESSFUL_MESSAGE + "deleted");
-        } catch (EmsException e) {
-            logger.error("empty record..!!");
-            System.out.println(Constants.ERROR_404);
-        }
     }
 
     /**
@@ -152,7 +154,7 @@ public class ProjectView {
                 System.out.println(Constants.
                         SUCCESSFUL_MESSAGE + "created ");
             } else {
-                System.out.println(Constants.NOT_ADDED_MESSAGE);
+                System.out.println(Constants.FAILED_TO_ADD);
             }
         } catch (EmsException emsException) {
             logger.error("Database not connected");
@@ -169,7 +171,7 @@ public class ProjectView {
                     getAllProject();
             if (projectDTOList.isEmpty()) {
                 logger.warn("No records in database");
-                System.out.println(Constants.RECORD_EMPTY_MESSAGE);
+                System.out.println(Constants.ERROR_404);
             } else {
                 for (ProjectDTO projectDTO : projectDTOList) {
                     System.out.println(projectDTO);
@@ -220,7 +222,7 @@ public class ProjectView {
                         System.out.println(Constants.PROJECT_END_DATE);
                         projectDTO.setProjectEnd(getDate());
                         break;
-                    case 06:
+                    case 6:
                         break;
                     default:
                         logger.warn("invalid data");
@@ -239,6 +241,48 @@ public class ProjectView {
                     .SUCCESSFUL_MESSAGE + "updated");
         } catch (EmsException emsException) {
             logger.error("database not connected..!!");
+            System.out.println(emsException.getMessage());
+        }
+    }
+
+    /**
+     * Delete the employee details based on the employee id.
+     */
+    private void deleteProject() {
+        System.out.println(Constants.PROJECT_ID + "to delete");
+        int id =  Integer.parseInt(getId(Constants.
+                ID_PATTERN, "id eg: 1 or 12"));
+        try {
+            projectController.deleteProject(id);
+            logger.info("Project " + id + "has been removed successfully");
+            System.out.println(Constants.
+                    SUCCESSFUL_MESSAGE + "deleted");
+        } catch (EmsException e) {
+            logger.error("empty record..!!");
+            System.out.println(Constants.ERROR_404);
+        }
+    }
+
+    /**
+     * display the project details based on the project name
+     */
+    public void displayProjectsByName() {
+        System.out.println(Constants.PROJECT_NAME);
+        String name = getUserInput(Constants.
+                NAME_PATTERN, "project name..!! ");
+        try {
+            List<ProjectDTO> searchedProject = projectController.
+                    getProjectsByName(name);
+            if (!searchedProject.isEmpty()) {
+                for (ProjectDTO projectDTO : searchedProject) {
+                    System.out.println(projectDTO);
+                }
+            } else {
+                logger.warn("no records");
+                System.out.println(Constants.ERROR_404);
+            }
+        } catch (EmsException emsException) {
+            logger.error("empty records...!!");
             System.out.println(emsException.getMessage());
         }
     }

@@ -4,7 +4,6 @@ package com.ideas2it.employeeManagementSystem.constants;
  * Declaring all the constants
  * @version	1.8.0_281
  * @author	Karthick
- *
  */
 public class Constants {
 
@@ -15,7 +14,8 @@ public class Constants {
             "\n3.search employee details by name  " +
             "\n4.Delete employee details by id " +
             "\n5.update " +
-            "\n6.exit " +
+            "\n6.Assign Projects For Employee" +
+            "\n7.Back " +
             "\nSelect your option : ";
     public static final String UPDATE_EMPLOYEE_MENU= "Which one you want to update ?" +
             "\n------------------------------" +
@@ -29,7 +29,7 @@ public class Constants {
             "\n08.Phone number " +
             "\n09.Role " +
             "\n10.Address " +
-            "\n11.Save & Exit" +
+            "\n11.Save & Back to previous menu" +
             "\nSelect your option : ";
     public static final String SELECT_OPTION_ERROR = "please Enter" +
             " valid option !!! ";
@@ -71,10 +71,9 @@ public class Constants {
     public static final String EMPLOYEE_ID = "Enter employee id ";
     public static final String PHONE_NUMBER = "Enter employee phone number ";
     public static final String SUCCESSFUL_MESSAGE = "Record successfully ";
-    public static final String NOT_ADDED_MESSAGE = "Record not added..!!";
-    public static final String NOT_DELETED_MESSAGE = "Record not deleted..!!";
-    public static final String NOT_UPDATED_MESSAGE = "Record not updated..!!";
-    public static final String RECORD_EMPTY_MESSAGE = "Record is empty...!!";
+    public static final String FAILED_TO_ADD = "Failed to add..!!";
+    public static final String FAILED_TO_DELETE = "Record not deleted..!!";
+    public static final String FAILED_TO_UPDATE = "Record not updated..!!";
     public static final String NOT_MATCHED_MESSAGE = "Record not matched..!!";
     public static final String NAME_PATTERN = "^[a-zA-Z]{3,}([ ]?" +
             "[a-zA-Z]{0,15}){0,}$";
@@ -104,15 +103,18 @@ public class Constants {
             " MANAGEMENT SYSTEM ***\n";
 
     public static final String OPTION = " 1.Employee " +
-            "\n 2.Project \n Select your option :";
+            "\n 2.Project" +
+            "\n 3. Exit" +
+            " \n Select your option :";
     public static final String PROJECT_MENU = "<<< Main Menu >>>" +
             "\n-----------------" +
             "\n1.Add project " +
             "\n2.Display all project " +
             "\n3.update project " +
             "\n4.Delete project by id " +
-            "\n5.Assign Employees For Project" +
-            "\n5.exit " +
+            "\n5.Display project by name" +
+            "\n6.Assign Employees For Project" +
+            "\n7.Back " +
             "\nSelect your option : ";
 
     public static final String PROJECT_ID = "Enter project id ";
@@ -129,7 +131,7 @@ public class Constants {
             "\n03.project due date " +
             "\n04.project start date " +
             "\n05.project end date " +
-            "\n06.Save & Exit" +
+            "\n06.Save & Back to previous menu" +
             "\nSelect your option : ";
 
     public static final String PROJECT_NAME = "Enter the project name: ";

@@ -46,13 +46,6 @@ public interface ProjectService {
     ProjectDTO getProjectById(int id);
 
     /**
-     * Find out the particular object based on the given id.
-     * @param employeeId - passing the integer.
-     * @return the object based on the given id.
-     */
-    EmployeeDTO getEmployeeById(int employeeId);
-
-    /**
      * passing the projectDTO object to database.
      *
      * @param projectDTO - passing the projectDTO object for create operation.
@@ -88,9 +81,17 @@ public interface ProjectService {
     void deleteProject(int id) throws EmsException;
 
     /**
-     * pass the project object to ProjectDAO for assigning project to employee.
+     * pass the project object to ProjectDAO for assigning employees for project.
      * @param projectDTO - passing a projectDTO object.
      * @throws EmsException
      */
     void assignEmployeesForProject(ProjectDTO projectDTO) throws EmsException;
+
+    /**
+     * It will return the projectDTO object based on project name.
+     * @param projectName- receive a String value
+     * @return the list of projectDTO.
+     * @throws EmsException
+     */
+    List<ProjectDTO> getProjectsByName(String projectName) throws EmsException;
 }

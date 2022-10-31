@@ -8,7 +8,6 @@ import com.ideas2it.employeeManagementSystem.model.Employee;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /*
  * This class convert DTO object to model object and model to DTO
  *

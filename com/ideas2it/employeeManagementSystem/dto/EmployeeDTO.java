@@ -1,6 +1,5 @@
 package com.ideas2it.employeeManagementSystem.dto;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -151,11 +150,16 @@ public class EmployeeDTO {
                 "\nEmail                 :  " + email +
                 "\nPhoneNumber           :  +91" + phoneNumber +
                 "\nDate Of Joining       :  " + dateOfJoining +
-                "\nAddress               :" +
+                "\nAddress               :  " + addressDTO.toString().replace(
+                "[","").replace("]","").replace(",", "") +
                 "\nProject               :";
-
-        return displayEmployeeDetails + "  " + addressDTO.toString().replace(
-                "[","").replace("]","").replace(",", "") + projectDTO + "\n" +
-                "                        ";
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!projectDTO.isEmpty()){
+            projectDTO.forEach(e -> stringBuilder.append(e.getId() + " - ")
+                    .append(e.getProjectName() + "\n                         "));
+        } else {
+            stringBuilder.append("Project not assign");
+        }
+        return displayEmployeeDetails + "  " + stringBuilder;
     }
 }

@@ -98,7 +98,12 @@ public class ProjectDTO {
                 "\nProject end           :  " + projectEnd +
                 "\nEmployee              :";
         StringBuilder stringBuilder = new StringBuilder();
-        employeeDTO.forEach(e -> stringBuilder.append(e.getId() + " ").append(e.getFirstName() + "\n"));
+        if (!employeeDTO.isEmpty()){
+            employeeDTO.forEach(e -> stringBuilder.append(e.getId() + " - ")
+                    .append(e.getFirstName() + "\n                         "));
+        } else {
+            stringBuilder.append("Employee not assign");
+        }
         return displayProject + "  " + stringBuilder;
     }
 }

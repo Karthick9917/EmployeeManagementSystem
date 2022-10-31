@@ -97,7 +97,12 @@ public class Project {
                 "\nProject end           :  " + projectEnd +
                 "\nEmployee              :";
         StringBuilder stringBuilder = new StringBuilder();
-        employee.forEach(e -> stringBuilder.append(e.getId() + " ").append(e.getFirstName() + "\n"));
+        if (employee != null){
+            employee.forEach(e -> stringBuilder.append(e.getId() + " - ")
+                    .append(e.getFirstName() + "\n                         "));
+        } else {
+            stringBuilder.append("Employee not assign");
+        }
         return displayProject + "  " + stringBuilder;
     }
 }
