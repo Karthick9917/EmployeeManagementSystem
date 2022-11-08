@@ -1,5 +1,3 @@
-package com.ideas2it.employeeManagementSystem.main;
-
 import com.ideas2it.employeeManagementSystem.constants.Constants;
 import com.ideas2it.employeeManagementSystem.view.EmployeeView;
 import com.ideas2it.employeeManagementSystem.view.ProjectView;

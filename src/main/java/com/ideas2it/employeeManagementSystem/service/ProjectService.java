@@ -33,10 +33,10 @@ public interface ProjectService {
 
     /**
      * Return true or false based on the given string is valid or not.
-     * @param id - passing the string for validate.
+     * @param id - passing the integer for validate.
      * @return true or false based on the given id.
      */
-    boolean validateId(String id);
+    boolean validateId(int id);
 
     /**
      * Find out the particular object based on the given id.

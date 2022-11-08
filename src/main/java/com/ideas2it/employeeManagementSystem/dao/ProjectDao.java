@@ -25,7 +25,8 @@ import java.util.List;
  */
 public class ProjectDao {
 
-    private static Logger logger = LogManager.getLogger(ProjectDao.class.getName());
+    private static Logger logger = LogManager
+            .getLogger(ProjectDao.class.getName());
 
     private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
 
@@ -103,7 +104,6 @@ public class ProjectDao {
     /**
      * delete the project from database by project id
      * @param id - receive an int value
-     * @return the acknowledgement
      * @throws EmsException
      */
     public void deleteProject(int id) throws EmsException {
@@ -134,9 +134,9 @@ public class ProjectDao {
         Session session = null;
         try {
             session = connectionUtil.getConnection();
-            session.beginTransaction();
             Criteria criteria = session.createCriteria(Project.class);
-            searchedProjectList = (List<Project>) criteria.add(Restrictions.like("projectName", (projectName + "%"))).list();
+            searchedProjectList = (List<Project>) criteria.add(Restrictions
+                    .like("projectName", (projectName + "%"))).list();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
             throw new EmsException(Constants.ERROR_404);

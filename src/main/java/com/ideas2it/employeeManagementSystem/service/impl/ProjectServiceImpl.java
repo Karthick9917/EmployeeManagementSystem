@@ -45,8 +45,8 @@ public class ProjectServiceImpl  implements ProjectService {
     /**
      * {@inheritDoc}
      */
-    public boolean validateId(String id) {
-        return getProjectById(Integer.parseInt(id)) != null;
+    public boolean validateId(int id) {
+        return getProjectById(id) != null;
     }
 
     /**

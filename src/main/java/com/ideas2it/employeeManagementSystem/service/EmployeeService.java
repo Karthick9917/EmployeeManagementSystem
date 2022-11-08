@@ -61,7 +61,7 @@ public interface EmployeeService {
      * @param id - passing the string for validate.
      * @return true or false based on the given id.
      */
-    boolean validateId(String id);
+    boolean validateId(int id);
 
     /**
      * Find out the particular object based on the given id.

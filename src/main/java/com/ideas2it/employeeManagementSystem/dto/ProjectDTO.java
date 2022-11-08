@@ -1,36 +1,38 @@
-package com.ideas2it.employeeManagementSystem.model;
+package com.ideas2it.employeeManagementSystem.dto;
 
 import java.time.LocalDate;
 import java.util.List;
 
 /**
- * This class with the attributes project id, project name, domain,
- * project due, project start, project end, employee
+ * This class with the attributes projectDTO id, project name, domain,
+ * project due, project start, project end, employeeDTO
  * initialize these attributes with the help of constructor
  *
  *@version    1.8.0_281
  *@author     Karthick
  */
-public class Project {
+public class ProjectDTO {
     private int id;
     private String projectName;
     private String domain;
     private LocalDate projectDue;
     private LocalDate projectStart;
     private LocalDate projectEnd;
+    private List<EmployeeDTO> employeeDTO;
 
-    private List<Employee> employee;
-
-    public Project (int id, String projectName, String domain, LocalDate projectDue, LocalDate projectStart, LocalDate projectEnd) {
+    public ProjectDTO (int id, String projectName, String domain,
+                       LocalDate projectDue, LocalDate projectStart,
+                       LocalDate projectEnd, List<EmployeeDTO> employeeDTO) {
         this.id = id;
         this.projectName = projectName;
         this.domain = domain;
         this.projectDue = projectDue;
         this.projectStart = projectStart;
         this.projectEnd = projectEnd;
+        this.employeeDTO = employeeDTO;
     }
 
-    public Project(){
+    public ProjectDTO(){
     }
 
     public int getId() {
@@ -81,13 +83,14 @@ public class Project {
         this.projectEnd = projectEnd;
     }
 
-    public List<Employee> getEmployee() {
-        return employee;
+    public List<EmployeeDTO> getEmployeeDTO() {
+        return employeeDTO;
     }
 
-    public void setEmployee(List<Employee> employee) {
-        this.employee = employee;
+    public void setEmployeeDTO(List<EmployeeDTO> employeeDTO) {
+        this.employeeDTO = employeeDTO;
     }
+
     public String toString() {
         String displayProject = "\nProject Id            :  " + id +
                 "\nProject Name          :  " + projectName +
@@ -97,8 +100,8 @@ public class Project {
                 "\nProject end           :  " + projectEnd +
                 "\nEmployee              :";
         StringBuilder stringBuilder = new StringBuilder();
-        if (employee != null){
-            employee.forEach(e -> stringBuilder.append(e.getId() + " - ")
+        if (!employeeDTO.isEmpty()){
+            employeeDTO.forEach(e -> stringBuilder.append(e.getId() + " - ")
                     .append(e.getFirstName() + "\n                         "));
         } else {
             stringBuilder.append("Employee not assign");
