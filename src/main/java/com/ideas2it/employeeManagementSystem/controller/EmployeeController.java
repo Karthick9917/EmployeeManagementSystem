@@ -84,7 +84,7 @@ public class EmployeeController {
      * @param id    - passing the given String for valid.
      * @return true for false once the input is valid.
      */
-    public boolean validateId(String id) {
+    public boolean validateId(int id) {
         return employeeService.validateId(id);
     }
 

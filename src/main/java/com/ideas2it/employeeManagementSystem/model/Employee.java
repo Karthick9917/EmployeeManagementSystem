@@ -1,6 +1,7 @@
 package com.ideas2it.employeeManagementSystem.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class Employee {
     private LocalDate dateOfJoining;
     private String role;
     private List<Address> address;
-    private List<Project> project;
+    private List<Project> project = new ArrayList<>();
 
     public Employee(String firstName, String lastName,
                     LocalDate dateOfBirth, double salary, String gender,

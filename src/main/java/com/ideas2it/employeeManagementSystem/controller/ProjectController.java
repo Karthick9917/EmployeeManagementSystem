@@ -52,7 +52,7 @@ public class ProjectController {
      * @param id    - passing the given String for valid.
      * @return true for false once the input is valid.
      */
-    public boolean validateId(String id) {
+    public boolean validateId(int id) {
         return projectService.validateId(id);
     }
 

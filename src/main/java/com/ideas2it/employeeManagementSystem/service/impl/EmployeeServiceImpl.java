@@ -72,8 +72,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public boolean validateId(String id) {
-        return getEmployeeById(Integer.parseInt(id)) != null;
+    public boolean validateId(int id) {
+        return getEmployeeById(id) != null;
     }
 
     /**

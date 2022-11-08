@@ -60,7 +60,7 @@ public class EmployeeView {
                         break;
 
                     case 5:
-                        this.updateEmployeeDetails();
+                        this.updateEmployee();
                         break;
 
                     case 6:
@@ -217,32 +217,6 @@ public class EmployeeView {
             }
         } while (!isValid);
         return phoneNumber;
-    }
-
-    /**
-     * Getting the input from the user and passing for the input is valid or not.
-     * @param pattern - for check the given input is matches or not.
-     * @param errorMessage - for Displaying the message
-     *                       once the given input is invalid.
-     * @return the string value once the given input is valid.
-     */
-    public String getId(String pattern, String errorMessage) {
-        boolean isValid = false;
-        String id;
-        do{
-            scanner = new Scanner(System.in);
-            id = scanner.nextLine();
-            if (!employeeController.userInputValidation(pattern, id)) {
-                System.out.println(Constants.
-                        ASKING_VALID_INPUT + errorMessage);
-            } else if(!employeeController.validateId(id)){
-                System.out.println(Constants.ERROR_404 + "\n" + Constants.
-                        ASKING_VALID_INPUT + errorMessage);
-            } else {
-                isValid = true;
-            }
-        } while (!isValid);
-        return id;
     }
 
     /**
@@ -456,8 +430,12 @@ public class EmployeeView {
      */
     public void deleteEmployeeDetails() {
         System.out.println(Constants.EMPLOYEE_ID + "to delete");
-        int id =  Integer.parseInt(getId(Constants.
+        int id =  Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
+        if (employeeController.validateId(id)) {
+            System.out.println(Constants.ERROR_404);
+            deleteEmployeeDetails();
+        }
         try {
             employeeController.deleteEmployeeDetails(id);
             logger.info("Employee " + id + "has been removed successfully");
@@ -472,11 +450,15 @@ public class EmployeeView {
     /**
      * Update the employee Details based on the employee id.
      */
-    public void updateEmployeeDetails() {
+    public void updateEmployee() {
         System.out.println(Constants.EMPLOYEE_ID + "to update ");
-        int id = Integer.parseInt(getId(Constants.
+        int id = Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
         EmployeeDTO employeeDTO = employeeController.getEmployeeById(id);
+        if (employeeDTO == null) {
+            System.out.println(Constants.ERROR_404);
+            updateEmployee();
+        }
         employeeDTO.setId(id);
         int option = 0;
         do {
@@ -561,7 +543,7 @@ public class EmployeeView {
      * @return the list of address object
      */
     public List<AddressDTO> updateAddress(EmployeeDTO employeeDTO) {
-        List<AddressDTO> addressDTOList = new ArrayList<AddressDTO>();
+        List<AddressDTO> listAddressDTO;
         boolean isUpdateAnotherAddress;
         do {
             isUpdateAnotherAddress = false;
@@ -591,19 +573,22 @@ public class EmployeeView {
                 }
             } while (!(choose > 0 && choose < 3));
             Boolean checkAddress = false;
-            for (AddressDTO addressDto : employeeDTO.getAddressDTO()) {
+            listAddressDTO = employeeDTO.getAddressDTO();
+            List<AddressDTO> addressDTOList = new ArrayList<AddressDTO>();
+            for (AddressDTO addressDto : listAddressDTO) {
                 if (addressDto.getType().equals(type)) {
-                    addressDTOList.add(getAddress(addressDto));
+                    getAddress(addressDto);
                     checkAddress = true;
                 }
+                addressDTOList.add(addressDto);
             }
             if (!checkAddress) {
                 System.out.println(type + " address is not there for update...!!");
-                System.out.println("Do you want to add " + type + " address (Y/N) ?");
+                System.out.println("Do you want to add " + type + "address (Y/N) ?");
                 String confirmation = getUserInput(Constants.
                         ANOTHER_ADDRESS_PATTERN, "input eg: y or n");
                 if (confirmation.equalsIgnoreCase("Y")) {
-                    addressDTOList.add(addAddress());
+                    isUpdateAnotherAddress = true;
                 }
             }
             System.out.println("Do you want to continue to Update the address (Y/N) ?");
@@ -613,7 +598,7 @@ public class EmployeeView {
                 isUpdateAnotherAddress = true;
             }
         } while (isUpdateAnotherAddress);
-        return addressDTOList;
+        return listAddressDTO;
     }
 
     /**
@@ -622,9 +607,13 @@ public class EmployeeView {
     private void assignProjectsForEmployee() {
         List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
         System.out.println(Constants.EMPLOYEE_ID + "to assign projects");
-        int id =  Integer.parseInt(getId(Constants.
+        int id =  Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
         EmployeeDTO employeeDTO = employeeController.getEmployeeById(id);
+        if (employeeDTO == null) {
+            System.out.println(Constants.ERROR_404);
+            assignProjectsForEmployee();
+        }
         if (employeeDTO.getProjectDTO() != null) {
             projectDTOList.addAll(employeeDTO.getProjectDTO());
         }

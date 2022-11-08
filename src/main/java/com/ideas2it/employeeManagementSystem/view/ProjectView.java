@@ -86,19 +86,24 @@ public class ProjectView {
     private void assignEmployeesForProject() {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
         System.out.println(Constants.PROJECT_ID + "to assign employees");
-        int id =  Integer.parseInt(getId(Constants.
+        int id =  Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
         ProjectDTO projectDTO = projectController.getProjectById(id);
-        if (projectDTO.getEmployeeDTO() != null) {
-            employeeDTOList.addAll(projectDTO.getEmployeeDTO());
+        if (projectDTO == null) {
+            System.out.println(Constants.ERROR_404);
+            assignEmployeesForProject();
+        } else {
+            if (projectDTO.getEmployeeDTO() != null) {
+                employeeDTOList.addAll(projectDTO.getEmployeeDTO());
+            }
+            System.out.println("How Many Employees to Assign for this Project");
+            int employeeCount = Integer.parseInt(getUserInput(Constants
+                    .ID_PATTERN, "count of employee"));
+            for (int count = 0; count < employeeCount; count++) {
+                employeeDTOList.add(getEmployee());
+            }
+            projectDTO.setEmployeeDTO(employeeDTOList);
         }
-        System.out.println("How Many Employees to Assign for this Project");
-        int employeeCount = Integer.parseInt(getUserInput(Constants
-                .ID_PATTERN,"count of employee"));
-        for (int count = 0; count < employeeCount; count++) {
-            employeeDTOList.add(getEmployee());
-        }
-        projectDTO.setEmployeeDTO(employeeDTOList);
         try {
             projectController.assignEmployeesForProject(projectDTO);
             logger.info("Project " + id + "has been updated successfully");
@@ -126,7 +131,7 @@ public class ProjectView {
                 getEmployee();
             }
         } catch (EmsException e) {
-            logger.error("empty record..!!");
+            logger.error("Record not found");
             System.out.println(Constants.ERROR_404);
         }
         return employeeDto;
@@ -189,9 +194,13 @@ public class ProjectView {
      */
     private void updateProject() {
         System.out.println(Constants.PROJECT_ID + "to update ");
-        int id = Integer.parseInt(getId(Constants.
+        int id = Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
         ProjectDTO projectDTO = projectController.getProjectById(id);
+        if (projectDTO == null) {
+            System.out.println(Constants.ERROR_404);
+            updateProject();
+        }
         projectDTO.setId(id);
         int option = 0;
         do {
@@ -250,15 +259,19 @@ public class ProjectView {
      */
     private void deleteProject() {
         System.out.println(Constants.PROJECT_ID + "to delete");
-        int id =  Integer.parseInt(getId(Constants.
+        int id =  Integer.parseInt(getUserInput(Constants.
                 ID_PATTERN, "id eg: 1 or 12"));
+        if (!projectController.validateId(id)) {
+            System.out.println(Constants.ERROR_404);
+            deleteProject();
+        }
         try {
             projectController.deleteProject(id);
             logger.info("Project " + id + "has been removed successfully");
             System.out.println(Constants.
                     SUCCESSFUL_MESSAGE + "deleted");
         } catch (EmsException e) {
-            logger.error("empty record..!!");
+            logger.error("Failed to delete");
             System.out.println(Constants.ERROR_404);
         }
     }
@@ -335,31 +348,5 @@ public class ProjectView {
             }
         } while (!isValid);
         return LocalDate.parse(date);
-    }
-
-    /**
-     * Getting the input from the user and passing for the input is valid or not.
-     * @param pattern - for check the given input is matches or not.
-     * @param errorMessage - for Displaying the message
-     *                       once the given input is invalid.
-     * @return the string value once the given input is valid.
-     */
-    public String getId(String pattern, String errorMessage) {
-        boolean isValid = false;
-        String id;
-        do{
-            scanner = new Scanner(System.in);
-            id = scanner.nextLine();
-            if (!projectController.userInputValidation(pattern, id)) {
-                System.out.println(Constants.
-                        ASKING_VALID_INPUT + errorMessage);
-            } else if(!projectController.validateId(id)){
-                System.out.println(Constants.ERROR_404 + "\n" + Constants.
-                        ASKING_VALID_INPUT + errorMessage);
-            } else {
-                isValid = true;
-            }
-        } while (!isValid);
-        return id;
     }
 }

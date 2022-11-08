@@ -26,7 +26,8 @@ import java.util.List;
  */
 public class EmployeeDao {
 
-    private static Logger logger = LogManager.getLogger(EmployeeDao.class.getName());
+    private static Logger logger = LogManager
+            .getLogger(EmployeeDao.class.getName());
 
     private ConnectionUtil connectionUtil = ConnectionUtil.getConnectionUtil();
 
@@ -82,7 +83,6 @@ public class EmployeeDao {
     /**
      * delete the employee from database by employee id
      * @param employeeId - receive an int value
-     * @return the acknowledgement
      * @throws EmsException
      */
     public void deleteEmployeeDetails(int employeeId) throws EmsException {
@@ -113,9 +113,9 @@ public class EmployeeDao {
         Session session = null;
         try {
             session = connectionUtil.getConnection();
-            session.beginTransaction();
             Criteria criteria = session.createCriteria(Employee.class);
-            searchEmployeeList = (List<Employee>) criteria.add(Restrictions.like("firstName", (firstName + "%"))).list();
+            searchEmployeeList = (List<Employee>) criteria.add(Restrictions
+                    .like("firstName", (firstName + "%"))).list();
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException.getMessage());
             throw new EmsException(Constants.ERROR_404);
@@ -137,7 +137,6 @@ public class EmployeeDao {
         try {
             session = connectionUtil.getConnection();
             session.beginTransaction();
-            //System.out.println(employee);
             session.update(employee);
             session.getTransaction().commit();
         } catch (HibernateException hibernateException) {
