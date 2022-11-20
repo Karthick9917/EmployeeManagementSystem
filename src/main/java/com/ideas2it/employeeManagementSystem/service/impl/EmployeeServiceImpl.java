@@ -1,6 +1,7 @@
 package com.ideas2it.employeeManagementSystem.service.impl;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
+import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
 import com.ideas2it.employeeManagementSystem.dao.EmployeeDao;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
@@ -10,11 +11,12 @@ import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.model.Project;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 import com.ideas2it.employeeManagementSystem.util.ValidationUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
  * It is passing the data between two class
@@ -25,9 +27,16 @@ import java.util.stream.Collectors;
  * @version	1.8.0_281
  * @author	Karthick
  */
+
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeDao employeeDao = new EmployeeDao();
+    private final EmployeeDao employeeDao;
+
+    @Autowired
+    public EmployeeServiceImpl(EmployeeDao employeeDao) {
+        this.employeeDao = employeeDao;
+    }
 
     /**
      * {@inheritDoc}
@@ -55,44 +64,37 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     public boolean validateEmail(String email) {
-        List<String> duplicateList = getAllEmployee().stream()
-                .map(employeeDto -> employeeDto.getEmail()).collect(Collectors.toList());
-        return duplicateList.contains(email);
+        if (employeeDao.existsByEmail(email)) {
+            throw new EmsException((email + " email is already exists"));
+        } else {
+            return true;
+        }
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean validatePhoneNumber(String phoneNumber) {
-        List<Long> duplicateList = getAllEmployee().stream()
-                .map(employeeDto -> employeeDto.getPhoneNumber()).collect(Collectors.toList());
-        return duplicateList.contains(Long.parseLong(phoneNumber));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean validateId(int id) {
-        return getEmployeeById(id) != null;
+    public boolean validatePhoneNumber(Long phoneNumber) {
+        if (employeeDao.existsByPhoneNumber(phoneNumber)) {
+            throw new EmsException(phoneNumber + " phone number is already exists");
+        } else {
+            return true;
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public EmployeeDTO getEmployeeById(int employeeId) {
-        List<Employee> employees = employeeDao.getAllEmployees() ;
-        EmployeeDTO employeeDTO = null;
-        for (Employee employee : employees) {
-            if (employee.getId() == employeeId) {
-                employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-                if(null != employee.getProject()) {
-                    List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
-                    for(Project project: employee.getProject()) {
-                        projectDTOList.add(ProjectMapper.toProjectDTO(project));
-                    }
-                    employeeDTO.setProjectDTO(projectDTOList);
-                }
-                break;
+        Employee employee = employeeDao.findById(employeeId).orElse(null);
+        if (employee == null) {
+            throw new NotFoundException("Record not found...!!");
+        }
+        EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
+        if(!employee.getProject().isEmpty()) {
+            for(Project project: employee.getProject()) {
+                employeeDTO.getProjectDTO().add(ProjectMapper
+                        .toProjectDTO(project));
             }
         }
         return employeeDTO;
@@ -101,23 +103,31 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public boolean createEmployeeDetails(EmployeeDTO employeeDTO)
-            throws EmsException {
-        int id = employeeDao.createEmployeeDetails(EmployeeMapper.
-                toEmployee(employeeDTO));
-        return id > 0;
+    public EmployeeDTO addEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = null;
+        if (validatePhoneNumber(employeeDTO.getPhoneNumber()) &
+                (validateEmail(employeeDTO.getEmail()))) {
+            employee = employeeDao.save(EmployeeMapper.
+                    toEmployee(employeeDTO));
+        } else {
+            throw new EmsException("Fail to add");
+        }
+        return EmployeeMapper.toEmployeeDTO(employee);
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> getAllEmployee() throws EmsException {
+    public List<EmployeeDTO> getAllEmployee() {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
-        List<Employee> employeeList = employeeDao.getAllEmployees();
+        List<Employee> employeeList = employeeDao.findAll();
+        if (employeeList.isEmpty()) {
+            throw new NotFoundException("Record not found...!!");
+        }
         EmployeeDTO employeeDTO;
         for (Employee employee : employeeList) {
             employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-            if(null != employee.getProject()) {
+            if(!employee.getProject().isEmpty()) {
                 List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
                 for(Project project: employee.getProject()) {
                     projectDTOList.add(ProjectMapper.toProjectDTO(project));
@@ -132,18 +142,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> getEmployeesByName(String employeeName) throws EmsException {
+    public List<EmployeeDTO> getEmployeesByName(String employeeName) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
-        List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
-        List<Employee> employeeList = employeeDao.getEmployeesByName(employeeName);
+        List<Employee> employeeList = employeeDao.findByFirstName(employeeName);
+        if (employeeList.isEmpty()) {
+            throw new NotFoundException("Record not found...!!");
+        }
         EmployeeDTO employeeDTO;
         for (Employee employee : employeeList) {
             employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-            if(null != employee.getProject()) {
+            if(!employee.getProject().isEmpty()) {
                 for(Project project: employee.getProject()) {
-                    projectDTOList.add(ProjectMapper.toProjectDTO(project));
+                    employeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
                 }
-                employeeDTO.setProjectDTO(projectDTOList);
             }
             employeeDTOList.add(employeeDTO);
         }
@@ -153,40 +164,56 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public void deleteEmployeeDetails(int employeeId)
-            throws EmsException {
-        employeeDao.deleteEmployeeDetails(employeeId);
+    public String deleteEmployeeDetails(int id) {
+        if(!employeeDao.existsById(id)) {
+            throw new NotFoundException("Record not found..!!");
+        }
+        employeeDao.deleteById(id);
+        return "Deleted";
     }
 
     /**
      * {@inheritDoc}
      */
-    public void updateEmployeeDetails(EmployeeDTO employeeDTO)
-            throws EmsException {
-        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        if(null != employeeDTO.getProjectDTO()) {
-            List<Project> project = new ArrayList<Project>();
-            for(ProjectDTO projectDTO: employeeDTO.getProjectDTO()){
-                project.add(ProjectMapper.toProject(projectDTO));
-            }
-            employee.setProject(project);
+    public EmployeeDTO updateEmployeeDetails(EmployeeDTO employeeDTO) {
+        if (employeeDao.existsById(employeeDTO.getId())){
+            throw new NotFoundException("Record not found...!!");
         }
-        employeeDao.updateEmployeeDetails(employee);
+        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
+        if(!employeeDTO.getProjectDTO().isEmpty()) {
+            for(ProjectDTO projectDTO: employeeDTO.getProjectDTO()){
+                employee.getProject().add(ProjectMapper.toProject(projectDTO));
+            }
+        }
+        Employee updatedEmployee = employeeDao.save(employee);
+
+        EmployeeDTO updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+        if(!updatedEmployee.getProject().isEmpty()) {
+            for(Project project: updatedEmployee.getProject()){
+                updatedEmployeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
+            }
+        }
+        return updatedEmployeeDTO;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void assignProjectsForEmployee(EmployeeDTO employeeDTO)
-            throws EmsException {
+    public EmployeeDTO assignProjectsForEmployee(EmployeeDTO employeeDTO) {
         Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        if(null != employeeDTO.getProjectDTO()) {
-            List<Project> project = new ArrayList<Project>();
-            for(ProjectDTO projectDTO: employeeDTO.getProjectDTO()){
-                project.add(ProjectMapper.toProject(projectDTO));
+        if (!employeeDTO.getProjectDTO().isEmpty()) {
+            for (ProjectDTO projectDTO : employeeDTO.getProjectDTO()) {
+                employee.getProject().add(ProjectMapper.toProject(projectDTO));
             }
-            employee.setProject(project);
         }
-        employeeDao.updateEmployeeDetails(employee);
+        Employee updatedEmployee = employeeDao.save(employee);
+
+        EmployeeDTO updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+        if(!updatedEmployee.getProject().isEmpty()) {
+            for(Project project: updatedEmployee.getProject()){
+                updatedEmployeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
+            }
+        }
+        return updatedEmployeeDTO;
     }
 }

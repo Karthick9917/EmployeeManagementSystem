@@ -1,12 +1,13 @@
 package com.ideas2it.employeeManagementSystem.controller;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
+import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 import com.ideas2it.employeeManagementSystem.service.ProjectService;
-import com.ideas2it.employeeManagementSystem.service.impl.EmployeeServiceImpl;
-import com.ideas2it.employeeManagementSystem.service.impl.ProjectServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +19,19 @@ import java.util.List;
  * @version	1.8.0_281
  * @author	Karthick
  */
+
+@RestController
+@RequestMapping("api/v1/ems/project")
 public class ProjectController {
 
-    private ProjectService projectService = new ProjectServiceImpl();
+    private ProjectService projectService;
+    private EmployeeService employeeService;
+
+    @Autowired
+    public ProjectController(ProjectService projectService, EmployeeService employeeService) {
+        this.projectService = projectService;
+        this.employeeService = employeeService;
+    }
 
     /**
      * Passing the pattern and user input, and it returns the true or
@@ -45,17 +56,6 @@ public class ProjectController {
         return projectService.validateDate(date);
     }
 
-
-    /**
-     * Passing the string and its return the true or false
-     * based on the given String is valid or not
-     * @param id    - passing the given String for valid.
-     * @return true for false once the input is valid.
-     */
-    public boolean validateId(int id) {
-        return projectService.validateId(id);
-    }
-
     /**
      * Passing the integer and its return the object
      * based on the given id.
@@ -73,7 +73,6 @@ public class ProjectController {
      * @return return the object based on the id.
      */
     public EmployeeDTO getEmployeeById(int employeeId) {
-        EmployeeService employeeService = new EmployeeServiceImpl();
         return employeeService.getEmployeeById(employeeId);
     }
 
@@ -83,26 +82,9 @@ public class ProjectController {
      * @return the acknowledgement
      * @throws EmsException
      */
-    public boolean addProject(ProjectDTO projectDTO) throws EmsException {
+    @PostMapping()
+    public ProjectDTO addProject(@RequestBody ProjectDTO projectDTO) throws EmsException {
         return projectService.addProject(projectDTO);
-    }
-
-    /**
-     * Asking all projectDto.
-     * @return list of all projectDto.
-     * @throws EmsException
-     */
-    public List<ProjectDTO> getAllProject() throws EmsException {
-        return projectService.getAllProject();
-    }
-
-    /**
-     * passing the projectDto for update operation.
-     * @param projectDTO - passing the projectDto object.
-     * @throws EmsException
-     */
-    public void updateProject(ProjectDTO projectDTO) throws EmsException {
-        projectService.updateProject(projectDTO);
     }
 
     /**
@@ -110,28 +92,62 @@ public class ProjectController {
      *
      * @param projectName - transfer the String value.
      * @return the list of projectDto object.
-     * @throws EmsException
+     * @throws NotFoundException
      */
-    public List<ProjectDTO> getProjectsByName(String projectName) throws EmsException {
+    @GetMapping("search/{projectName}")
+    public List<ProjectDTO> getProjectsByName(@PathVariable("projectName") String projectName) throws NotFoundException {
         return projectService.getProjectsByName(projectName);
+    }
+
+    /**
+     * Asking all projectDto.
+     * @return list of all projectDto.
+     * @throws NotFoundException
+     */
+    @GetMapping("getAll")
+    public List<ProjectDTO> getAllProject() throws NotFoundException {
+        return projectService.getAllProject();
     }
 
     /**
      * passing the value for delete operation.
      *
      * @param id - transfer the integer value.
-     * @throws EmsException
+     * @return - the acknowledgement
+     * @throws NotFoundException
      */
-    public void deleteProject(int id) throws EmsException {
-        projectService.deleteProject(id);
+    @DeleteMapping("{id}")
+    public String deleteProject(@PathVariable("id") int id) throws NotFoundException {
+        return projectService.deleteProject(id);
     }
 
     /**
-     * pass the project object for assigning employees for project.
-     * @param projectDTO - passing a projectDTO object.
-     * @throws EmsException
+     * passing the projectDto for update operation.
+     * @param projectDTO - passing the projectDto object.
+     * @return - the object
+     * @throws NotFoundException
      */
-    public void assignEmployeesForProject(ProjectDTO projectDTO) throws EmsException {
-        projectService.assignEmployeesForProject(projectDTO);
+    @PutMapping("update")
+    public ProjectDTO updateProject(@RequestBody ProjectDTO projectDTO) throws NotFoundException {
+        return projectService.updateProject(projectDTO);
+    }
+
+    /**
+     * pass the project object for assigning employees to project.
+     * @param projectId get a project object
+     * @param ids - employees id for assigning
+     * @return the object
+     * @throws NotFoundException
+     */
+
+    @PutMapping("assign/{projectId}")
+    public ProjectDTO assignEmployeesForProject(@PathVariable int projectId,
+                                                @RequestParam List<Integer> ids) throws NotFoundException {
+        ProjectDTO projectDTO = projectService.getProjectById(projectId);
+        for (Integer employeeId: ids) {
+            EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
+            projectDTO.getEmployeeDTO().add(employeeDTO);
+        }
+        return projectService.assignEmployeesForProject(projectDTO);
     }
 }

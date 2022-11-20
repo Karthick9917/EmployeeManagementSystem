@@ -1,6 +1,7 @@
 package com.ideas2it.employeeManagementSystem.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,12 +20,11 @@ public class EmployeeDTO {
     private double salary;
     private String gender;
     private String email;
-    private long phoneNumber;
+    private Long phoneNumber;
     private LocalDate dateOfJoining;
     private String role;
     private List<AddressDTO> addressDTO;
-
-    private List<ProjectDTO> projectDTO;
+    private List<ProjectDTO> projectDTO = new ArrayList<>();
 
     public EmployeeDTO(String firstName, String lastName,
                        LocalDate dateOfBirth, double salary, String gender,
@@ -100,7 +100,7 @@ public class EmployeeDTO {
         this.email = email;
     }
 
-    public long getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
