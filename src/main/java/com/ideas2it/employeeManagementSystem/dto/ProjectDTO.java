@@ -1,6 +1,7 @@
 package com.ideas2it.employeeManagementSystem.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class ProjectDTO {
     private LocalDate projectDue;
     private LocalDate projectStart;
     private LocalDate projectEnd;
-    private List<EmployeeDTO> employeeDTO;
+    private List<EmployeeDTO> employeeDTO = new ArrayList<>();
 
     public ProjectDTO (int id, String projectName, String domain,
                        LocalDate projectDue, LocalDate projectStart,

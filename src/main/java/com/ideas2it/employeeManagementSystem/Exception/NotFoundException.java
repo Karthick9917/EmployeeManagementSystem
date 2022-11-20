@@ -7,13 +7,13 @@ package com.ideas2it.employeeManagementSystem.Exception;
  *  *@version    1.8.0_281
  *  *@author     Karthick
  */
-public class EmsException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
 
     /**
      * This method shows message of exception thrown.
      * @param message - show the message
      */
-    public EmsException(String message){
+    public NotFoundException(String message) {
         super(message);
     }
 }

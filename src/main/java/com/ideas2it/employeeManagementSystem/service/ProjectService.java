@@ -1,7 +1,6 @@
 package com.ideas2it.employeeManagementSystem.service;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
-import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 
 import java.util.List;
@@ -32,13 +31,6 @@ public interface ProjectService {
     boolean validateDate(String date) throws EmsException;
 
     /**
-     * Return true or false based on the given string is valid or not.
-     * @param id - passing the integer for validate.
-     * @return true or false based on the given id.
-     */
-    boolean validateId(int id);
-
-    /**
      * Find out the particular object based on the given id.
      * @param id - passing the integer.
      * @return the object based on the given id.
@@ -49,49 +41,44 @@ public interface ProjectService {
      * passing the projectDTO object to database.
      *
      * @param projectDTO - passing the projectDTO object for create operation.
-     * @return The acknowledgment.
-     * @throws EmsException
+     * @return The object.
      */
-    boolean addProject(ProjectDTO projectDTO) throws EmsException;
+    ProjectDTO addProject(ProjectDTO projectDTO);
 
     /**
      * Passing the all projectDTO from the projectDAO
      *
      * @return list of all the ProjectDTO
-     * @throws EmsException
      */
-    List<ProjectDTO> getAllProject() throws EmsException;
+    List<ProjectDTO> getAllProject();
 
     /**
      * pass the project object to ProjectDAO for update operation.
      *
      * @param projectDTO - passing a projectDTO object.
-     * @return the acknowledgement once the operation is done.
-     * @throws EmsException
+     * @return the same object.
      */
-    void updateProject(ProjectDTO projectDTO) throws EmsException;
+    ProjectDTO updateProject(ProjectDTO projectDTO);
 
     /**
      * pass the project id for delete operation.
      *
      * @param id - receive a integer value.
      * @return the acknowledgement once the operation is done
-     * @throws EmsException
      */
-    void deleteProject(int id) throws EmsException;
+    String deleteProject(int id);
 
     /**
      * pass the project object to ProjectDAO for assigning employees for project.
      * @param projectDTO - passing a projectDTO object.
-     * @throws EmsException
+     * @return - the object
      */
-    void assignEmployeesForProject(ProjectDTO projectDTO) throws EmsException;
+    ProjectDTO assignEmployeesForProject(ProjectDTO projectDTO);
 
     /**
      * It will return the projectDTO object based on project name.
      * @param projectName- receive a String value
-     * @return the list of projectDTO.
-     * @throws EmsException
+     * @return the list of objects.
      */
-    List<ProjectDTO> getProjectsByName(String projectName) throws EmsException;
+    List<ProjectDTO> getProjectsByName(String projectName);
 }

@@ -1,5 +1,8 @@
 package com.ideas2it.employeeManagementSystem.model;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,24 +15,46 @@ import java.util.List;
  *@version    1.8.0_281
  *@author     Karthick
  */
+@Entity
 public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String firstName;
+
     private String lastName;
+
     private LocalDate dateOfBirth;
+
     private double salary;
+
     private String gender;
+
     private String email;
+
     private long phoneNumber;
+
     private LocalDate dateOfJoining;
+
     private String role;
-    private List<Address> address;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "employee_id")
+    private List<Address> address = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    @JoinTable(name = "employee_project",
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")})
     private List<Project> project = new ArrayList<>();
 
-    public Employee(String firstName, String lastName,
+    public Employee(int id, String firstName, String lastName,
                     LocalDate dateOfBirth, double salary, String gender,
-                    String email, long phoneNumber, LocalDate dateOfJoining, String role,
-                    List<Address> address) {
+                    String email, long phoneNumber, LocalDate dateOfJoining,
+                    String role, List<Address> address, List<Project> project) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -40,7 +65,9 @@ public class Employee {
         this.dateOfJoining = dateOfJoining;
         this.role = role;
         this.address = address;
+        this.project = project;
     }
+
     public Employee() {
     }
 

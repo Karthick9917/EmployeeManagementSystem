@@ -2,7 +2,7 @@ package com.ideas2it.employeeManagementSystem.service;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
  * @version 1.8.0_281
  * @author	Karthick
  */
+
 public interface EmployeeService {
 
     /**
@@ -54,14 +55,7 @@ public interface EmployeeService {
      * @param phoneNumber - passing the string for validate.
      * @return true or false based on the given phone number.
      */
-    boolean validatePhoneNumber(String phoneNumber);
-
-    /**
-     * Return true or false based on the given string is valid or not.
-     * @param id - passing the string for validate.
-     * @return true or false based on the given id.
-     */
-    boolean validateId(int id);
+    boolean validatePhoneNumber(Long phoneNumber);
 
     /**
      * Find out the particular object based on the given id.
@@ -75,50 +69,44 @@ public interface EmployeeService {
      *
      * @param employeeDTO - get an employeeDTO object for create operation.
      * @return The acknowledgment.
-     * @throws EmsException
      */
-    boolean createEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
+    EmployeeDTO addEmployee(EmployeeDTO employeeDTO);
 
     /**
      * Passing all employeeDTO from the EmployeeDAO
      *
      * @return list of all the employeeDTO
-     * @throws EmsException
      *
      */
-    List<EmployeeDTO> getAllEmployee() throws EmsException;
+    List<EmployeeDTO> getAllEmployee();
 
     /**
      * it will return the employeeDTO based on employee name from the employeeDAO.
      *
      * @param employeeName - receive a String value
      * @return the list of employeeDTO.
-     * @throws EmsException
      */
-    List<EmployeeDTO> getEmployeesByName(String employeeName) throws EmsException;
+    List<EmployeeDTO> getEmployeesByName(String employeeName);
 
     /**
      * pass the employee id for delete operation.
      *
      * @param employeeDTO_Id - receive a integer value.
      * @return the acknowledgement once the operation is done
-     * @throws EmsException
      */
-    void deleteEmployeeDetails(int employeeDTO_Id) throws EmsException;
+    String deleteEmployeeDetails(int employeeDTO_Id);
 
     /**
      * pass the employee object to EmployeeDAO for update operation.
      *
      * @param employeeDTO - passing a employeeDTO object.
      * @return the acknowledgement once the operation is done.
-     * @throws EmsException
      */
-    void updateEmployeeDetails(EmployeeDTO employeeDTO) throws EmsException;
+    EmployeeDTO updateEmployeeDetails(EmployeeDTO employeeDTO);
 
     /**
      * pass the employee object for assigning projects for employee.
      * @param employeeDTO - passing a employeeDTO object.
-     * @throws EmsException
      */
-    void assignProjectsForEmployee(EmployeeDTO employeeDTO) throws EmsException;
+    EmployeeDTO assignProjectsForEmployee(EmployeeDTO employeeDTO);
 }

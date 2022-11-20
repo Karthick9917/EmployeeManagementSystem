@@ -1,5 +1,9 @@
 package com.ideas2it.employeeManagementSystem.model;
 
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
+
 /**
  * Address class with the attributes house building number, street name,
  * area name, city name, pincode initialize these attributes
@@ -8,18 +12,29 @@ package com.ideas2it.employeeManagementSystem.model;
  *@version    1.8.0_281
  *@author     Karthick
  */
+
+@Entity
+@Table(name = "address")
 public class Address {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String doorNumber;
+
     private String street;
+
     private String city;
+
     private String state;
+
     private int pinCode;
+
     private String type;
 
     public Address(int id, String doorNumber, String street,
-                      String city, String state, int pinCode, String type) {
+                   String city, String state, int pinCode, String type) {
         this.id = id;
         this.doorNumber = doorNumber;
         this.street = street;
@@ -29,15 +44,15 @@ public class Address {
         this.type = type;
     }
 
+    public Address() {
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Address() {
     }
 
     public String getDoorNumber() {
