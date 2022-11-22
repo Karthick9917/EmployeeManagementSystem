@@ -5,8 +5,8 @@ package com.ideas2it.employeeManagementSystem.dto;
  * city, state, pincode initialize these attributes
  * with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 public class AddressDTO {
     private int id;
@@ -18,7 +18,7 @@ public class AddressDTO {
     private String type;
 
     public AddressDTO(int id, String buildingNumber, String street,
-                   String city, String state, int pincode, String type) {
+                      String city, String state, int pincode, String type) {
         this.doorNumber = buildingNumber;
         this.street = street;
         this.city = city;
@@ -53,6 +53,7 @@ public class AddressDTO {
     public void setStreet(String street) {
         this.street = street;
     }
+
     public String getCity() {
         return city;
     }
@@ -86,7 +87,7 @@ public class AddressDTO {
     }
 
     public String toString() {
-        return doorNumber + " "+ street + " "+ city + " "
+        return doorNumber + " " + street + " " + city + " "
                 + state + " " + pincode + " - " + type + " address" + "\n" +
                 "                        ";
     }

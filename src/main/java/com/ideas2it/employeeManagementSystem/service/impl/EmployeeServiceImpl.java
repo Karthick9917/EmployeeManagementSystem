@@ -2,6 +2,7 @@ package com.ideas2it.employeeManagementSystem.service.impl;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
+import com.ideas2it.employeeManagementSystem.constants.Constants;
 import com.ideas2it.employeeManagementSystem.dao.EmployeeDao;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
@@ -10,7 +11,11 @@ import com.ideas2it.employeeManagementSystem.mapper.ProjectMapper;
 import com.ideas2it.employeeManagementSystem.model.Employee;
 import com.ideas2it.employeeManagementSystem.model.Project;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
+import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import com.ideas2it.employeeManagementSystem.util.ValidationUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,110 +36,111 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
+    private static final Logger logger = LogManager
+            .getLogger(EmployeeServiceImpl.class.getName());
     private final EmployeeDao employeeDao;
+    private final ProjectService projectService;
 
     @Autowired
-    public EmployeeServiceImpl(EmployeeDao employeeDao) {
+    public EmployeeServiceImpl(EmployeeDao employeeDao, ProjectService projectService) {
         this.employeeDao = employeeDao;
+        this.projectService = projectService;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean validateDateOfJoining(LocalDate date) throws EmsException {
+        return ValidationUtil.dateValid(String.valueOf(date)).isAfter(LocalDate.now());
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean userInputValidation(String pattern, String userInput) {
-        return ValidationUtil.isInputValid(pattern, userInput);
+    public boolean validateDateOfBirth(LocalDate dateOfJoining,
+                                       LocalDate dateOfBirth) throws EmsException {
+        return ValidationUtil.dateValid(String.valueOf(dateOfBirth))
+                .isAfter(dateOfJoining.minusYears(18));
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean validateDate(String date) throws EmsException {
-        return ValidationUtil.dateValid(date).isAfter(LocalDate.now());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean getDateOfBirth(LocalDate dateOfJoining,
-                                  LocalDate dateOfBirth) throws EmsException {
-        return dateOfBirth.isAfter(dateOfJoining.minusYears(18));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean validateEmail(String email) {
-        if (employeeDao.existsByEmail(email)) {
-            throw new EmsException((email + " email is already exists"));
-        } else {
-            return true;
+    public void validateEmployee(EmployeeDTO employeeDTO) throws EmsException {
+        if (validateDateOfJoining(employeeDTO.getDateOfBirth()) && validateDateOfBirth(employeeDTO
+                .getDateOfJoining(), employeeDTO.getDateOfBirth())) {
+            throw new EmsException(Constants.DATE_MISMATCH);
+        }
+        if (employeeDao.existsByPhoneNumberAndEmail(employeeDTO
+                .getPhoneNumber(), employeeDTO.getEmail())) {
+            throw new EmsException(Constants.INVALID_DATA);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean validatePhoneNumber(Long phoneNumber) {
-        if (employeeDao.existsByPhoneNumber(phoneNumber)) {
-            throw new EmsException(phoneNumber + " phone number is already exists");
-        } else {
-            return true;
-        }
+    public Employee getEmployeeById(int employeeId) {
+        return employeeDao.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException(Constants.ERROR_404));
     }
 
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO getEmployeeById(int employeeId) {
-        Employee employee = employeeDao.findById(employeeId).orElse(null);
-        if (employee == null) {
-            throw new NotFoundException("Record not found...!!");
+    public List<ProjectDTO> toProjectDTO(Employee employee) {
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
+        for (Project project : employee.getProject()) {
+            projectDTOS.add(ProjectMapper.toProjectDTO(project));
         }
-        EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-        if(!employee.getProject().isEmpty()) {
-            for(Project project: employee.getProject()) {
-                employeeDTO.getProjectDTO().add(ProjectMapper
-                        .toProjectDTO(project));
-            }
-        }
-        return employeeDTO;
+        return projectDTOS;
     }
 
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO addEmployee(EmployeeDTO employeeDTO) {
-        Employee employee = null;
-        if (validatePhoneNumber(employeeDTO.getPhoneNumber()) &
-                (validateEmail(employeeDTO.getEmail()))) {
-            employee = employeeDao.save(EmployeeMapper.
-                    toEmployee(employeeDTO));
-        } else {
-            throw new EmsException("Fail to add");
+    public List<Project> toProject(EmployeeDTO employeeDTO) {
+        List<Project> projects = new ArrayList<>();
+        for (ProjectDTO projectDTO : employeeDTO.getProjectDTO()) {
+            projects.add(ProjectMapper.toProject(projectDTO));
         }
+        return projects;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public EmployeeDTO addEmployee(EmployeeDTO employeeDTO) throws EmsException {
+        Employee employee;
+        try {
+            validateEmployee(employeeDTO);
+            employee = employeeDao.save(EmployeeMapper.toEmployee(employeeDTO));
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new EmsException(Constants.FAILED_TO_ADD);
+        }
+        logger.info("Employee " + employee.getId() + "has been created successfully");
         return EmployeeMapper.toEmployeeDTO(employee);
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> getAllEmployee() {
-        List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
-        List<Employee> employeeList = employeeDao.findAll();
-        if (employeeList.isEmpty()) {
-            throw new NotFoundException("Record not found...!!");
-        }
-        EmployeeDTO employeeDTO;
-        for (Employee employee : employeeList) {
-            employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-            if(!employee.getProject().isEmpty()) {
-                List<ProjectDTO> projectDTOList = new ArrayList<ProjectDTO>();
-                for(Project project: employee.getProject()) {
-                    projectDTOList.add(ProjectMapper.toProjectDTO(project));
+    public List<EmployeeDTO> getAllEmployee() throws EmsException {
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        try {
+            for (Employee employee : employeeDao.findAll()) {
+                EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
+                if (!employee.getProject().isEmpty()) {
+                    employeeDTO.setProjectDTO(toProjectDTO(employee));
                 }
-                employeeDTO.setProjectDTO(projectDTOList);
+                employeeDTOList.add(employeeDTO);
             }
-            employeeDTOList.add(employeeDTO);
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new EmsException(Constants.FAILED_TO_FETCH);
         }
         return employeeDTOList;
     }
@@ -142,21 +148,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> getEmployeesByName(String employeeName) {
-        List<EmployeeDTO> employeeDTOList = new ArrayList<EmployeeDTO>();
-        List<Employee> employeeList = employeeDao.findByFirstName(employeeName);
-        if (employeeList.isEmpty()) {
-            throw new NotFoundException("Record not found...!!");
-        }
-        EmployeeDTO employeeDTO;
-        for (Employee employee : employeeList) {
-            employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
-            if(!employee.getProject().isEmpty()) {
-                for(Project project: employee.getProject()) {
-                    employeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
+    public List<EmployeeDTO> getEmployeesByName(String employeeName) throws NotFoundException {
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        try {
+            for (Employee employee : employeeDao.findByFirstName(employeeName)) {
+                EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
+                if (!employee.getProject().isEmpty()) {
+                    employeeDTO.setProjectDTO(toProjectDTO(employee));
                 }
+                employeeDTOList.add(employeeDTO);
             }
-            employeeDTOList.add(employeeDTO);
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new NotFoundException(Constants.ERROR_404);
         }
         return employeeDTOList;
     }
@@ -164,34 +168,34 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public String deleteEmployeeDetails(int id) {
-        if(!employeeDao.existsById(id)) {
-            throw new NotFoundException("Record not found..!!");
+    public void deleteEmployee(int id) throws NotFoundException {
+        try {
+            employeeDao.deleteById(id);
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new NotFoundException(Constants.FAILED_TO_DELETE);
         }
-        employeeDao.deleteById(id);
-        return "Deleted";
     }
 
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO updateEmployeeDetails(EmployeeDTO employeeDTO) {
-        if (employeeDao.existsById(employeeDTO.getId())){
-            throw new NotFoundException("Record not found...!!");
-        }
-        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        if(!employeeDTO.getProjectDTO().isEmpty()) {
-            for(ProjectDTO projectDTO: employeeDTO.getProjectDTO()){
-                employee.getProject().add(ProjectMapper.toProject(projectDTO));
+    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) throws EmsException {
+        EmployeeDTO updatedEmployeeDTO;
+        try {
+            Employee employee = EmployeeMapper.toEmployee(employeeDTO);
+            if (!employeeDTO.getProjectDTO().isEmpty()) {
+                employee.setProject(toProject(employeeDTO));
             }
-        }
-        Employee updatedEmployee = employeeDao.save(employee);
+            Employee updatedEmployee = employeeDao.save(employee);
 
-        EmployeeDTO updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
-        if(!updatedEmployee.getProject().isEmpty()) {
-            for(Project project: updatedEmployee.getProject()){
-                updatedEmployeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
+            updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+            if (!updatedEmployee.getProject().isEmpty()) {
+                updatedEmployeeDTO.setProjectDTO(toProjectDTO(employee));
             }
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new EmsException(Constants.FAILED_TO_UPDATE);
         }
         return updatedEmployeeDTO;
     }
@@ -199,21 +203,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public EmployeeDTO assignProjectsForEmployee(EmployeeDTO employeeDTO) {
-        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-        if (!employeeDTO.getProjectDTO().isEmpty()) {
-            for (ProjectDTO projectDTO : employeeDTO.getProjectDTO()) {
-                employee.getProject().add(ProjectMapper.toProject(projectDTO));
+    public EmployeeDTO assignProjectsForEmployee(int employeeId, List<Integer> ids)
+            throws EmsException {
+        EmployeeDTO employeeDTO;
+        try {
+            Employee employee = employeeDao.findById(employeeId)
+                    .orElseThrow(() -> new NotFoundException(Constants.ERROR_404));
+            for (Integer projectId : ids) {
+                employee.getProject().add(projectService
+                        .getProjectById(projectId));
             }
-        }
-        Employee updatedEmployee = employeeDao.save(employee);
-
-        EmployeeDTO updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
-        if(!updatedEmployee.getProject().isEmpty()) {
-            for(Project project: updatedEmployee.getProject()){
-                updatedEmployeeDTO.getProjectDTO().add(ProjectMapper.toProjectDTO(project));
+            Employee updatedEmployee = employeeDao.save(employee);
+            employeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+            if (!updatedEmployee.getProject().isEmpty()) {
+                employeeDTO.setProjectDTO(toProjectDTO(updatedEmployee));
             }
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException.getMessage());
+            throw new EmsException(Constants.FAILED_TO_ASSIGN);
         }
-        return updatedEmployeeDTO;
+        return employeeDTO;
     }
 }

@@ -1,7 +1,5 @@
 package com.ideas2it.employeeManagementSystem.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,8 +10,8 @@ import java.util.List;
  * date of birth, salary, gender, email,phone number, address
  * initialize these attributes with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 @Entity
 public class Employee {

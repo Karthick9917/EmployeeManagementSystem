@@ -13,6 +13,7 @@ public class ProjectMapper {
 
     /**
      * Convert projectDto object to projectModel Object
+     *
      * @param projectDTO - passing the object
      * @return project object
      */
@@ -29,6 +30,7 @@ public class ProjectMapper {
 
     /**
      * Convert projectModel object to projectDto Object
+     *
      * @param project - passing the object
      * @return projectDto object
      */

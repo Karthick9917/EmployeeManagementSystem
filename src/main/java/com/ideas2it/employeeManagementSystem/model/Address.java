@@ -1,7 +1,5 @@
 package com.ideas2it.employeeManagementSystem.model;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 
 /**
@@ -9,8 +7,8 @@ import javax.persistence.*;
  * area name, city name, pincode initialize these attributes
  * with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 
 @Entity
@@ -70,6 +68,7 @@ public class Address {
     public void setStreet(String street) {
         this.street = street;
     }
+
     public String getCity() {
         return city;
     }
@@ -103,7 +102,7 @@ public class Address {
     }
 
     public String toString() {
-        return  id + " " +doorNumber + " "+ street + " "+ city + " "
+        return id + " " + doorNumber + " " + street + " " + city + " "
                 + state + " " + pinCode + " - " + type + " address" + "\n" +
                 "                        ";
     }

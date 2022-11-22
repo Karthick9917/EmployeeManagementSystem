@@ -1,8 +1,13 @@
 package com.ideas2it.employeeManagementSystem.service;
 
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
+import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
+import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
+import com.ideas2it.employeeManagementSystem.model.Employee;
+import com.ideas2it.employeeManagementSystem.model.Project;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -10,75 +15,96 @@ import java.util.List;
  * to EmployeeService
  *
  * @version 1.8.0_281
- * @author	Karthick
+ * @author Karthick
  */
 public interface ProjectService {
 
     /**
-     * Return true or false based on the user Input is valid or not.
-     * @param pattern - check the user input based on the formatter.
-     * @param userInput - user input to be validated.
-     * @return true or false based on the user input.
-     */
-    boolean userInputValidation(String pattern, String userInput);
-
-    /**
      * Return true or false based on the date is valid or not.
+     *
      * @param date - passing the date input to be validated.
      * @return true or false based on the given date.
      * @throws EmsException
      */
-    boolean validateDate(String date) throws EmsException;
+    boolean validateDate(LocalDate date) throws EmsException;
 
     /**
      * Find out the particular object based on the given id.
+     *
      * @param id - passing the integer.
      * @return the object based on the given id.
+     * @throws EmsException - throws a String message
      */
-    ProjectDTO getProjectById(int id);
+    Project getProjectById(int id) throws EmsException;
+
+    /**
+     * Converting the model object to dto object.
+     *
+     * @param project - passing the model object for converting
+     *                the model object to dto object.
+     * @return - the list of DTO object.
+     */
+    List<EmployeeDTO> toEmployeeDTO(Project project);
+
+    /**
+     * Converting the model object to dto object.
+     *
+     * @param projectDTO - passing the DTO object for converting
+     *                   the DTO object to model object.
+     * @return - the list of Model object.
+     */
+    List<Employee> toEmployee(ProjectDTO projectDTO);
 
     /**
      * passing the projectDTO object to database.
      *
      * @param projectDTO - passing the projectDTO object for create operation.
      * @return The object.
+     * @throws EmsException - throws a String message.
      */
-    ProjectDTO addProject(ProjectDTO projectDTO);
+    ProjectDTO addProject(ProjectDTO projectDTO) throws EmsException;
 
     /**
      * Passing the all projectDTO from the projectDAO
      *
-     * @return list of all the ProjectDTO
+     * @return list of all the ProjectDTO.
+     * @throws EmsException - throws a String message.
      */
-    List<ProjectDTO> getAllProject();
+    List<ProjectDTO> getAllProject() throws EmsException;
 
     /**
      * pass the project object to ProjectDAO for update operation.
      *
      * @param projectDTO - passing a projectDTO object.
      * @return the same object.
+     * @throws EmsException - throws a String message.
      */
-    ProjectDTO updateProject(ProjectDTO projectDTO);
+    ProjectDTO updateProject(ProjectDTO projectDTO) throws EmsException;
 
     /**
      * pass the project id for delete operation.
      *
      * @param id - receive a integer value.
-     * @return the acknowledgement once the operation is done
+     * @throws NotFoundException - throws a String message.
      */
-    String deleteProject(int id);
+    void deleteProject(int id) throws NotFoundException;
 
     /**
      * pass the project object to ProjectDAO for assigning employees for project.
-     * @param projectDTO - passing a projectDTO object.
+     *
+     * @param projectId - passing an id for object.
+     * @param ids       - passing the ids for assign the object.
      * @return - the object
+     * @throws EmsException - throws a String message.
      */
-    ProjectDTO assignEmployeesForProject(ProjectDTO projectDTO);
+    ProjectDTO assignEmployeesForProject(int projectId, List<Integer> ids) throws EmsException;
 
     /**
      * It will return the projectDTO object based on project name.
+     *
      * @param projectName- receive a String value
      * @return the list of objects.
+     * @throws NotFoundException - throws a String message.
      */
-    List<ProjectDTO> getProjectsByName(String projectName);
+    List<ProjectDTO> getProjectsByName(String projectName) throws NotFoundException;
 }

@@ -9,8 +9,8 @@ import java.util.List;
  * date of birth, salary, gender, email,phone number, addressDTO
  * initialize these attributes with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 public class EmployeeDTO {
     private int id;
@@ -41,6 +41,7 @@ public class EmployeeDTO {
         this.role = role;
         this.addressDTO = addressDTO;
     }
+
     public EmployeeDTO() {
     }
 
@@ -151,10 +152,10 @@ public class EmployeeDTO {
                 "\nPhoneNumber           :  +91" + phoneNumber +
                 "\nDate Of Joining       :  " + dateOfJoining +
                 "\nAddress               :  " + addressDTO.toString().replace(
-                "[","").replace("]","").replace(",", "") +
+                "[", "").replace("]", "").replace(",", "") +
                 "\nProject               :";
         StringBuilder stringBuilder = new StringBuilder();
-        if (!projectDTO.isEmpty()){
+        if (!projectDTO.isEmpty()) {
             projectDTO.forEach(e -> stringBuilder.append(e.getId() + " - ")
                     .append(e.getProjectName() + "\n                         "));
         } else {

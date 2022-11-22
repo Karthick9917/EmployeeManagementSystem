@@ -1,7 +1,5 @@
 package com.ideas2it.employeeManagementSystem.model;
 
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,8 +10,8 @@ import java.util.List;
  * project due, project start, project end, employee
  * initialize these attributes with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 @Entity
 @Table(name = "project")
@@ -52,7 +50,7 @@ public class Project {
         this.employee = employee;
     }
 
-    public Project(){
+    public Project() {
     }
 
     public int getId() {
