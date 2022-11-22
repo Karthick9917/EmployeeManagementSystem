@@ -9,8 +9,8 @@ import java.util.List;
  * project due, project start, project end, employeeDTO
  * initialize these attributes with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 public class ProjectDTO {
     private int id;
@@ -21,9 +21,9 @@ public class ProjectDTO {
     private LocalDate projectEnd;
     private List<EmployeeDTO> employeeDTO = new ArrayList<>();
 
-    public ProjectDTO (int id, String projectName, String domain,
-                       LocalDate projectDue, LocalDate projectStart,
-                       LocalDate projectEnd, List<EmployeeDTO> employeeDTO) {
+    public ProjectDTO(int id, String projectName, String domain,
+                      LocalDate projectDue, LocalDate projectStart,
+                      LocalDate projectEnd, List<EmployeeDTO> employeeDTO) {
         this.id = id;
         this.projectName = projectName;
         this.domain = domain;
@@ -33,7 +33,7 @@ public class ProjectDTO {
         this.employeeDTO = employeeDTO;
     }
 
-    public ProjectDTO(){
+    public ProjectDTO() {
     }
 
     public int getId() {
@@ -101,9 +101,11 @@ public class ProjectDTO {
                 "\nProject end           :  " + projectEnd +
                 "\nEmployee              :";
         StringBuilder stringBuilder = new StringBuilder();
-        if (!employeeDTO.isEmpty()){
-            employeeDTO.forEach(e -> stringBuilder.append(e.getId() + " - ")
-                    .append(e.getFirstName() + "\n                         "));
+        if (!employeeDTO.isEmpty()) {
+            employeeDTO.forEach(e -> stringBuilder.append(e.getId())
+                    .append(" - ")
+                    .append(e.getFirstName())
+                    .append("\n                         "));
         } else {
             stringBuilder.append("Employee not assign");
         }

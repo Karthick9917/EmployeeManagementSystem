@@ -24,7 +24,7 @@ public class EmployeeMapper {
      */
     public static Employee toEmployee(EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
-        List<Address> address = new ArrayList<Address>();
+        List<Address> address = new ArrayList<>();
         employee.setId(employeeDTO.getId());
         employee.setFirstName(employeeDTO.getFirstName());
         employee.setLastName(employeeDTO.getLastName());
@@ -35,8 +35,8 @@ public class EmployeeMapper {
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
         employee.setDateOfJoining(employeeDTO.getDateOfJoining());
         employee.setRole(employeeDTO.getRole());
-        if(null != employeeDTO.getAddressDTO()) {
-            for(AddressDTO addressDTO: employeeDTO.getAddressDTO()){
+        if (null != employeeDTO.getAddressDTO()) {
+            for (AddressDTO addressDTO : employeeDTO.getAddressDTO()) {
                 address.add(toAddress(addressDTO));
             }
             employee.setAddress(address);
@@ -70,7 +70,7 @@ public class EmployeeMapper {
      */
     public static EmployeeDTO toEmployeeDTO(Employee employee) {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        List<AddressDTO> addressDTO = new ArrayList<AddressDTO>();
+        List<AddressDTO> addressDTO = new ArrayList<>();
         employeeDTO.setId(employee.getId());
         employeeDTO.setFirstName(employee.getFirstName());
         employeeDTO.setLastName(employee.getLastName());
@@ -81,8 +81,8 @@ public class EmployeeMapper {
         employeeDTO.setPhoneNumber(employee.getPhoneNumber());
         employeeDTO.setDateOfJoining(employee.getDateOfJoining());
         employeeDTO.setRole(employee.getRole());
-        if(null != employee.getAddress()) {
-            for(Address address: employee.getAddress()){
+        if (null != employee.getAddress()) {
+            for (Address address : employee.getAddress()) {
                 addressDTO.add(toAddressDTO(address));
             }
             employeeDTO.setAddressDTO(addressDTO);

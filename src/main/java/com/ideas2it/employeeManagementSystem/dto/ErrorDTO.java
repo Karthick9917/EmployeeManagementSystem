@@ -4,8 +4,8 @@ package com.ideas2it.employeeManagementSystem.dto;
  * This class with the attributes error message, error code
  * employeeDTO initialize these attributes with the help of constructor
  *
- *@version    1.8.0_281
- *@author     Karthick
+ * @author Karthick
+ * @version 1.8.0_281
  */
 public class ErrorDTO {
 

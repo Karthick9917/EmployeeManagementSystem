@@ -10,7 +10,6 @@ import java.util.List;
 public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
     List<Employee> findByFirstName(String name);
-    Boolean existsByPhoneNumber(Long phoneNumber);
-    Boolean existsByEmail(String email);
 
+    Boolean existsByPhoneNumberAndEmail(Long phoneNumber, String email);
 }

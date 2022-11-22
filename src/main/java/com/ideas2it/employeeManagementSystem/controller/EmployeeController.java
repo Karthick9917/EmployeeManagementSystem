@@ -3,13 +3,10 @@ package com.ideas2it.employeeManagementSystem.controller;
 import com.ideas2it.employeeManagementSystem.Exception.EmsException;
 import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
-import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
-import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /*
@@ -25,96 +22,19 @@ import java.util.List;
 @RequestMapping("api/v1/ems/employee")
 public class EmployeeController {
 
-    private EmployeeService employeeService;
-    private ProjectService projectService;
+    private final EmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService, ProjectService projectService) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.projectService = projectService;
     }
 
     /**
-     * Passing the pattern and user input, and it returns the true or
-     * false once the input is valid.
+     * Passing the object for add operation and return the same object.
      *
-     * @param pattern - for check the input.
-     * @param userInput - for check the input is matches or not
-     * @return true for false once the input is valid.
-     */
-    public boolean userInputValidation(String pattern, String userInput) {
-        return employeeService.userInputValidation(pattern,userInput);
-    }
-
-    /**
-     * Passing the date, and it returns the true or false
-     * once the date is valid.
-     *
-     * @param date - for check the date is valid or not
-     * @return true for false once the input is valid.
-     */
-    public boolean getDate(String date) {
-        return employeeService.validateDate(date);
-    }
-
-    /**
-     * Passing the date of birth and date of joining, and it returns the true or false
-     * based on the given date is valid or not
-     * @param dateOfJoining - passing the date of joining for validate
-     *                        the date of birth.
-     * @param dateOfBirth - passing the date of birth input to be validated.
-     * @return true for false once the input is valid.
-     */
-    public boolean getDateOfBirth(LocalDate dateOfJoining, LocalDate dateOfBirth) {
-        return employeeService.getDateOfBirth(dateOfJoining, dateOfBirth);
-    }
-
-    /**
-     * Passing the string and its return the true or false
-     * based on the given String is valid or not
-     * @param email - passing the given String for valid.
-     * @return true for false once the input is valid.
-     */
-    public boolean validateEmail(String email) {
-        return employeeService.validateEmail(email);
-    }
-
-    /**
-     * Passing the string and its return the true or false
-     * based on the given String is valid or not
-     * @param phoneNumber    - passing the given String for valid.
-     * @return true for false once the input is valid.
-     */
-    public boolean validatePhoneNumber(Long phoneNumber) {
-        return employeeService.validatePhoneNumber(phoneNumber);
-    }
-
-    /**
-     * Passing the integer and its return the object
-     * based on the given id.
-     * @param employeeId - passing the given integer.
-     * @return return the object based on the id.
-     */
-    public EmployeeDTO getEmployeeById (int employeeId) {
-        return employeeService.getEmployeeById(employeeId);
-    }
-
-    /**
-     * Passing the integer and its return the object
-     * based on the given id.
-     * @param projectId - passing the given integer.
-     * @return return the object based on the id.
-     */
-    public ProjectDTO getProjectById(int projectId) {
-        return projectService.getProjectById(projectId);
-    }
-
-    /**
-     * passing the employeeDTO and return the same object.
-     *
-     * @param - employeeDTO - get an employeeDTO object for create operation.
-     * @return - the object
-     * @throws - EmsException
+     * @param employeeDTO - passing the
+     * @return - the same object
+     * @throws EmsException - throws a String message.
      */
     @PostMapping()
     public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDTO)
@@ -125,11 +45,11 @@ public class EmployeeController {
     /**
      * Asking all employeeDTO.
      *
-     * @return list of all employeesDTO.
-     * @throws NotFoundException
+     * @return - list of all employeesDTO.
+     * @throws EmsException - throws a String message
      */
     @GetMapping("getAll")
-    public List<EmployeeDTO> getAllEmployee() throws NotFoundException {
+    public List<EmployeeDTO> getAllEmployee() throws EmsException {
         return employeeService.getAllEmployee();
     }
 
@@ -138,56 +58,51 @@ public class EmployeeController {
      *
      * @param employeeName - transfer the String value.
      * @return the list of employeeDTO object.
-     * @throws NotFoundException
+     * @throws NotFoundException - throws a String message
      */
 
     @GetMapping("search/{firstName}")
-    public List<EmployeeDTO> getEmployeesByName (@PathVariable("firstName") String employeeName)
+    public List<EmployeeDTO> getEmployeesByName(@PathVariable("firstName") String employeeName)
             throws NotFoundException {
         return employeeService.getEmployeesByName(employeeName);
     }
 
     /**
-     * passing the id value for delete operation.
+     * passing the value for delete operation.
      *
      * @param id - transfer the integer value.
-     * @return - the acknowledgment.
-     * @throws NotFoundException
+     * @throws NotFoundException - throws a String message
      */
     @DeleteMapping("{id}")
-    public String deleteEmployeeDetails(@PathVariable("id") int id)
+    public void deleteEmployeeDetails(@PathVariable("id") int id)
             throws NotFoundException {
-        return employeeService.deleteEmployeeDetails(id);
+        employeeService.deleteEmployee(id);
     }
 
     /**
-     * passing the employeeDTO and return the same object.
+     * passing the employeeDTO for update operation.
      *
      * @param employeeDTO - Getting the employeeDTO object.
      * @return - the object.
-     * @throws NotFoundException
+     * @throws EmsException - throws a String message
      */
     @PutMapping("update")
-    public EmployeeDTO updateEmployeeDetails(EmployeeDTO employeeDTO )
-            throws NotFoundException {
-        return employeeService.updateEmployeeDetails(employeeDTO);
+    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO)
+            throws EmsException {
+        return employeeService.updateEmployee(employeeDTO);
     }
 
-     /**
+    /**
      * pass the employee object for assigning projects to employee.
-     * @param employeeId get a employee object
-     * @param ids - project id for assigning
-     * @return EmployeeDTO object
-     * @throws NotFoundException
+     *
+     * @param employeeId get a id for assign.
+     * @param ids        - project id for assign.
+     * @return - the same object
+     * @throws EmsException - throws a String message.
      */
     @PutMapping("assign/{employeeId}")
     public EmployeeDTO assignProjectsForEmployee(@PathVariable int employeeId
-            , @RequestParam List<Integer> ids) throws NotFoundException {
-        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
-        for (Integer projectId: ids) {
-            ProjectDTO projectDTO = projectService.getProjectById(projectId);
-            employeeDTO.getProjectDTO().add(projectDTO);
-        }
-        return employeeService.assignProjectsForEmployee(employeeDTO);
+            , @RequestParam List<Integer> ids) throws EmsException {
+        return employeeService.assignProjectsForEmployee(employeeId, ids);
     }
 }
