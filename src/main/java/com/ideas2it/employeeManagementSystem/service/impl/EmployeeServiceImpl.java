@@ -15,8 +15,8 @@ import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import com.ideas2it.employeeManagementSystem.util.ValidationUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -39,6 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private static final Logger logger = LogManager
             .getLogger(EmployeeServiceImpl.class.getName());
     private final EmployeeDao employeeDao;
+
     private final ProjectService projectService;
 
     @Autowired
@@ -46,7 +47,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeDao = employeeDao;
         this.projectService = projectService;
     }
-
 
     /**
      * {@inheritDoc}
@@ -114,14 +114,9 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public EmployeeDTO addEmployee(EmployeeDTO employeeDTO) throws EmsException {
         Employee employee;
-        try {
-            validateEmployee(employeeDTO);
-            employee = employeeDao.save(EmployeeMapper.toEmployee(employeeDTO));
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.FAILED_TO_ADD);
-        }
-        logger.info("Employee " + employee.getId() + "has been created successfully");
+        validateEmployee(employeeDTO);
+        employee = employeeDao.save(EmployeeMapper.toEmployee(employeeDTO));
+        logger.info("Employee " + employee.getId() + " has been created successfully");
         return EmployeeMapper.toEmployeeDTO(employee);
     }
 
@@ -130,17 +125,15 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public List<EmployeeDTO> getAllEmployee() throws EmsException {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        try {
-            for (Employee employee : employeeDao.findAll()) {
+        List<Employee> employeeList = employeeDao.findAll();
+        if (!employeeList.isEmpty()) {
+            for (Employee employee : employeeList) {
                 EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
                 if (!employee.getProject().isEmpty()) {
                     employeeDTO.setProjectDTO(toProjectDTO(employee));
                 }
                 employeeDTOList.add(employeeDTO);
             }
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.FAILED_TO_FETCH);
         }
         return employeeDTOList;
     }
@@ -148,19 +141,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     /**
      * {@inheritDoc}
      */
-    public List<EmployeeDTO> getEmployeesByName(String employeeName) throws NotFoundException {
+    public List<EmployeeDTO> getEmployeesByName(String employeeName) {
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        try {
-            for (Employee employee : employeeDao.findByFirstName(employeeName)) {
+        List<Employee> employeeList = employeeDao.findByFirstName(employeeName);
+        if (!employeeList.isEmpty()) {
+            for (Employee employee : employeeList) {
                 EmployeeDTO employeeDTO = EmployeeMapper.toEmployeeDTO(employee);
                 if (!employee.getProject().isEmpty()) {
                     employeeDTO.setProjectDTO(toProjectDTO(employee));
                 }
                 employeeDTOList.add(employeeDTO);
             }
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
-            throw new NotFoundException(Constants.ERROR_404);
         }
         return employeeDTOList;
     }
@@ -171,8 +162,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(int id) throws NotFoundException {
         try {
             employeeDao.deleteById(id);
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
+            logger.info("Employee " + id + "has been removed successfully");
+        } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+            logger.error(emptyResultDataAccessException.getMessage());
             throw new NotFoundException(Constants.FAILED_TO_DELETE);
         }
     }
@@ -182,21 +174,17 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) throws EmsException {
         EmployeeDTO updatedEmployeeDTO;
-        try {
-            Employee employee = EmployeeMapper.toEmployee(employeeDTO);
-            if (!employeeDTO.getProjectDTO().isEmpty()) {
-                employee.setProject(toProject(employeeDTO));
-            }
-            Employee updatedEmployee = employeeDao.save(employee);
-
-            updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
-            if (!updatedEmployee.getProject().isEmpty()) {
-                updatedEmployeeDTO.setProjectDTO(toProjectDTO(employee));
-            }
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.FAILED_TO_UPDATE);
+        Employee employee = EmployeeMapper.toEmployee(employeeDTO);
+        if (!employeeDTO.getProjectDTO().isEmpty()) {
+            employee.setProject(toProject(employeeDTO));
         }
+        Employee updatedEmployee = employeeDao.save(employee);
+
+        updatedEmployeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+        if (!updatedEmployee.getProject().isEmpty()) {
+            updatedEmployeeDTO.setProjectDTO(toProjectDTO(employee));
+        }
+        logger.info("Employee " + employeeDTO.getId() + "has been updated successfully");
         return updatedEmployeeDTO;
     }
 
@@ -206,22 +194,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO assignProjectsForEmployee(int employeeId, List<Integer> ids)
             throws EmsException {
         EmployeeDTO employeeDTO;
-        try {
-            Employee employee = employeeDao.findById(employeeId)
-                    .orElseThrow(() -> new NotFoundException(Constants.ERROR_404));
-            for (Integer projectId : ids) {
-                employee.getProject().add(projectService
-                        .getProjectById(projectId));
-            }
-            Employee updatedEmployee = employeeDao.save(employee);
-            employeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
-            if (!updatedEmployee.getProject().isEmpty()) {
-                employeeDTO.setProjectDTO(toProjectDTO(updatedEmployee));
-            }
-        } catch (HibernateException hibernateException) {
-            logger.error(hibernateException.getMessage());
-            throw new EmsException(Constants.FAILED_TO_ASSIGN);
+        Employee employee = employeeDao.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException(Constants.ERROR_404));
+        for (Integer projectId : ids) {
+            employee.getProject().add(projectService
+                    .getProjectById(projectId));
         }
+        Employee updatedEmployee = employeeDao.save(employee);
+        employeeDTO = EmployeeMapper.toEmployeeDTO(updatedEmployee);
+        if (!updatedEmployee.getProject().isEmpty()) {
+            employeeDTO.setProjectDTO(toProjectDTO(updatedEmployee));
+        }
+        logger.info("Projects are assigned to employee " + employeeDTO.getId());
         return employeeDTO;
     }
 }

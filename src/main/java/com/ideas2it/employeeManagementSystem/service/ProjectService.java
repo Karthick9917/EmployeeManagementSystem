@@ -60,26 +60,23 @@ public interface ProjectService {
      *
      * @param projectDTO - passing the projectDTO object for create operation.
      * @return The object.
-     * @throws EmsException - throws a String message.
      */
-    ProjectDTO addProject(ProjectDTO projectDTO) throws EmsException;
+    ProjectDTO addProject(ProjectDTO projectDTO);
 
     /**
      * Passing the all projectDTO from the projectDAO
      *
      * @return list of all the ProjectDTO.
-     * @throws EmsException - throws a String message.
      */
-    List<ProjectDTO> getAllProject() throws EmsException;
+    List<ProjectDTO> getAllProject();
 
     /**
      * pass the project object to ProjectDAO for update operation.
      *
      * @param projectDTO - passing a projectDTO object.
      * @return the same object.
-     * @throws EmsException - throws a String message.
      */
-    ProjectDTO updateProject(ProjectDTO projectDTO) throws EmsException;
+    ProjectDTO updateProject(ProjectDTO projectDTO);
 
     /**
      * pass the project id for delete operation.
@@ -95,16 +92,14 @@ public interface ProjectService {
      * @param projectId - passing an id for object.
      * @param ids       - passing the ids for assign the object.
      * @return - the object
-     * @throws EmsException - throws a String message.
      */
-    ProjectDTO assignEmployeesForProject(int projectId, List<Integer> ids) throws EmsException;
+    ProjectDTO assignEmployeesForProject(int projectId, List<Integer> ids);
 
     /**
      * It will return the projectDTO object based on project name.
      *
      * @param projectName- receive a String value
      * @return the list of objects.
-     * @throws NotFoundException - throws a String message.
      */
-    List<ProjectDTO> getProjectsByName(String projectName) throws NotFoundException;
+    List<ProjectDTO> getProjectsByName(String projectName);
 }
