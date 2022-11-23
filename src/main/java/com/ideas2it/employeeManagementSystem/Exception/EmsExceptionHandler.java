@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLException;
+
 /**
  * It is used to handle the exceptions.
  * <p>
@@ -37,5 +39,11 @@ public class EmsExceptionHandler {
     @ExceptionHandler(value = {NotFoundException.class})
     public ErrorDTO notFound(NotFoundException notFoundException) {
         return new ErrorDTO(notFoundException.getMessage(), 404);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(SQLException.class)
+    public ErrorDTO badRequestException(SQLException sqlException) {
+        return new ErrorDTO("Internal server error", 500);
     }
 }

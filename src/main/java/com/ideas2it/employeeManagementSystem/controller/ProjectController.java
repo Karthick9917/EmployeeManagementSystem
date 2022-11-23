@@ -5,6 +5,8 @@ import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
 import com.ideas2it.employeeManagementSystem.dto.ProjectDTO;
 import com.ideas2it.employeeManagementSystem.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +39,10 @@ public class ProjectController {
      * @throws EmsException - throws a String message.
      */
     @PostMapping()
-    public ProjectDTO addProject(@RequestBody ProjectDTO projectDTO) throws EmsException {
-        return projectService.addProject(projectDTO);
+    public ResponseEntity<ProjectDTO> addProject(@RequestBody ProjectDTO projectDTO)
+            throws EmsException {
+        return new ResponseEntity<>(projectService
+                .addProject(projectDTO), HttpStatus.CREATED);
     }
 
     /**
@@ -48,8 +52,8 @@ public class ProjectController {
      * @throws EmsException - throws a String message.
      */
     @GetMapping("getAll")
-    public List<ProjectDTO> getAllProject() throws EmsException {
-        return projectService.getAllProject();
+    public ResponseEntity<List<ProjectDTO>> getAllProject() throws EmsException {
+        return new ResponseEntity<>(projectService.getAllProject(), HttpStatus.OK);
     }
 
     /**
@@ -60,20 +64,26 @@ public class ProjectController {
      * @throws NotFoundException - throws a String message
      */
     @GetMapping("search/{projectName}")
-    public List<ProjectDTO> getProjectsByName(@PathVariable("projectName") String projectName)
+    public ResponseEntity<List<ProjectDTO>>
+    getProjectsByName(@PathVariable("projectName") String projectName)
             throws NotFoundException {
-        return projectService.getProjectsByName(projectName);
+        return new ResponseEntity<>(projectService
+                .getProjectsByName(projectName), HttpStatus.OK);
     }
 
     /**
      * passing the value for delete operation.
      *
      * @param id - transfer the integer value for delete operation .
+     * @return - the acknowledgement.
      * @throws NotFoundException - throws a String message.
      */
     @DeleteMapping("{id}")
-    public void deleteProject(@PathVariable("id") int id) throws NotFoundException {
+    public ResponseEntity<String>
+    deleteProject(@PathVariable("id") int id) throws NotFoundException {
         projectService.deleteProject(id);
+        return new ResponseEntity<>("Deleted successfully", HttpStatus
+                .NO_CONTENT);
     }
 
     /**
@@ -84,9 +94,10 @@ public class ProjectController {
      * @throws EmsException - throws a String message.
      */
     @PutMapping("update")
-    public ProjectDTO updateProject(ProjectDTO projectDTO)
+    public ResponseEntity<ProjectDTO> updateProject(ProjectDTO projectDTO)
             throws EmsException {
-        return projectService.updateProject(projectDTO);
+        return new ResponseEntity<>(projectService
+                .updateProject(projectDTO), HttpStatus.OK);
     }
 
     /**
@@ -99,8 +110,10 @@ public class ProjectController {
      */
 
     @PutMapping("assign/{projectId}")
-    public ProjectDTO assignEmployeesForProject(@PathVariable int projectId,
-                                                @RequestParam List<Integer> ids) throws NotFoundException {
-        return projectService.assignEmployeesForProject(projectId, ids);
+    public ResponseEntity<ProjectDTO>
+    assignEmployeesForProject(@PathVariable int projectId, @RequestParam List<Integer> ids)
+            throws NotFoundException {
+        return new ResponseEntity<>(projectService
+                .assignEmployeesForProject(projectId, ids), HttpStatus.OK);
     }
 }

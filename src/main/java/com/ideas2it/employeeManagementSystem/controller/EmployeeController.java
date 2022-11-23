@@ -5,6 +5,8 @@ import com.ideas2it.employeeManagementSystem.Exception.NotFoundException;
 import com.ideas2it.employeeManagementSystem.dto.EmployeeDTO;
 import com.ideas2it.employeeManagementSystem.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +39,10 @@ public class EmployeeController {
      * @throws EmsException - throws a String message.
      */
     @PostMapping()
-    public EmployeeDTO addEmployee(@RequestBody EmployeeDTO employeeDTO)
+    public ResponseEntity<EmployeeDTO> addEmployee(@RequestBody EmployeeDTO employeeDTO)
             throws EmsException {
-        return employeeService.addEmployee(employeeDTO);
+        return new ResponseEntity<>(employeeService
+                .addEmployee(employeeDTO), HttpStatus.CREATED);
     }
 
     /**
@@ -49,8 +52,8 @@ public class EmployeeController {
      * @throws EmsException - throws a String message
      */
     @GetMapping("getAll")
-    public List<EmployeeDTO> getAllEmployee() throws EmsException {
-        return employeeService.getAllEmployee();
+    public ResponseEntity<List<EmployeeDTO>> getAllEmployee() throws EmsException {
+        return new ResponseEntity<>(employeeService.getAllEmployee(), HttpStatus.OK);
     }
 
     /**
@@ -62,21 +65,25 @@ public class EmployeeController {
      */
 
     @GetMapping("search/{firstName}")
-    public List<EmployeeDTO> getEmployeesByName(@PathVariable("firstName") String employeeName)
-            throws NotFoundException {
-        return employeeService.getEmployeesByName(employeeName);
+    public ResponseEntity<List<EmployeeDTO>> getEmployeesByName
+    (@PathVariable("firstName") String employeeName) throws NotFoundException {
+        return new ResponseEntity<>(employeeService
+                .getEmployeesByName(employeeName), HttpStatus.OK);
     }
 
     /**
      * passing the value for delete operation.
      *
      * @param id - transfer the integer value.
+     * @return the acknowledgment.
      * @throws NotFoundException - throws a String message
      */
     @DeleteMapping("{id}")
-    public void deleteEmployeeDetails(@PathVariable("id") int id)
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") int id)
             throws NotFoundException {
         employeeService.deleteEmployee(id);
+        return new ResponseEntity<>("Deleted successfully.!!", HttpStatus
+                .NO_CONTENT);
     }
 
     /**
@@ -87,9 +94,10 @@ public class EmployeeController {
      * @throws EmsException - throws a String message
      */
     @PutMapping("update")
-    public EmployeeDTO updateEmployee(EmployeeDTO employeeDTO)
+    public ResponseEntity<EmployeeDTO> updateEmployee(EmployeeDTO employeeDTO)
             throws EmsException {
-        return employeeService.updateEmployee(employeeDTO);
+        return new ResponseEntity<>(employeeService
+                .updateEmployee(employeeDTO), HttpStatus.OK);
     }
 
     /**
@@ -101,8 +109,9 @@ public class EmployeeController {
      * @throws EmsException - throws a String message.
      */
     @PutMapping("assign/{employeeId}")
-    public EmployeeDTO assignProjectsForEmployee(@PathVariable int employeeId
+    public ResponseEntity<EmployeeDTO> assignProjectsForEmployee(@PathVariable int employeeId
             , @RequestParam List<Integer> ids) throws EmsException {
-        return employeeService.assignProjectsForEmployee(employeeId, ids);
+        return new ResponseEntity<>(employeeService
+                .assignProjectsForEmployee(employeeId, ids), HttpStatus.OK);
     }
 }

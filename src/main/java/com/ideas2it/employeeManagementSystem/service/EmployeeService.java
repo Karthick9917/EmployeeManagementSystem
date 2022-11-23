@@ -80,26 +80,23 @@ public interface EmployeeService {
      *
      * @param employeeDTO - get an employeeDTO object for create operation.
      * @return The object once the operation is done.
-     * @throws EmsException - throws a String message.
      */
-    EmployeeDTO addEmployee(EmployeeDTO employeeDTO) throws EmsException;
+    EmployeeDTO addEmployee(EmployeeDTO employeeDTO);
 
     /**
      * Passing all employeeDTO from the EmployeeDAO
      *
      * @return list of all the employeeDTO
-     * @throws EmsException - throws a String message.
      */
-    List<EmployeeDTO> getAllEmployee() throws EmsException;
+    List<EmployeeDTO> getAllEmployee();
 
     /**
      * it will return the employeeDTO based on employee name from the employeeDAO.
      *
      * @param employeeName - receive a String value
      * @return the list of employeeDTO.
-     * @throws NotFoundException - throws a String message.
      */
-    List<EmployeeDTO> getEmployeesByName(String employeeName) throws NotFoundException;
+    List<EmployeeDTO> getEmployeesByName(String employeeName);
 
     /**
      * pass the employee id for delete operation.
@@ -114,9 +111,8 @@ public interface EmployeeService {
      *
      * @param employeeDTO - passing a employeeDTO object.
      * @return the object once the operation is done.
-     * @throws EmsException - throws a String message.
      */
-    EmployeeDTO updateEmployee(EmployeeDTO employeeDTO) throws EmsException;
+    EmployeeDTO updateEmployee(EmployeeDTO employeeDTO);
 
     /**
      * pass the employee object for assigning projects.
@@ -124,8 +120,6 @@ public interface EmployeeService {
      * @param employeeId - passing an id for object.
      * @param ids        - passing the ids for assign the object.
      * @return the object once the operation is done.
-     * @throws EmsException - throws a String message.
      */
-    EmployeeDTO assignProjectsForEmployee(int employeeId, List<Integer> ids)
-            throws EmsException;
+    EmployeeDTO assignProjectsForEmployee(int employeeId, List<Integer> ids);
 }
